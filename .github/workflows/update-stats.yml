@@ -21,24 +21,35 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          set +e
           mkdir -p assets
 
           # Fetch stars and commits via GraphQL
           echo "=== Fetching stats via GraphQL ==="
-          QUERY=$(curl -s -H "Authorization: bearer $GITHUB_TOKEN" \
+          QUERY=$(curl -sf -H "Authorization: bearer $GITHUB_TOKEN" \
             -H "Content-Type: application/json" \
             -d '{"query":"{ viewer { repositories(ownerAffiliations: OWNER, isFork: false, first: 100) { totalCount nodes { stargazerCount } } contributionsCollection { totalContributions } } }"}' \
-            https://api.github.com/graphql)
-
+            https://api.github.com/graphql 2>&1)
+          CURL_EXIT=$?
+          echo "curl exit: $CURL_EXIT"
           echo "GraphQL response: $QUERY"
 
-          # Sum stargazerCount across all repos
-          TOTAL_STARS=$(echo "$QUERY" | jq -r '[.data.viewer.repositories.nodes[].stargazerCount // 0] | add // 0')
-          TOTAL_COMMITS=$(echo "$QUERY" | jq -r '.data.viewer.contributionsCollection.totalContributions // 0')
+          if [ $CURL_EXIT -eq 0 ] && [ -n "$QUERY" ]; then
+            TOTAL_STARS=$(echo "$QUERY" | jq -r '[.data.viewer.repositories.nodes[].stargazerCount // 0] | add // 0' 2>/dev/null || echo "0")
+            TOTAL_COMMITS=$(echo "$QUERY" | jq -r '.data.viewer.contributionsCollection.totalContributions // 0' 2>/dev/null || echo "0")
+          else
+            echo "GraphQL request failed, using defaults"
+            TOTAL_STARS=0
+            TOTAL_COMMITS=0
+          fi
 
           # Fetch profile views from komarev.com
           echo "=== Fetching Profile Views ==="
-          TOTAL_VIEWS=$(curl -s "https://komarev.com/ghpvc/?username=jieefeng&style=flat" | awk -F'[><]' '/<text/{for(i=1;i<=NF;i++) if($i=="/text" && $(i-1)~/^[0-9]+$/) print $(i-1)}' | tail -1 || echo "0")
+          VIEWS_HTML=$(curl -sf "https://komarev.com/ghpvc/?username=jieefeng&style=flat" 2>&1)
+          if [ $? -eq 0 ] && [ -n "$VIEWS_HTML" ]; then
+            TOTAL_VIEWS=$(echo "$VIEWS_HTML" | grep -oP '\d+(?=</text>)' | tail -1)
+          fi
+          TOTAL_VIEWS=${TOTAL_VIEWS:-0}
           echo "Views: $TOTAL_VIEWS"
 
           echo "=== Final Stats ==="
