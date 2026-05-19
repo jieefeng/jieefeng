@@ -36,7 +36,7 @@ Focused on retrieval-augmented generation, backend architecture, and clean code.
 <div align="center">
 
 <a href="https://github.com/jieefeng">
-  <img height="180em" src="https://github-readme-stats.vercel.app/api?username=jieefeng&show_icons=true&theme=radical&count_private=true&include_all_commits=true" />
+  <img height="180em" src="https://github-readme-stats-refh2s1v4-jieefengs-projects.vercel.app/api?username=jieefeng&show_icons=true&theme=radical&count_private=true&include_all_commits=true" />
 </a>
 
 </div>
@@ -47,7 +47,7 @@ Focused on retrieval-augmented generation, backend architecture, and clean code.
 
 <div align="center">
 
-[![GitHub Streak](https://github-readme-streak-stats.vercel.app?user=jieefeng&theme=radical)](https://github.com/jieefeng)
+[![GitHub Streak](https://github-readme-streak-stats-38gsk04h5-jieefengs-projects.vercel.app?user=jieefeng&theme=radical)](https://github.com/jieefeng)
 
 </div>
 
@@ -57,9 +57,9 @@ Focused on retrieval-augmented generation, backend architecture, and clean code.
 
 <div align="center">
 
-<img height="180em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=jieefeng&layout=compact&theme=radical" />
+<img height="180em" src="https://github-readme-stats-refh2s1v4-jieefengs-projects.vercel.app/api/top-langs/?username=jieefeng&layout=compact&theme=radical" />
 
-[![Activity Graph](https://github-readme-stats.vercel.app/api/activity-graph?username=jieefeng&theme=radical)](https://github.com/ashutosh00710/github-readme-activity-graph)
+[![Activity Graph](https://github-readme-stats-refh2s1v4-jieefengs-projects.vercel.app/api/activity-graph?username=jieefeng&theme=radical)](https://github.com/ashutosh00710/github-readme-activity-graph)
 
 </div>
 
