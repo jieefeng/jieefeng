@@ -33,14 +33,17 @@ jobs:
           echo "=== Fetching stats ==="
           QUERY=$(curl -s -H "Authorization: bearer $GITHUB_TOKEN" \
             -H "Content-Type: application/json" \
-            -d '{"query":"{ user(login: \"jieefeng\") { repositories(ownerAffiliations: OWNER, isFork: false) { totalCount stargazerCount } contributionsCollection { contributionCalendar { totalContributions } } } }"}' \
+            -d '{"query":"{ user(login: \"jieefeng\") { repositories(ownerAffiliations: OWNER, isFork: false) { totalCount stargazerCount } contributionsCollection { totalContributions restrictedContributionsCount } } }"}' \
             https://api.github.com/graphql)
 
           echo "GraphQL response: $QUERY"
 
           TOTAL_STARS=$(echo "$QUERY" | jq -r '.data.user.repositories.stargazerCount // 0')
-          TOTAL_COMMITS=$(echo "$QUERY" | jq -r '.data.user.contributionsCollection.contributionCalendar.totalContributions // 0')
           TOTAL_REPOS=$(echo "$QUERY" | jq -r '.data.user.repositories.totalCount // 0')
+          TOTAL_COMMITS=$(echo "$QUERY" | jq -r '.data.user.contributionsCollection.totalContributions // 0')
+          PRIVATE_COMMITS=$(echo "$QUERY" | jq -r '.data.user.contributionsCollection.restrictedContributionsCount // 0')
+          TOTAL_COMMITS=$((TOTAL_COMMITS + PRIVATE_COMMITS))
+          echo "Commits: $TOTAL_COMMITS (public: $((TOTAL_COMMITS - PRIVATE_COMMITS)), private: $PRIVATE_COMMITS)"
 
           # Fetch PRs via REST API
           echo "=== Fetching PRs ==="
