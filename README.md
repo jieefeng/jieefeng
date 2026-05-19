@@ -20,24 +20,9 @@
 ---
 
 <h2 style="font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 1.2rem; font-weight: 600; color: #F8F8FF; letter-spacing: 1px; text-transform: uppercase; margin: 36px 0 24px; text-align: center;">
-  <span style="background: linear-gradient(90deg, #7C3AED, #EC4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">技术栈</span>
-</h2>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white" />&nbsp;
-  <img src="https://img.shields.io/badge/Java-ED8B00?style=flat-square&logo=openjdk&logoColor=white" />&nbsp;
-  <img src="https://img.shields.io/badge/Vue.js-4FC08D?style=flat-square&logo=vuedotjs&logoColor=white" />&nbsp;
-  <img src="https://img.shields.io/badge/Spring_Boot-6DB33F?style=flat-square&logo=springboot&logoColor=white" />&nbsp;
-  <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white" />&nbsp;
-  <img src="https://img.shields.io/badge/Redis-DC382D?style=flat-square&logo=redis&logoColor=white" />
-</p>
-
----
-
-<h2 style="font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 1.2rem; font-weight: 600; color: #F8F8FF; letter-spacing: 1px; text-transform: uppercase; margin: 36px 0 24px; text-align: center;">
   <span style="background: linear-gradient(90deg, #EC4899, #F472B6); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">访问人数</span>
 </h2>
 
 <p align="center">
-  <img src="https://komarev.com/ghpvc/?username=jieefeng&color=blue&style=flat-square&label=Profile+Views" alt="Profile Views" />
+  <img src="https://komarev.com/ghpvc/?username=jieefeng&color=blue&style=plastic&label=Profile+Views&labelColor=%231E1E2E&bgColor=%232D2D3F&borderColor=%237C3AED&borderRadius=10" alt="Profile Views" />
 </p>
