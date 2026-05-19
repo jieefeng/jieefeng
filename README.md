@@ -2,12 +2,12 @@
 
 <img src="https://github.com/jieefeng.png" width="150" style="border-radius:50%" />
 
-# jieefeng
+# 你好，我是 jieefeng 👋
 
-**AI / RAG / 全栈开发者**
+**AI / RAG / 全栈开发**
 
-专注于智能系统开发，技术栈涵盖 Python、Java 及现代 Web 技术。
-主要研究方向：检索增强生成（RAG）、后端架构设计、代码质量优化。
+热衷于构建智能化系统，擅长 Python、Java 与现代 Web 技术。
+当前聚焦于检索增强生成（RAG）、后端架构设计与工程化实践。
 
 [![GitHub](https://img.shields.io/badge/GitHub-jieefeng-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/jieefeng)
 [![邮箱](https://img.shields.io/badge/邮箱-联系我-1877F2?style=for-the-badge&logo=mail.ru&logoColor=white)](mailto:1627017086@qq.com)
@@ -31,12 +31,12 @@
 
 ---
 
-## GitHub 统计
+## GitHub 数据
 
 <div align="center">
 
 <a href="https://github.com/jieefeng">
-  <img src="./assets/stats.svg" alt="GitHub 统计" />
+  <img src="./assets/stats.svg" alt="GitHub 数据面板" />
 </a>
 
 </div>
