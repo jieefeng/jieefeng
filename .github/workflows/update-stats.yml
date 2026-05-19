@@ -27,12 +27,13 @@ jobs:
           echo "=== Fetching stats via GraphQL ==="
           QUERY=$(curl -s -H "Authorization: bearer $GITHUB_TOKEN" \
             -H "Content-Type: application/json" \
-            -d '{"query":"{ viewer { repositories(ownerAffiliations: OWNER, isFork: false) { stargazerCount } contributionsCollection(includePrivate: true) { totalContributions } } }"}' \
+            -d '{"query":"{ viewer { repositories(ownerAffiliations: OWNER, isFork: false, first: 100) { totalCount nodes { stargazerCount } } contributionsCollection { totalContributions } } }"}' \
             https://api.github.com/graphql)
 
           echo "GraphQL response: $QUERY"
 
-          TOTAL_STARS=$(echo "$QUERY" | jq -r '.data.viewer.repositories.stargazerCount // 0')
+          # Sum stargazerCount across all repos
+          TOTAL_STARS=$(echo "$QUERY" | jq -r '[.data.viewer.repositories.nodes[].stargazerCount // 0] | add // 0')
           TOTAL_COMMITS=$(echo "$QUERY" | jq -r '.data.viewer.contributionsCollection.totalContributions // 0')
 
           # Fetch profile views from komarev.com
