@@ -10,7 +10,7 @@ Building intelligent systems with Python, Java, and modern web technologies.
 Focused on retrieval-augmented generation, backend architecture, and clean code.
 
 [![GitHub](https://img.shields.io/badge/GitHub-jieefeng-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/jieefeng)
-[![Email](https://img.shields.io/badge/Email-Contact-EA4335?style=for-the-badge&logo=gmail&logoColor=white)](mailto:jieefeng@example.com)
+[![Email](https://img.shields.io/badge/Email-Contact-1877F2?style=for-the-badge&logo=mail.ru&logoColor=white)](mailto:1627017086@qq.com)
 
 </div>
 
@@ -47,7 +47,7 @@ Focused on retrieval-augmented generation, backend architecture, and clean code.
 
 <div align="center">
 
-[![GitHub Streak](https://github-readme-streak-stats.vercel.app?user=jieefeng&theme=radical)](https://git.io/streak-stats)
+[![GitHub Streak](https://github-readme-streak-stats.vercel.app?user=jieefeng&theme=radical)](https://github.com/jieefeng)
 
 </div>
 
