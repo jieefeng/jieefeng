@@ -24,5 +24,5 @@
 </h2>
 
 <p align="center">
-  <img src="https://komarev.com/ghpvc/?username=jieefeng&color=blue&style=plastic&label=Profile+Views&labelColor=%231E1E2E&bgColor=%232D2D3F&borderColor=%237C3AED&borderRadius=10" alt="Profile Views" />
+  <img src="./assets/views-card.svg" alt="Profile Views" />
 </p>

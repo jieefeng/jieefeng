@@ -17,90 +17,69 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Generate stats SVGs
+      - name: Generate views card SVG
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set +e
           mkdir -p assets
 
-          # Fetch stars and commits via GraphQL
-          echo "=== Fetching stats via GraphQL ==="
-          QUERY=$(curl -sf -H "Authorization: bearer $GITHUB_TOKEN" \
-            -H "Content-Type: application/json" \
-            -d '{"query":"{ viewer { repositories(ownerAffiliations: OWNER, isFork: false, first: 100) { totalCount nodes { stargazerCount } } contributionsCollection { totalContributions } } }"}' \
-            https://api.github.com/graphql 2>&1)
-          CURL_EXIT=$?
-          echo "curl exit: $CURL_EXIT"
-          echo "GraphQL response: $QUERY"
+          # Fetch profile views from komarev API
+          echo "=== Fetching profile views ==="
+          VIEWS=$(curl -sf "https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fjieefeng&count_bg=%237C3AED&title_bg=%231E1E2E&icon=&icon_color=%23E7E7E7&title=Views&edge_flat=false" 2>&1 | grep -oP '\d+(?=</text>)' | tail -1 || echo "0")
+          echo "Views count: $VIEWS"
 
-          if [ $CURL_EXIT -eq 0 ] && [ -n "$QUERY" ]; then
-            TOTAL_STARS=$(echo "$QUERY" | jq -r '[.data.viewer.repositories.nodes[].stargazerCount // 0] | add // 0' 2>/dev/null || echo "0")
-            TOTAL_COMMITS=$(echo "$QUERY" | jq -r '.data.viewer.contributionsCollection.totalContributions // 0' 2>/dev/null || echo "0")
-          else
-            echo "GraphQL request failed, using defaults"
-            TOTAL_STARS=0
-            TOTAL_COMMITS=0
-          fi
-
-          echo "=== Final Stats ==="
-          echo "Stars=$TOTAL_STARS Commits=$TOTAL_COMMITS"
-
-          # Generate stats card SVG
-          cat > assets/stats.svg << 'SVGEOF'
-          <svg xmlns="http://www.w3.org/2000/svg" width="520" height="180" viewBox="0 0 520 180">
+          # Generate views card SVG with actual count
+          cat > assets/views-card.svg << 'SVGEOF'
+          <svg xmlns="http://www.w3.org/2000/svg" width="360" height="100" viewBox="0 0 360 100">
             <defs>
-              <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#FAFBFC"/>
-                <stop offset="100%" stop-color="#F0F3F6"/>
+              <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#1E1E2E"/>
+                <stop offset="100%" stop-color="#2D2D3F"/>
               </linearGradient>
-              <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#0969DA"/>
-                <stop offset="100%" stop-color="#8250DF"/>
+              <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#7C3AED"/>
+                <stop offset="100%" stop-color="#EC4899"/>
               </linearGradient>
-              <filter id="shadow" x="-4%" y="-4%" width="108%" height="116%">
-                <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#1B1F240D"/>
+              <linearGradient id="countGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#F472B6"/>
+                <stop offset="100%" stop-color="#EC4899"/>
+              </linearGradient>
+              <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+                <feGaussianBlur stdDeviation="4" result="blur"/>
+                <feMerge>
+                  <feMergeNode in="blur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
               </filter>
-              <clipPath id="card-clip">
-                <rect width="520" height="180" rx="12"/>
-              </clipPath>
+              <filter id="shadow" x="-5%" y="-10%" width="110%" height="130%">
+                <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#00000040"/>
+              </filter>
             </defs>
-            <rect width="520" height="180" rx="12" fill="url(#bg)" filter="url(#shadow)"/>
-            <rect x="0.5" y="0.5" width="519" height="179" rx="12" fill="none" stroke="#D8DEE4" stroke-opacity="0.6"/>
-            <rect width="520" height="3" fill="url(#accent)" clip-path="url(#card-clip)"/>
-            <g transform="translate(24, 22)">
-              <rect width="28" height="28" rx="7" fill="#F6F8FA" stroke="#D0D7DE"/>
-              <path transform="translate(5,4)" d="M9 0C4.03 0 0 4.03 0 9c0 3.98 2.58 7.35 6.16 8.54.45.08.59-.2.59-.43v-1.53C4.12 16.11 3.63 14.53 3.63 14.53c-.41-1.04-1-1.31-1-1.31-.82-.56.06-.55.06-.55.9.06 1.38.93 1.38.93.8 1.37 2.11.97 2.62.74.08-.58.31-.98.57-1.2-2-.23-4.1-1-4.1-4.45 0-.98.35-1.78.93-2.41-.09-.23-.4-1.14.09-2.38 0 0 .76-.24 2.49.93A8.72 8.72 0 019 5.21c.82 0 1.64.11 2.41.32 1.73-1.17 2.49-.93 2.49-.93.49 1.24.18 2.15.09 2.38.58.63.93 1.43.93 2.41 0 3.46-2.1 4.22-4.11 4.44.32.28.59.83.59 1.67v2.47c0 .24.14.52.6.43A9.01 9.01 0 0018 9c0-4.97-4.03-9-9-9z" fill="#656D76"/>
-              <text x="38" y="13" fill="#1F2328" font-family="'SF Pro Display',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="600" letter-spacing="-0.3">GitHub Stats</text>
-              <text x="38" y="25" fill="#656D76" font-family="'SF Pro Text',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="10" letter-spacing="0.2">Contribution Overview</text>
+            <rect width="360" height="100" rx="16" fill="url(#bg)" filter="url(#shadow)"/>
+            <rect width="360" height="4" rx="2" fill="url(#accent)"/>
+            <g transform="translate(32, 50)">
+              <circle cx="20" cy="0" r="24" fill="#FCE7F3" opacity="0.15"/>
+              <circle cx="20" cy="0" r="18" fill="none" stroke="#EC4899" stroke-width="2" opacity="0.4"/>
+              <ellipse cx="20" cy="0" rx="12" ry="8" fill="none" stroke="#EC4899" stroke-width="2.5"/>
+              <circle cx="20" cy="0" r="4" fill="#EC4899"/>
+              <circle cx="20" cy="0" r="4" fill="#EC4899" filter="url(#glow)"/>
             </g>
-            <line x1="24" y1="60" x2="496" y2="60" stroke="#D8DEE4" stroke-opacity="0.5"/>
-            <g transform="translate(120, 80)">
-              <circle cx="10" cy="10" r="10" fill="#DDF4FF"/>
-              <text x="10" y="14" text-anchor="middle" fill="#0969DA" font-size="12">&#9733;</text>
-              <text x="28" y="8" fill="#656D76" font-family="'SF Pro Text',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="10" letter-spacing="0.3">STARS</text>
-              <text x="28" y="26" fill="#1F2328" font-family="'SF Pro Display',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="22" font-weight="700" letter-spacing="-0.5">STARS_PLACEHOLDER</text>
-            </g>
-            <g transform="translate(310, 80)">
-              <circle cx="10" cy="10" r="10" fill="#DAFBE1"/>
-              <text x="10" y="14" text-anchor="middle" fill="#1A7F37" font-size="12">&#10003;</text>
-              <text x="28" y="8" fill="#656D76" font-family="'SF Pro Text',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="10" letter-spacing="0.3">COMMITS</text>
-              <text x="28" y="26" fill="#1F2328" font-family="'SF Pro Display',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="22" font-weight="700" letter-spacing="-0.5">COMMITS_PLACEHOLDER</text>
-            </g>
-            <line x1="24" y1="150" x2="496" y2="150" stroke="#D8DEE4" stroke-opacity="0.5"/>
-            <g transform="translate(260, 166)">
-              <circle cx="-52" cy="-3" r="3" fill="#2DA44E"/>
-              <text x="-44" y="0" fill="#8B949E" font-family="'SF Pro Text',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="10" letter-spacing="0.2">Updated daily via GitHub Actions</text>
-            </g>
+            <text x="95" y="38" fill="#9CA3AF" font-family="'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="14" font-weight="500" letter-spacing="1">PROFILE VIEWS</text>
+            <text x="95" y="70" fill="url(#countGrad)" font-family="'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="42" font-weight="700" letter-spacing="-2" filter="url(#glow)">VIEWS_PLACEHOLDER</text>
+            <circle cx="340" cy="20" r="3" fill="#7C3AED" opacity="0.6"/>
+            <circle cx="350" cy="30" r="2" fill="#EC4899" opacity="0.4"/>
+            <circle cx="335" cy="35" r="1.5" fill="#F472B6" opacity="0.5"/>
           </svg>
           SVGEOF
 
-          # Replace placeholders with actual values
-          sed -i "s/STARS_PLACEHOLDER/$TOTAL_STARS/g" assets/stats.svg
-          sed -i "s/COMMITS_PLACEHOLDER/$TOTAL_COMMITS/g" assets/stats.svg
+          # Replace placeholder with actual views count
+          sed -i "s/VIEWS_PLACEHOLDER/$VIEWS/g" assets/views-card.svg
+
+          echo "=== Views card generated successfully ==="
 
       - name: Commit and push
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git diff --quiet || (git add assets/ && git commit -m "chore: update stats [skip ci]" && git push)
+          git diff --quiet || (git add assets/ && git commit -m "chore: update views card [skip ci]" && git push)
