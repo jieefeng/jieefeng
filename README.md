@@ -37,7 +37,6 @@ Focused on retrieval-augmented generation, backend architecture, and clean code.
 
 <a href="https://github.com/jieefeng">
   <img height="180em" src="https://github-readme-stats.vercel.app/api?username=jieefeng&show_icons=true&theme=radical&count_private=true&include_all_commits=true" />
-  <img height="180em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=jieefeng&layout=compact&theme=radical" />
 </a>
 
 </div>
@@ -54,9 +53,11 @@ Focused on retrieval-augmented generation, backend architecture, and clean code.
 
 ---
 
-## Activity Graph
+## Top Languages & Activity Graph
 
 <div align="center">
+
+<img height="180em" src="https://github-readme-stats.vercel.app/api/top-langs/?username=jieefeng&layout=compact&theme=radical" />
 
 [![Activity Graph](https://github-readme-stats.vercel.app/api/activity-graph?username=jieefeng&theme=radical)](https://github.com/ashutosh00710/github-readme-activity-graph)
 
@@ -69,3 +70,5 @@ Focused on retrieval-augmented generation, backend architecture, and clean code.
 ![Profile Views](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fjieefeng&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=Profile+Views&edge_flat=false)
 
 </div>
+
+<!-- stats:2025-07-10 -->
