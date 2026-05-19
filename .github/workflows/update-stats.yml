@@ -18,15 +18,17 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Generate views card SVG
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set +e
           mkdir -p assets
 
           # Fetch profile views from komarev API
           echo "=== Fetching profile views ==="
-          VIEWS=$(curl -sf "https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fjieefeng&count_bg=%237C3AED&title_bg=%231E1E2E&icon=&icon_color=%23E7E7E7&title=Views&edge_flat=false" 2>&1 | grep -oP '\d+(?=</text>)' | tail -1 || echo "0")
+          RESPONSE=$(curl -sf "https://komarev.com/ghpvc/?username=jieefeng&color=blue&style=flat" 2>&1)
+          echo "API Response: $RESPONSE"
+
+          # Extract number from SVG - the last </text> contains the count
+          VIEWS=$(echo "$RESPONSE" | grep -oP '\d+(?=</text>)' | tail -1 || echo "0")
           echo "Views count: $VIEWS"
 
           # Generate views card SVG with actual count
@@ -77,6 +79,7 @@ jobs:
           sed -i "s/VIEWS_PLACEHOLDER/$VIEWS/g" assets/views-card.svg
 
           echo "=== Views card generated successfully ==="
+          cat assets/views-card.svg
 
       - name: Commit and push
         run: |
