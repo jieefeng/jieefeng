@@ -38,7 +38,7 @@ jobs:
 
           # Fetch profile views from komarev.com
           echo "=== Fetching Profile Views ==="
-          TOTAL_VIEWS=$(curl -s "https://komarev.com/ghpvc/?username=jieefeng&style=flat" | sed -n 's/.*<text[^>]*>\([0-9]*\)<\/text>.*/\1/p' | tail -1 || echo "0")
+          TOTAL_VIEWS=$(curl -s "https://komarev.com/ghpvc/?username=jieefeng&style=flat" | awk -F'[><]' '/<text/{for(i=1;i<=NF;i++) if($i=="/text" && $(i-1)~/^[0-9]+$/) print $(i-1)}' | tail -1 || echo "0")
           echo "Views: $TOTAL_VIEWS"
 
           echo "=== Final Stats ==="
