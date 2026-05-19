@@ -14,12 +14,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pull-requests: read
     steps:
       - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
 
       - name: Generate stats SVGs
         env:
@@ -27,17 +24,38 @@ jobs:
         run: |
           mkdir -p assets
 
+          # Debug: check token works
+          echo "=== Testing GitHub API ==="
+          curl -s -H "Authorization: bearer $GITHUB_TOKEN" \
+            https://api.github.com/user | jq '.login'
+
           # Fetch user stats via GraphQL
+          echo "=== Fetching stats ==="
           QUERY=$(curl -s -H "Authorization: bearer $GITHUB_TOKEN" \
             -H "Content-Type: application/json" \
-            -d '{"query":"query { user(login:\"jieefeng\") { name contributionsCollection { totalCommitContributions totalPullRequestReviewContributions restrictedContributionsCount contributionCalendar { totalContributions } } repositories(ownerAffiliations:OWNER, isFork:false) { totalCount stargazerCount } pullRequests { totalCount } issues { totalCount } } }"}' \
+            -d '{"query":"{ user(login: \"jieefeng\") { repositories(ownerAffiliations: OWNER, isFork: false) { totalCount stargazerCount } contributionsCollection { contributionCalendar { totalContributions } } } }"}' \
             https://api.github.com/graphql)
 
-          TOTAL_STARS=$(echo "$QUERY" | jq -r '.data.user.repositories.stargazerCount')
-          TOTAL_COMMITS=$(echo "$QUERY" | jq -r '.data.user.contributionsCollection.contributionCalendar.totalContributions')
-          TOTAL_PRS=$(echo "$QUERY" | jq -r '.data.user.pullRequests.totalCount')
-          TOTAL_ISSUES=$(echo "$QUERY" | jq -r '.data.user.issues.totalCount')
-          TOTAL_REPOS=$(echo "$QUERY" | jq -r '.data.user.repositories.totalCount')
+          echo "GraphQL response: $QUERY"
+
+          TOTAL_STARS=$(echo "$QUERY" | jq -r '.data.user.repositories.stargazerCount // 0')
+          TOTAL_COMMITS=$(echo "$QUERY" | jq -r '.data.user.contributionsCollection.contributionCalendar.totalContributions // 0')
+          TOTAL_REPOS=$(echo "$QUERY" | jq -r '.data.user.repositories.totalCount // 0')
+
+          # Fetch PRs via REST API
+          echo "=== Fetching PRs ==="
+          TOTAL_PRS=$(curl -s -H "Authorization: bearer $GITHUB_TOKEN" \
+            "https://api.github.com/search/issues?q=author:jieefeng+type:pr" | jq -r '.total_count // 0')
+          echo "PRs: $TOTAL_PRS"
+
+          # Fetch Issues via REST API
+          echo "=== Fetching Issues ==="
+          TOTAL_ISSUES=$(curl -s -H "Authorization: bearer $GITHUB_TOKEN" \
+            "https://api.github.com/search/issues?q=author:jieefeng+type:issue" | jq -r '.total_count // 0')
+          echo "Issues: $TOTAL_ISSUES"
+
+          echo "=== Final Stats ==="
+          echo "Stars=$TOTAL_STARS Commits=$TOTAL_COMMITS PRs=$TOTAL_PRS Issues=$TOTAL_ISSUES Repos=$TOTAL_REPOS"
 
           # Generate stats card SVG
           cat > assets/stats.svg << 'SVGEOF'
@@ -87,8 +105,6 @@ jobs:
           sed -i "s/PRS_PLACEHOLDER/$TOTAL_PRS/g" assets/stats.svg
           sed -i "s/ISSUES_PLACEHOLDER/$TOTAL_ISSUES/g" assets/stats.svg
           sed -i "s/REPOS_PLACEHOLDER/$TOTAL_REPOS/g" assets/stats.svg
-
-          echo "Stats: Stars=$TOTAL_STARS Commits=$TOTAL_COMMITS PRs=$TOTAL_PRS Issues=$TOTAL_ISSUES Repos=$TOTAL_REPOS"
 
       - name: Commit and push
         run: |
