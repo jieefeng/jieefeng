@@ -1,0 +1,32 @@
+name: Update GitHub Stats
+
+on:
+  schedule:
+    - cron: '0 1 * * *'  # 9:00 AM Beijing Time (UTC+8)
+  workflow_dispatch:
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get current date
+        id: date
+        run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+
+      - name: Update stats cache
+        run: |
+          # Touch README to refresh stat images
+          # The stats APIs serve live data; this commit
+          # ensures GitHub re-renders the page daily
+          sed -i "s/<!-- stats:.* -->/<!-- stats:${{ steps.date.outputs.date }} -->/" README.md || \
+          echo "<!-- stats:${{ steps.date.outputs.date }} -->" >> README.md
+
+      - name: Commit and push
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git diff --quiet || (git add README.md && git commit -m "chore: update stats [skip ci]" && git push)
