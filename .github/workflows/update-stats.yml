@@ -24,26 +24,18 @@ jobs:
         run: |
           mkdir -p assets
 
-          # Debug: check token works
-          echo "=== Testing GitHub API ==="
-          curl -s -H "Authorization: bearer $GITHUB_TOKEN" \
-            https://api.github.com/user | jq '.login'
-
-          # Fetch user stats via GraphQL
-          echo "=== Fetching stats ==="
+          # Fetch user stats via GraphQL (use viewer for authenticated context)
+          echo "=== Fetching stats via GraphQL ==="
           QUERY=$(curl -s -H "Authorization: bearer $GITHUB_TOKEN" \
             -H "Content-Type: application/json" \
-            -d '{"query":"{ user(login: \"jieefeng\") { repositories(ownerAffiliations: OWNER, isFork: false) { totalCount stargazerCount } contributionsCollection { totalContributions restrictedContributionsCount } } }"}' \
+            -d '{"query":"{ viewer { repositories(ownerAffiliations: OWNER, isFork: false) { totalCount stargazerCount } contributionsCollection(includePrivate: true) { totalContributions } } }"}' \
             https://api.github.com/graphql)
 
           echo "GraphQL response: $QUERY"
 
-          TOTAL_STARS=$(echo "$QUERY" | jq -r '.data.user.repositories.stargazerCount // 0')
-          TOTAL_REPOS=$(echo "$QUERY" | jq -r '.data.user.repositories.totalCount // 0')
-          TOTAL_COMMITS=$(echo "$QUERY" | jq -r '.data.user.contributionsCollection.totalContributions // 0')
-          PRIVATE_COMMITS=$(echo "$QUERY" | jq -r '.data.user.contributionsCollection.restrictedContributionsCount // 0')
-          TOTAL_COMMITS=$((TOTAL_COMMITS + PRIVATE_COMMITS))
-          echo "Commits: $TOTAL_COMMITS (public: $((TOTAL_COMMITS - PRIVATE_COMMITS)), private: $PRIVATE_COMMITS)"
+          TOTAL_STARS=$(echo "$QUERY" | jq -r '.data.viewer.repositories.stargazerCount // 0')
+          TOTAL_REPOS=$(echo "$QUERY" | jq -r '.data.viewer.repositories.totalCount // 0')
+          TOTAL_COMMITS=$(echo "$QUERY" | jq -r '.data.viewer.contributionsCollection.totalContributions // 0')
 
           # Fetch PRs via REST API
           echo "=== Fetching PRs ==="
