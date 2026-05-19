@@ -9,9 +9,6 @@
 热衷于构建智能化系统，擅长 Python、Java 与现代 Web 技术。
 当前聚焦于检索增强生成（RAG）、后端架构设计与工程化实践。
 
-[![GitHub](https://img.shields.io/badge/GitHub-jieefeng-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/jieefeng)
-[![邮箱](https://img.shields.io/badge/邮箱-联系我-1877F2?style=for-the-badge&logo=mail.ru&logoColor=white)](mailto:1627017086@qq.com)
-
 </div>
 
 ---
