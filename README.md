@@ -4,19 +4,19 @@
 
 # jieefeng
 
-**AI / RAG / Full-stack Developer**
+**AI / RAG / 全栈开发者**
 
-Building intelligent systems with Python, Java, and modern web technologies.
-Focused on retrieval-augmented generation, backend architecture, and clean code.
+专注于智能系统开发，技术栈涵盖 Python、Java 及现代 Web 技术。
+主要研究方向：检索增强生成（RAG）、后端架构设计、代码质量优化。
 
 [![GitHub](https://img.shields.io/badge/GitHub-jieefeng-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/jieefeng)
-[![Email](https://img.shields.io/badge/Email-Contact-1877F2?style=for-the-badge&logo=mail.ru&logoColor=white)](mailto:1627017086@qq.com)
+[![邮箱](https://img.shields.io/badge/邮箱-联系我-1877F2?style=for-the-badge&logo=mail.ru&logoColor=white)](mailto:1627017086@qq.com)
 
 </div>
 
 ---
 
-## Tech Stack
+## 技术栈
 
 <div align="center">
 
@@ -31,12 +31,12 @@ Focused on retrieval-augmented generation, backend architecture, and clean code.
 
 ---
 
-## GitHub Stats
+## GitHub 统计
 
 <div align="center">
 
 <a href="https://github.com/jieefeng">
-  <img src="./assets/stats.svg" alt="GitHub Stats" />
+  <img src="./assets/stats.svg" alt="GitHub 统计" />
 </a>
 
 </div>
@@ -45,6 +45,6 @@ Focused on retrieval-augmented generation, backend architecture, and clean code.
 
 <div align="center">
 
-![Profile Views](https://img.shields.io/badge/Profile%20Views-Counter-79C83D?style=flat&logo=github&logoColor=white)
+![访问量](https://img.shields.io/badge/访问量-统计中-79C83D?style=flat&logo=github&logoColor=white)
 
 </div>
