@@ -54,38 +54,78 @@ jobs:
             "https://api.github.com/search/issues?q=author:jieefeng+type:issue" | jq -r '.total_count // 0')
           echo "Issues: $TOTAL_ISSUES"
 
+          # Fetch profile views from komarev.com
+          echo "=== Fetching Profile Views ==="
+          TOTAL_VIEWS=$(curl -s "https://komarev.com/ghpvc/?username=jieefeng&style=flat" | grep -oP '\d+' | head -1 || echo "0")
+          echo "Views: $TOTAL_VIEWS"
+
           echo "=== Final Stats ==="
-          echo "Stars=$TOTAL_STARS Commits=$TOTAL_COMMITS PRs=$TOTAL_PRS Issues=$TOTAL_ISSUES Repos=$TOTAL_REPOS"
+          echo "Stars=$TOTAL_STARS Commits=$TOTAL_COMMITS PRs=$TOTAL_PRS Issues=$TOTAL_ISSUES Repos=$TOTAL_REPOS Views=$TOTAL_VIEWS"
 
           # Generate stats card SVG
           cat > assets/stats.svg << 'SVGEOF'
-          <svg xmlns="http://www.w3.org/2000/svg" width="520" height="200" viewBox="0 0 520 200">
-            <rect width="520" height="200" rx="8" fill="#FFFFFF"/>
-            <rect x="0.5" y="0.5" width="519" height="199" rx="8" fill="none" stroke="#D0D7DE"/>
-            <circle cx="20" cy="16" r="5" fill="#2DA44E"/>
-            <text x="32" y="20" fill="#1F2328" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="600">GitHub Stats</text>
-            <g transform="translate(20, 42)">
-              <text fill="#656D76" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12">Stars</text>
-              <text x="110" fill="#1A7F37" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="18" font-weight="700">STARS_PLACEHOLDER</text>
+          <svg xmlns="http://www.w3.org/2000/svg" width="520" height="280" viewBox="0 0 520 280">
+            <defs>
+              <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#FAFBFC"/>
+                <stop offset="100%" stop-color="#F0F3F6"/>
+              </linearGradient>
+              <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#0969DA"/>
+                <stop offset="100%" stop-color="#8250DF"/>
+              </linearGradient>
+              <filter id="shadow" x="-4%" y="-4%" width="108%" height="116%">
+                <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#1B1F240D"/>
+              </filter>
+              <clipPath id="card-clip">
+                <rect width="520" height="280" rx="12"/>
+              </clipPath>
+            </defs>
+            <rect width="520" height="280" rx="12" fill="url(#bg)" filter="url(#shadow)"/>
+            <rect x="0.5" y="0.5" width="519" height="279" rx="12" fill="none" stroke="#D8DEE4" stroke-opacity="0.6"/>
+            <rect width="520" height="3" fill="url(#accent)" clip-path="url(#card-clip)"/>
+            <g transform="translate(24, 28)">
+              <rect width="32" height="32" rx="8" fill="#F6F8FA" stroke="#D0D7DE"/>
+              <path transform="translate(6,5)" d="M10 0C4.48 0 0 4.48 0 10c0 4.42 2.87 8.17 6.84 9.49.5.09.66-.22.66-.48v-1.7C4.58 17.91 4.02 16.14 4.02 16.14c-.46-1.15-1.11-1.46-1.11-1.46-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.56-1.11-4.56-4.95 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0110 5.8c.85.004 1.71.12 2.51.34 1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.85-2.34 4.7-4.57 4.95.36.31.68.92.68 1.85v2.74c0 .27.16.58.67.48A10.01 10.01 0 0020 10c0-5.52-4.48-10-10-10z" fill="#656D76"/>
+              <text x="42" y="16" fill="#1F2328" font-family="'SF Pro Display',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="15" font-weight="600" letter-spacing="-0.3">GitHub Stats</text>
+              <text x="42" y="30" fill="#656D76" font-family="'SF Pro Text',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="11" letter-spacing="0.2">Contribution Overview</text>
             </g>
-            <g transform="translate(20, 78)">
-              <text fill="#656D76" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12">Commits</text>
-              <text x="110" fill="#0969DA" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="18" font-weight="700">COMMITS_PLACEHOLDER</text>
+            <line x1="24" y1="72" x2="496" y2="72" stroke="#D8DEE4" stroke-opacity="0.5"/>
+            <g transform="translate(24, 92)">
+              <circle cx="8" cy="14" r="8" fill="#DDF4FF"/>
+              <text x="24" y="12" fill="#656D76" font-family="'SF Pro Text',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="11" letter-spacing="0.3">STARS</text>
+              <text x="24" y="32" fill="#1F2328" font-family="'SF Pro Display',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="22" font-weight="700" letter-spacing="-0.5">STARS_PLACEHOLDER</text>
             </g>
-            <g transform="translate(20, 114)">
-              <text fill="#656D76" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12">Pull Requests</text>
-              <text x="110" fill="#8250DF" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="18" font-weight="700">PRS_PLACEHOLDER</text>
+            <g transform="translate(24, 142)">
+              <circle cx="8" cy="14" r="8" fill="#DAFBE1"/>
+              <text x="24" y="12" fill="#656D76" font-family="'SF Pro Text',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="11" letter-spacing="0.3">COMMITS</text>
+              <text x="24" y="32" fill="#1F2328" font-family="'SF Pro Display',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="22" font-weight="700" letter-spacing="-0.5">COMMITS_PLACEHOLDER</text>
             </g>
-            <g transform="translate(20, 150)">
-              <text fill="#656D76" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12">Issues</text>
-              <text x="110" fill="#BF8700" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="18" font-weight="700">ISSUES_PLACEHOLDER</text>
+            <g transform="translate(24, 192)">
+              <circle cx="8" cy="14" r="8" fill="#FBEFFF"/>
+              <text x="24" y="12" fill="#656D76" font-family="'SF Pro Text',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="11" letter-spacing="0.3">PULL REQUESTS</text>
+              <text x="24" y="32" fill="#1F2328" font-family="'SF Pro Display',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="22" font-weight="700" letter-spacing="-0.5">PRS_PLACEHOLDER</text>
             </g>
-            <g transform="translate(280, 42)">
-              <text fill="#656D76" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12">Repositories</text>
-              <text x="110" fill="#1F2328" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="18" font-weight="700">REPOS_PLACEHOLDER</text>
+            <g transform="translate(280, 92)">
+              <circle cx="8" cy="14" r="8" fill="#FFF8C5"/>
+              <text x="24" y="12" fill="#656D76" font-family="'SF Pro Text',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="11" letter-spacing="0.3">ISSUES</text>
+              <text x="24" y="32" fill="#1F2328" font-family="'SF Pro Display',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="22" font-weight="700" letter-spacing="-0.5">ISSUES_PLACEHOLDER</text>
             </g>
-            <line x1="20" y1="185" x2="500" y2="185" stroke="#D8DEE4" stroke-width="1"/>
-            <text x="260" y="197" text-anchor="middle" fill="#8B949E" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="10">Updated daily via GitHub Actions</text>
+            <g transform="translate(280, 142)">
+              <circle cx="8" cy="14" r="8" fill="#F6F8FA"/>
+              <text x="24" y="12" fill="#656D76" font-family="'SF Pro Text',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="11" letter-spacing="0.3">REPOSITORIES</text>
+              <text x="24" y="32" fill="#1F2328" font-family="'SF Pro Display',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="22" font-weight="700" letter-spacing="-0.5">REPOS_PLACEHOLDER</text>
+            </g>
+            <g transform="translate(280, 192)">
+              <circle cx="8" cy="14" r="8" fill="#FFF1E5"/>
+              <text x="24" y="12" fill="#656D76" font-family="'SF Pro Text',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="11" letter-spacing="0.3">PROFILE VIEWS</text>
+              <text x="24" y="32" fill="#1F2328" font-family="'SF Pro Display',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="22" font-weight="700" letter-spacing="-0.5">VIEWS_PLACEHOLDER</text>
+            </g>
+            <line x1="24" y1="252" x2="496" y2="252" stroke="#D8DEE4" stroke-opacity="0.5"/>
+            <g transform="translate(260, 268)">
+              <circle cx="-52" cy="-3" r="3" fill="#2DA44E"/>
+              <text x="-44" y="0" fill="#8B949E" font-family="'SF Pro Text',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="10" letter-spacing="0.2">Updated daily via GitHub Actions</text>
+            </g>
           </svg>
           SVGEOF
 
@@ -95,6 +135,7 @@ jobs:
           sed -i "s/PRS_PLACEHOLDER/$TOTAL_PRS/g" assets/stats.svg
           sed -i "s/ISSUES_PLACEHOLDER/$TOTAL_ISSUES/g" assets/stats.svg
           sed -i "s/REPOS_PLACEHOLDER/$TOTAL_REPOS/g" assets/stats.svg
+          sed -i "s/VIEWS_PLACEHOLDER/$TOTAL_VIEWS/g" assets/stats.svg
 
       - name: Commit and push
         run: |

@@ -33,3 +33,7 @@
     <img src="./assets/stats.svg" alt="GitHub 数据面板" />
   </a>
 </p>
+
+<p align="center">
+  <img src="https://komarev.com/ghpvc/?username=jieefeng&color=blue&style=flat-square&label=Profile+Views" alt="Profile Views" />
+</p>
