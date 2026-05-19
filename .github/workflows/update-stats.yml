@@ -33,45 +33,46 @@ jobs:
 
           # Generate views card SVG with actual count
           cat > assets/views-card.svg << 'SVGEOF'
-          <svg xmlns="http://www.w3.org/2000/svg" width="360" height="100" viewBox="0 0 360 100">
+          <svg xmlns="http://www.w3.org/2000/svg" width="320" height="90" viewBox="0 0 320 90">
             <defs>
-              <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#1E1E2E"/>
-                <stop offset="100%" stop-color="#2D2D3F"/>
+              <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#0F0F1A"/>
+                <stop offset="100%" stop-color="#1A1A2E"/>
               </linearGradient>
-              <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+              <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="0%">
                 <stop offset="0%" stop-color="#7C3AED"/>
+                <stop offset="50%" stop-color="#A855F7"/>
                 <stop offset="100%" stop-color="#EC4899"/>
               </linearGradient>
-              <linearGradient id="countGrad" x1="0" y1="0" x2="1" y2="1">
+              <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
                 <stop offset="0%" stop-color="#F472B6"/>
-                <stop offset="100%" stop-color="#EC4899"/>
+                <stop offset="100%" stop-color="#C084FC"/>
               </linearGradient>
-              <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
-                <feGaussianBlur stdDeviation="4" result="blur"/>
+              <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
                 <feMerge>
-                  <feMergeNode in="blur"/>
+                  <feMergeNode in="coloredBlur"/>
                   <feMergeNode in="SourceGraphic"/>
                 </feMerge>
               </filter>
-              <filter id="shadow" x="-5%" y="-10%" width="110%" height="130%">
-                <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#00000040"/>
+              <filter id="shadow">
+                <feDropShadow dx="0" dy="2" stdDeviation="8" flood-color="#7C3AED" flood-opacity="0.3"/>
               </filter>
             </defs>
-            <rect width="360" height="100" rx="16" fill="url(#bg)" filter="url(#shadow)"/>
-            <rect width="360" height="4" rx="2" fill="url(#accent)"/>
-            <g transform="translate(32, 50)">
-              <circle cx="20" cy="0" r="24" fill="#FCE7F3" opacity="0.15"/>
-              <circle cx="20" cy="0" r="18" fill="none" stroke="#EC4899" stroke-width="2" opacity="0.4"/>
-              <ellipse cx="20" cy="0" rx="12" ry="8" fill="none" stroke="#EC4899" stroke-width="2.5"/>
-              <circle cx="20" cy="0" r="4" fill="#EC4899"/>
-              <circle cx="20" cy="0" r="4" fill="#EC4899" filter="url(#glow)"/>
+            <rect x="2" y="2" width="316" height="86" rx="14" fill="url(#bg)" filter="url(#shadow)"/>
+            <rect x="2" y="2" width="316" height="86" rx="14" fill="none" stroke="url(#borderGrad)" stroke-width="2"/>
+            <rect x="2" y="22" width="4" height="46" rx="2" fill="url(#borderGrad)"/>
+            <g transform="translate(24, 45)">
+              <circle cx="0" cy="0" r="14" fill="#1E1E2E" stroke="#7C3AED" stroke-width="1.5"/>
+              <ellipse cx="0" cy="0" rx="9" ry="5" fill="none" stroke="#C084FC" stroke-width="1.5"/>
+              <circle cx="0" cy="0" r="2.5" fill="#F472B6"/>
             </g>
-            <text x="95" y="38" fill="#9CA3AF" font-family="'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="14" font-weight="500" letter-spacing="1">PROFILE VIEWS</text>
-            <text x="95" y="70" fill="url(#countGrad)" font-family="'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="42" font-weight="700" letter-spacing="-2" filter="url(#glow)">VIEWS_PLACEHOLDER</text>
-            <circle cx="340" cy="20" r="3" fill="#7C3AED" opacity="0.6"/>
-            <circle cx="350" cy="30" r="2" fill="#EC4899" opacity="0.4"/>
-            <circle cx="335" cy="35" r="1.5" fill="#F472B6" opacity="0.5"/>
+            <text x="52" y="38" fill="#6B7280" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif" font-size="11" font-weight="500" letter-spacing="2">VISITORS</text>
+            <text x="52" y="66" fill="url(#textGrad)" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif" font-size="36" font-weight="700" letter-spacing="-1" filter="url(#glow)">VIEWS_PLACEHOLDER</text>
+            <circle cx="290" cy="20" r="2" fill="#7C3AED" opacity="0.6"/>
+            <circle cx="298" cy="28" r="1.5" fill="#A855F7" opacity="0.5"/>
+            <circle cx="284" cy="30" r="1" fill="#EC4899" opacity="0.4"/>
+            <circle cx="300" cy="18" r="1" fill="#C084FC" opacity="0.3"/>
           </svg>
           SVGEOF
 
@@ -79,7 +80,6 @@ jobs:
           sed -i "s/VIEWS_PLACEHOLDER/$VIEWS/g" assets/views-card.svg
 
           echo "=== Views card generated successfully ==="
-          cat assets/views-card.svg
 
       - name: Commit and push
         run: |
