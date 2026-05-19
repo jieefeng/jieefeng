@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://github.com/jieefeng.png" width="120" style="border-radius:50%; border: 3px solid #30363D;" />
+<img src="https://github.com/jieefeng.png" width="120" style="border-radius:50%; border: 3px solid #D0D7DE;" />
 
 # 你好，我是 jieefeng
 
