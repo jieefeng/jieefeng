@@ -15,6 +15,26 @@
   </defs>
   <rect x="1" y="1" width="493" height="193" rx="12" fill="url(#bg)" filter="url(#shadow)"/>
   <rect x="1" y="1" width="493" height="193" rx="12" fill="none" stroke="url(#borderGrad)" stroke-width="1.5"/>
+  <!-- Title -->
   <text x="248" y="36" text-anchor="middle" fill="#A855F7" font-family="'Segoe UI', -apple-system, sans-serif" font-size="16" font-weight="600">GitHub Stats</text>
-  <text x="248" y="110" text-anchor="middle" fill="#6B7280" font-family="'Segoe UI', sans-serif" font-size="13">Loading...</text>
+  <!-- Stats grid: 2 rows x 3 cols -->
+  <!-- Row 1 -->
+  <text x="83" y="80" text-anchor="middle" fill="#C084FC" font-family="'Segoe UI', sans-serif" font-size="28" font-weight="700">4</text>
+  <text x="83" y="100" text-anchor="middle" fill="#8B949E" font-family="'Segoe UI', sans-serif" font-size="11">Repos</text>
+  <text x="248" y="80" text-anchor="middle" fill="#C084FC" font-family="'Segoe UI', sans-serif" font-size="28" font-weight="700">34</text>
+  <text x="248" y="100" text-anchor="middle" fill="#8B949E" font-family="'Segoe UI', sans-serif" font-size="11">Stars</text>
+  <text x="413" y="80" text-anchor="middle" fill="#C084FC" font-family="'Segoe UI', sans-serif" font-size="28" font-weight="700">0</text>
+  <text x="413" y="100" text-anchor="middle" fill="#8B949E" font-family="'Segoe UI', sans-serif" font-size="11">Followers</text>
+  <!-- Row 2 -->
+  <text x="83" y="145" text-anchor="middle" fill="#F472B6" font-family="'Segoe UI', sans-serif" font-size="28" font-weight="700">153</text>
+  <text x="83" y="165" text-anchor="middle" fill="#8B949E" font-family="'Segoe UI', sans-serif" font-size="11">Commits</text>
+  <text x="248" y="145" text-anchor="middle" fill="#F472B6" font-family="'Segoe UI', sans-serif" font-size="28" font-weight="700">0</text>
+  <text x="248" y="165" text-anchor="middle" fill="#8B949E" font-family="'Segoe UI', sans-serif" font-size="11">PRs</text>
+  <text x="413" y="145" text-anchor="middle" fill="#F472B6" font-family="'Segoe UI', sans-serif" font-size="28" font-weight="700">0</text>
+  <text x="413" y="165" text-anchor="middle" fill="#8B949E" font-family="'Segoe UI', sans-serif" font-size="11">Issues</text>
+  <!-- Streak info -->
+  <text x="470" y="36" text-anchor="end" fill="#6B7280" font-family="'Segoe UI', sans-serif" font-size="10">🔥 9 day streak</text>
+  <!-- Decorative dots -->
+  <circle cx="470" cy="180" r="1.5" fill="#7C3AED" opacity="0.4"/>
+  <circle cx="478" cy="174" r="1" fill="#EC4899" opacity="0.3"/>
 </svg>
