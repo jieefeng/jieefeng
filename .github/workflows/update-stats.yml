@@ -17,24 +17,219 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Fetch view count and generate SVG
+      - name: Generate all stats SVGs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set +e
+          mkdir -p assets
+          USER="jieefeng"
+
+          echo "=== Fetching user data ==="
+
+          # REST API: user profile
+          USER_JSON=$(gh api users/$USER 2>/dev/null)
+          REPOS=$(echo "$USER_JSON" | jq -r '.public_repos // 0')
+          FOLLOWERS=$(echo "$USER_JSON" | jq -r '.followers // 0')
+          STARS=$(gh api "users/$USER/starred?per_page=100" 2>/dev/null | jq -r 'if type == "array" then length else 0 end')
+          echo "Repos: $REPOS, Followers: $FOLLOWERS, Stars: $STARS"
+
+          # GraphQL: contributions + PRs + issues + commits
+          GRAPHQL=$(gh api graphql -f query='{
+            user(login: "'$USER'") {
+              contributionsCollection {
+                totalCommitContributions
+                totalPullRequestContributions
+                totalIssueContributions
+                contributionCalendar {
+                  totalContributions
+                  weeks {
+                    contributionDays {
+                      contributionCount
+                      date
+                    }
+                  }
+                }
+              }
+            }
+          }' 2>/dev/null)
+
+          COMMITS=$(echo "$GRAPHQL" | jq -r '.data.user.contributionsCollection.totalCommitContributions // 0')
+          PRS=$(echo "$GRAPHQL" | jq -r '.data.user.contributionsCollection.totalPullRequestContributions // 0')
+          ISSUES=$(echo "$GRAPHQL" | jq -r '.data.user.contributionsCollection.totalIssueContributions // 0')
+          TOTAL_CONTRIBS=$(echo "$GRAPHQL" | jq -r '.data.user.contributionsCollection.contributionCalendar.totalContributions // 0')
+          echo "Commits: $COMMITS, PRs: $PRS, Issues: $ISSUES, Total: $TOTAL_CONTRIBS"
+
+          # Calculate streak from contribution calendar
+          STREAK=0
+          MAX_STREAK=0
+          CURRENT_STREAK=0
+          if [ "$GRAPHQL" != "" ]; then
+            # Get all days sorted by date descending
+            DAYS=$(echo "$GRAPHQL" | jq -r '[.data.user.contributionsCollection.contributionCalendar.weeks[].contributionDays[]] | sort_by(.date) | reverse | .[].contributionCount')
+            for count in $DAYS; do
+              if [ "$count" -gt 0 ] 2>/dev/null; then
+                CURRENT_STREAK=$((CURRENT_STREAK + 1))
+                if [ $CURRENT_STREAK -gt $MAX_STREAK ]; then
+                  MAX_STREAK=$CURRENT_STREAK
+                fi
+              else
+                if [ $STREAK -eq 0 ]; then
+                  STREAK=$CURRENT_STREAK
+                fi
+                CURRENT_STREAK=0
+              fi
+            done
+            if [ $STREAK -eq 0 ]; then
+              STREAK=$CURRENT_STREAK
+            fi
+          fi
+          echo "Current streak: $STREAK, Max streak: $MAX_STREAK"
+
+          # Fetch top languages
+          echo "=== Fetching languages ==="
+          LANGS_JSON=$(gh api "users/$USER/repos?per_page=100&sort=updated" 2>/dev/null)
+          # Aggregate language bytes
+          LANG_DATA=""
+          for repo in $(echo "$LANGS_JSON" | jq -r '.[].full_name'); do
+            REPO_LANGS=$(gh api "repos/$repo/languages" 2>/dev/null)
+            if [ "$REPO_LANGS" != "" ] && [ "$REPO_LANGS" != "null" ]; then
+              LANG_DATA=$(echo -e "$LANG_DATA\n$REPO_LANGS")
+            fi
+          done
+          # Sum languages using jq
+          TOP_LANGS=$(echo "$LANG_DATA" | jq -s 'add | to_entries | sort_by(.value) | reverse | .[0:6]' 2>/dev/null)
+          echo "Top languages: $(echo $TOP_LANGS | jq -r '.[].key' | tr '\n' ', ')"
+
+          # Calculate total bytes for percentage
+          TOTAL_BYTES=$(echo "$TOP_LANGS" | jq -r 'map(.value) | add // 1')
+
+          # Language colors
+          declare -A LANG_COLORS=(
+            ["Python"]="#3572A5" ["Java"]="#B07219" ["JavaScript"]="#F1E05A"
+            ["TypeScript"]="#3178C6" ["Vue"]="#41B883" ["HTML"]="#E34C26"
+            ["CSS"]="#563D7C" ["Shell"]="#89E051" ["Go"]="#00ADD8"
+            ["C"]="#555555" ["C++"]="#F34B7D" ["Rust"]="#DEA584"
+            ["Kotlin"]="#A97BFF" ["Swift"]="#F05138" ["Dart"]="#00B4AB"
+            ["Ruby"]="#701516" ["PHP"]="#4F5D95" ["Lua"]="#000080"
+            ["Jupyter Notebook"]="#DA5B0B" ["Makefile"]="#427819"
+          )
+
+          echo "=== Generating SVGs ==="
+
+          # ---- Stats Card SVG ----
+          cat > assets/stats-card.svg << STATS_EOF
+          <svg xmlns="http://www.w3.org/2000/svg" width="495" height="195" viewBox="0 0 495 195">
+            <defs>
+              <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#0D1117"/>
+                <stop offset="100%" stop-color="#161B22"/>
+              </linearGradient>
+              <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#7C3AED"/>
+                <stop offset="50%" stop-color="#A855F7"/>
+                <stop offset="100%" stop-color="#EC4899"/>
+              </linearGradient>
+              <filter id="shadow">
+                <feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="#7C3AED" flood-opacity="0.2"/>
+              </filter>
+            </defs>
+            <rect x="1" y="1" width="493" height="193" rx="12" fill="url(#bg)" filter="url(#shadow)"/>
+            <rect x="1" y="1" width="493" height="193" rx="12" fill="none" stroke="url(#borderGrad)" stroke-width="1.5"/>
+            <!-- Title -->
+            <text x="248" y="36" text-anchor="middle" fill="#A855F7" font-family="'Segoe UI', -apple-system, sans-serif" font-size="16" font-weight="600">GitHub Stats</text>
+            <!-- Stats grid: 2 rows x 3 cols -->
+            <!-- Row 1 -->
+            <text x="83" y="80" text-anchor="middle" fill="#C084FC" font-family="'Segoe UI', sans-serif" font-size="28" font-weight="700">$REPOS</text>
+            <text x="83" y="100" text-anchor="middle" fill="#8B949E" font-family="'Segoe UI', sans-serif" font-size="11">Repos</text>
+            <text x="248" y="80" text-anchor="middle" fill="#C084FC" font-family="'Segoe UI', sans-serif" font-size="28" font-weight="700">$STARS</text>
+            <text x="248" y="100" text-anchor="middle" fill="#8B949E" font-family="'Segoe UI', sans-serif" font-size="11">Stars</text>
+            <text x="413" y="80" text-anchor="middle" fill="#C084FC" font-family="'Segoe UI', sans-serif" font-size="28" font-weight="700">$FOLLOWERS</text>
+            <text x="413" y="100" text-anchor="middle" fill="#8B949E" font-family="'Segoe UI', sans-serif" font-size="11">Followers</text>
+            <!-- Row 2 -->
+            <text x="83" y="145" text-anchor="middle" fill="#F472B6" font-family="'Segoe UI', sans-serif" font-size="28" font-weight="700">$COMMITS</text>
+            <text x="83" y="165" text-anchor="middle" fill="#8B949E" font-family="'Segoe UI', sans-serif" font-size="11">Commits</text>
+            <text x="248" y="145" text-anchor="middle" fill="#F472B6" font-family="'Segoe UI', sans-serif" font-size="28" font-weight="700">$PRS</text>
+            <text x="248" y="165" text-anchor="middle" fill="#8B949E" font-family="'Segoe UI', sans-serif" font-size="11">PRs</text>
+            <text x="413" y="145" text-anchor="middle" fill="#F472B6" font-family="'Segoe UI', sans-serif" font-size="28" font-weight="700">$ISSUES</text>
+            <text x="413" y="165" text-anchor="middle" fill="#8B949E" font-family="'Segoe UI', sans-serif" font-size="11">Issues</text>
+            <!-- Streak info -->
+            <text x="470" y="36" text-anchor="end" fill="#6B7280" font-family="'Segoe UI', sans-serif" font-size="10">🔥 $STREAK day streak</text>
+            <!-- Decorative dots -->
+            <circle cx="470" cy="180" r="1.5" fill="#7C3AED" opacity="0.4"/>
+            <circle cx="478" cy="174" r="1" fill="#EC4899" opacity="0.3"/>
+          </svg>
+          STATS_EOF
+
+          # ---- Languages Card SVG ----
+          # Calculate bar widths (max bar width = 340px)
+          MAX_BAR=340
+          LANG_SVG=""
+          Y_OFFSET=50
+          if [ "$TOP_LANGS" != "" ] && [ "$TOP_LANGS" != "null" ]; then
+            INDEX=0
+            while IFS= read -r line; do
+              LANG_NAME=$(echo "$line" | jq -r '.key')
+              LANG_BYTES=$(echo "$line" | jq -r '.value')
+              PERCENT=$((LANG_BYTES * 100 / TOTAL_BYTES))
+              BAR_WIDTH=$((LANG_BYTES * MAX_BAR / TOTAL_BYTES))
+              if [ $BAR_WIDTH -lt 2 ]; then BAR_WIDTH=2; fi
+              COLOR="${LANG_COLORS[$LANG_NAME]:-#8B949E}"
+              Y_POS=$((Y_OFFSET + INDEX * 32))
+              Y_TEXT=$((Y_POS + 14))
+              Y_BAR=$((Y_POS + 20))
+              LANG_SVG="$LANG_SVG
+            <text x=\"20\" y=\"$Y_TEXT\" fill=\"#C9D1D9\" font-family=\"'Segoe UI', sans-serif\" font-size=\"13\">$LANG_NAME</text>
+            <text x=\"470\" y=\"$Y_TEXT\" text-anchor=\"end\" fill=\"#8B949E\" font-family=\"'Segoe UI', sans-serif\" font-size=\"12\">$PERCENT%</text>
+            <rect x=\"120\" y=\"$Y_BAR\" width=\"$MAX_BAR\" height=\"8\" rx=\"4\" fill=\"#21262D\"/>
+            <rect x=\"120\" y=\"$Y_BAR\" width=\"$BAR_WIDTH\" height=\"8\" rx=\"4\" fill=\"$COLOR\"/>"
+              INDEX=$((INDEX + 1))
+              if [ $INDEX -ge 6 ]; then break; fi
+            done <<< "$(echo "$TOP_LANGS" | jq -c '.[]')"
+          fi
+
+          LANGS_HEIGHT=$((50 + INDEX * 32 + 15))
+
+          cat > assets/langs-card.svg << LANGS_EOF
+          <svg xmlns="http://www.w3.org/2000/svg" width="495" height="$LANGS_HEIGHT" viewBox="0 0 495 $LANGS_HEIGHT">
+            <defs>
+              <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#0D1117"/>
+                <stop offset="100%" stop-color="#161B22"/>
+              </linearGradient>
+              <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#EC4899"/>
+                <stop offset="50%" stop-color="#A855F7"/>
+                <stop offset="100%" stop-color="#7C3AED"/>
+              </linearGradient>
+              <filter id="shadow">
+                <feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="#EC4899" flood-opacity="0.2"/>
+              </filter>
+            </defs>
+            <rect x="1" y="1" width="493" height="$(($LANGS_HEIGHT - 2))" rx="12" fill="url(#bg)" filter="url(#shadow)"/>
+            <rect x="1" y="1" width="493" height="$(($LANGS_HEIGHT - 2))" rx="12" fill="none" stroke="url(#borderGrad)" stroke-width="1.5"/>
+            <text x="248" y="36" text-anchor="middle" fill="#EC4899" font-family="'Segoe UI', -apple-system, sans-serif" font-size="16" font-weight="600">Top Languages</text>
+            $LANG_SVG
+          </svg>
+          LANGS_EOF
+
+          echo "=== All SVGs generated ==="
+
+      - name: Fetch view count and update views SVG
         run: |
           set +e
           mkdir -p assets
 
           # Fetch profile views with timeout and retries
-          echo "=== Fetching profile views ==="
           RESPONSE=$(curl -sf --max-time 15 --retry 3 --retry-delay 5 \
             "https://komarev.com/ghpvc/?username=jieefeng&color=blue&style=flat" 2>&1)
           CURL_EXIT=$?
 
           if [ $CURL_EXIT -ne 0 ] || [ -z "$RESPONSE" ]; then
-            echo "WARNING: API request failed (exit=$CURL_EXIT). Keeping existing SVG."
+            echo "WARNING: API request failed. Keeping existing SVG."
             exit 0
           fi
 
-          # Extract number from SVG - last text element contains the count
-          # Use grep -oE (ERE) instead of grep -oP (PCRE) for portability
           VIEWS=$(echo "$RESPONSE" | grep -oE '[0-9]+</text>' | tail -1 | sed 's/<\/text>//')
 
           if [ -z "$VIEWS" ] || [ "$VIEWS" = "0" ]; then
@@ -44,7 +239,6 @@ jobs:
 
           echo "Views count: $VIEWS"
 
-          # Generate views card SVG
           cat > assets/views-card.svg << 'SVGEOF'
           <svg xmlns="http://www.w3.org/2000/svg" width="340" height="90" viewBox="0 0 340 90">
             <defs>
@@ -92,13 +286,12 @@ jobs:
           </svg>
           SVGEOF
 
-          # Replace placeholder with actual count
           sed -i "s/VIEWS_PLACEHOLDER/$VIEWS/g" assets/views-card.svg
 
-          echo "=== Views card generated successfully ==="
+          echo "=== Views card updated ==="
 
       - name: Commit and push
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git diff --quiet || (git add assets/ && git commit -m "chore: update views card [skip ci]" && git push)
+          git diff --quiet || (git add assets/ && git commit -m "chore: update stats cards [skip ci]" && git push)

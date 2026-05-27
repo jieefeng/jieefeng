@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="495" height="195" viewBox="0 0 495 195">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0D1117"/>
+      <stop offset="100%" stop-color="#161B22"/>
+    </linearGradient>
+    <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#7C3AED"/>
+      <stop offset="50%" stop-color="#A855F7"/>
+      <stop offset="100%" stop-color="#EC4899"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="#7C3AED" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  <rect x="1" y="1" width="493" height="193" rx="12" fill="url(#bg)" filter="url(#shadow)"/>
+  <rect x="1" y="1" width="493" height="193" rx="12" fill="none" stroke="url(#borderGrad)" stroke-width="1.5"/>
+  <text x="248" y="36" text-anchor="middle" fill="#A855F7" font-family="'Segoe UI', -apple-system, sans-serif" font-size="16" font-weight="600">GitHub Stats</text>
+  <text x="248" y="110" text-anchor="middle" fill="#6B7280" font-family="'Segoe UI', sans-serif" font-size="13">Loading...</text>
+</svg>
