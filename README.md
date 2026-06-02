@@ -62,9 +62,9 @@
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://skillicons.dev/icons?i=python,java,vuejs,spring,mysql,redis,docker,linux,git,langchain&theme=onDark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://skillicons.dev/icons?i=python,java,vuejs,spring,mysql,redis,docker,linux,git,langchain&theme=onLight" />
-    <img src="https://skillicons.dev/icons?i=python,java,vuejs,spring,mysql,redis,docker,linux,git,langchain&theme=onDark" alt="Skills" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://skillicons.dev/icons?i=python,java,typescript,vuejs,spring,mysql,redis,minio,rabbitmq,kafka,docker,linux,git,langchain&theme=onDark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://skillicons.dev/icons?i=python,java,typescript,vuejs,spring,mysql,redis,minio,rabbitmq,kafka,docker,linux,git,langchain&theme=onLight" />
+    <img src="https://skillicons.dev/icons?i=python,java,typescript,vuejs,spring,mysql,redis,minio,rabbitmq,kafka,docker,linux,git,langchain&theme=onDark" alt="Skills" />
   </picture>
 </p>
 
