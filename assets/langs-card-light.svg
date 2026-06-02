@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="495" height="257" viewBox="0 0 495 257">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFBEB"/>
+      <stop offset="100%" stop-color="#FEF3C7"/>
+    </linearGradient>
+    <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#F59E0B"/>
+      <stop offset="50%" stop-color="#D97706"/>
+      <stop offset="100%" stop-color="#92400E"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="#D97706" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+  <rect x="1" y="1" width="493" height="255" rx="12" fill="url(#bg)" filter="url(#shadow)"/>
+  <rect x="1" y="1" width="493" height="255" rx="12" fill="none" stroke="url(#borderGrad)" stroke-width="1.5"/>
+  <text x="248" y="36" text-anchor="middle" fill="#92400E" font-family="'Segoe UI', -apple-system, sans-serif" font-size="16" font-weight="600">Top Languages</text>
+  <text x="20" y="64" fill="#1F2937" font-family="'Segoe UI', sans-serif" font-size="13">Java</text>
+  <text x="470" y="64" text-anchor="end" fill="#6B7280" font-family="'Segoe UI', sans-serif" font-size="12">42%</text>
+  <rect x="120" y="70" width="340" height="8" rx="4" fill="#E5E7EB"/>
+  <rect x="120" y="70" width="145" height="8" rx="4" fill="#B07219"/>
+  <text x="20" y="96" fill="#1F2937" font-family="'Segoe UI', sans-serif" font-size="13">TypeScript</text>
+  <text x="470" y="96" text-anchor="end" fill="#6B7280" font-family="'Segoe UI', sans-serif" font-size="12">28%</text>
+  <rect x="120" y="102" width="340" height="8" rx="4" fill="#E5E7EB"/>
+  <rect x="120" y="102" width="97" height="8" rx="4" fill="#3178C6"/>
+  <text x="20" y="128" fill="#1F2937" font-family="'Segoe UI', sans-serif" font-size="13">Python</text>
+  <text x="470" y="128" text-anchor="end" fill="#6B7280" font-family="'Segoe UI', sans-serif" font-size="12">24%</text>
+  <rect x="120" y="134" width="340" height="8" rx="4" fill="#E5E7EB"/>
+  <rect x="120" y="134" width="84" height="8" rx="4" fill="#3572A5"/>
+  <text x="20" y="160" fill="#1F2937" font-family="'Segoe UI', sans-serif" font-size="13">SCSS</text>
+  <text x="470" y="160" text-anchor="end" fill="#6B7280" font-family="'Segoe UI', sans-serif" font-size="12">2%</text>
+  <rect x="120" y="166" width="340" height="8" rx="4" fill="#E5E7EB"/>
+  <rect x="120" y="166" width="7" height="8" rx="4" fill="#9CA3AF"/>
+  <text x="20" y="192" fill="#1F2937" font-family="'Segoe UI', sans-serif" font-size="13">JavaScript</text>
+  <text x="470" y="192" text-anchor="end" fill="#6B7280" font-family="'Segoe UI', sans-serif" font-size="12">1%</text>
+  <rect x="120" y="198" width="340" height="8" rx="4" fill="#E5E7EB"/>
+  <rect x="120" y="198" width="3" height="8" rx="4" fill="#F1E05A"/>
+  <text x="20" y="224" fill="#1F2937" font-family="'Segoe UI', sans-serif" font-size="13">Shell</text>
+  <text x="470" y="224" text-anchor="end" fill="#6B7280" font-family="'Segoe UI', sans-serif" font-size="12">0%</text>
+  <rect x="120" y="230" width="340" height="8" rx="4" fill="#E5E7EB"/>
+  <rect x="120" y="230" width="2" height="8" rx="4" fill="#89E051"/>
+</svg>
