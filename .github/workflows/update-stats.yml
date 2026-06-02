@@ -157,9 +157,9 @@ jobs:
 
           echo "=== Generating SVGs ==="
 
-          # ---- Achievements Card SVG ----
+          # ---- Achievements Card SVG (Dark) ----
           cat > assets/achievements-card.svg << ACHIEVEMENTS_EOF
-          <svg xmlns="http://www.w3.org/2000/svg" width="495" height="195" viewBox="0 0 495 195">
+          <svg xmlns="http://www.w3.org/2000/svg" width="495" height="280" viewBox="0 0 495 280">
             <defs>
               <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stop-color="#0D1117"/>
@@ -170,30 +170,53 @@ jobs:
                 <stop offset="50%" stop-color="#D97706"/>
                 <stop offset="100%" stop-color="#F59E0B"/>
               </linearGradient>
+              <linearGradient id="cardBg" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#1C2128"/>
+                <stop offset="100%" stop-color="#161B22"/>
+              </linearGradient>
               <filter id="shadow">
                 <feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="#D97706" flood-opacity="0.2"/>
               </filter>
             </defs>
-            <rect x="1" y="1" width="493" height="193" rx="12" fill="url(#bg)" filter="url(#shadow)"/>
-            <rect x="1" y="1" width="493" height="193" rx="12" fill="none" stroke="url(#borderGrad)" stroke-width="1.5"/>
+            <rect x="1" y="1" width="493" height="278" rx="12" fill="url(#bg)" filter="url(#shadow)"/>
+            <rect x="1" y="1" width="493" height="278" rx="12" fill="none" stroke="url(#borderGrad)" stroke-width="1.5"/>
             <text x="248" y="36" text-anchor="middle" fill="#D97706" font-family="'Segoe UI', -apple-system, sans-serif" font-size="16" font-weight="600">GitHub Achievements</text>
-            <!-- Achievement items -->
-            <text x="30" y="75" fill="#FDE68A" font-family="'Segoe UI', sans-serif" font-size="24">$STARSTRUCK_TIER</text>
-            <text x="30" y="95" fill="#8B949E" font-family="'Segoe UI', sans-serif" font-size="11">$STARS stars earned</text>
-            <text x="30" y="125" fill="#FDE68A" font-family="'Segoe UI', sans-serif" font-size="24">$PULL_SHARK_TIER</text>
-            <text x="30" y="145" fill="#8B949E" font-family="'Segoe UI', sans-serif" font-size="11">$TOTAL_PRS pull requests</text>
-            <text x="280" y="75" fill="#FDE68A" font-family="'Segoe UI', sans-serif" font-size="24">$ARCTIC_TIER</text>
-            <text x="280" y="95" fill="#8B949E" font-family="'Segoe UI', sans-serif" font-size="11">$TOTAL_CONTRIBS contributions</text>
-            <text x="280" y="125" fill="#FDE68A" font-family="'Segoe UI', sans-serif" font-size="24">$YOLO_TIER</text>
-            <text x="280" y="145" fill="#8B949E" font-family="'Segoe UI', sans-serif" font-size="11">$TOTAL_PRS PRs merged</text>
-            <!-- Stats footer -->
-            <text x="248" y="180" text-anchor="middle" fill="#6B7280" font-family="'Segoe UI', sans-serif" font-size="10">Total: $TOTAL_CONTRIBS contributions | $STARS stars | $TOTAL_PRS PRs</text>
+
+            <!-- Card 1: Starstruck -->
+            <rect x="20" y="55" width="140" height="95" rx="10" fill="url(#cardBg)" stroke="#30363d" stroke-width="1"/>
+            <text x="90" y="85" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="28">⭐</text>
+            <text x="90" y="115" text-anchor="middle" fill="#FDE68A" font-family="'Segoe UI', sans-serif" font-size="14" font-weight="600">$STARSTRUCK_TIER</text>
+            <text x="90" y="135" text-anchor="middle" fill="#8B949E" font-family="'Segoe UI', sans-serif" font-size="11">$STARS stars</text>
+
+            <!-- Card 2: Pull Shark -->
+            <rect x="178" y="55" width="140" height="95" rx="10" fill="url(#cardBg)" stroke="#30363d" stroke-width="1"/>
+            <text x="248" y="85" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="28">🦈</text>
+            <text x="248" y="115" text-anchor="middle" fill="#FDE68A" font-family="'Segoe UI', sans-serif" font-size="14" font-weight="600">$PULL_SHARK_TIER</text>
+            <text x="248" y="135" text-anchor="middle" fill="#8B949E" font-family="'Segoe UI', sans-serif" font-size="11">$TOTAL_PRS PRs</text>
+
+            <!-- Card 3: Arctic -->
+            <rect x="336" y="55" width="140" height="95" rx="10" fill="url(#cardBg)" stroke="#30363d" stroke-width="1"/>
+            <text x="406" y="85" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="28">🏔️</text>
+            <text x="406" y="115" text-anchor="middle" fill="#FDE68A" font-family="'Segoe UI', sans-serif" font-size="12" font-weight="600">Arctic Vault</text>
+            <text x="406" y="135" text-anchor="middle" fill="#8B949E" font-family="'Segoe UI', sans-serif" font-size="11">$TOTAL_CONTRIBS contribs</text>
+
+            <!-- Card 4: YOLO -->
+            <rect x="20" y="165" width="140" height="95" rx="10" fill="url(#cardBg)" stroke="#30363d" stroke-width="1"/>
+            <text x="90" y="195" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="28">🤠</text>
+            <text x="90" y="225" text-anchor="middle" fill="#FDE68A" font-family="'Segoe UI', sans-serif" font-size="14" font-weight="600">YOLO</text>
+            <text x="90" y="245" text-anchor="middle" fill="#8B949E" font-family="'Segoe UI', sans-serif" font-size="11">Direct merge</text>
+
+            <!-- Stats Summary -->
+            <rect x="178" y="165" width="298" height="95" rx="10" fill="url(#cardBg)" stroke="#30363d" stroke-width="1"/>
+            <text x="327" y="195" text-anchor="middle" fill="#D97706" font-family="'Segoe UI', sans-serif" font-size="13" font-weight="600">📊 Summary</text>
+            <text x="327" y="220" text-anchor="middle" fill="#C9D1D9" font-family="'Segoe UI', sans-serif" font-size="12">Contributions: $TOTAL_CONTRIBS</text>
+            <text x="327" y="240" text-anchor="middle" fill="#C9D1D9" font-family="'Segoe UI', sans-serif" font-size="12">Stars: $STARS | PRs: $TOTAL_PRS</text>
           </svg>
           ACHIEVEMENTS_EOF
 
           # ---- Achievements Card SVG (Light) ----
           cat > assets/achievements-card-light.svg << ACHIEVEMENTS_LIGHT_EOF
-          <svg xmlns="http://www.w3.org/2000/svg" width="495" height="195" viewBox="0 0 495 195">
+          <svg xmlns="http://www.w3.org/2000/svg" width="495" height="280" viewBox="0 0 495 280">
             <defs>
               <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stop-color="#FFFBEB"/>
@@ -204,22 +227,42 @@ jobs:
                 <stop offset="50%" stop-color="#D97706"/>
                 <stop offset="100%" stop-color="#F59E0B"/>
               </linearGradient>
+              <linearGradient id="cardBg" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#FFFFFF"/>
+                <stop offset="100%" stop-color="#F9FAFB"/>
+              </linearGradient>
               <filter id="shadow">
                 <feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="#D97706" flood-opacity="0.15"/>
               </filter>
             </defs>
-            <rect x="1" y="1" width="493" height="193" rx="12" fill="url(#bg)" filter="url(#shadow)"/>
-            <rect x="1" y="1" width="493" height="193" rx="12" fill="none" stroke="url(#borderGrad)" stroke-width="1.5"/>
+            <rect x="1" y="1" width="493" height="278" rx="12" fill="url(#bg)" filter="url(#shadow)"/>
+            <rect x="1" y="1" width="493" height="278" rx="12" fill="none" stroke="url(#borderGrad)" stroke-width="1.5"/>
             <text x="248" y="36" text-anchor="middle" fill="#92400E" font-family="'Segoe UI', -apple-system, sans-serif" font-size="16" font-weight="600">GitHub Achievements</text>
-            <text x="30" y="75" fill="#92400E" font-family="'Segoe UI', sans-serif" font-size="24">$STARSTRUCK_TIER</text>
-            <text x="30" y="95" fill="#6B7280" font-family="'Segoe UI', sans-serif" font-size="11">$STARS stars earned</text>
-            <text x="30" y="125" fill="#92400E" font-family="'Segoe UI', sans-serif" font-size="24">$PULL_SHARK_TIER</text>
-            <text x="30" y="145" fill="#6B7280" font-family="'Segoe UI', sans-serif" font-size="11">$TOTAL_PRS pull requests</text>
-            <text x="280" y="75" fill="#92400E" font-family="'Segoe UI', sans-serif" font-size="24">$ARCTIC_TIER</text>
-            <text x="280" y="95" fill="#6B7280" font-family="'Segoe UI', sans-serif" font-size="11">$TOTAL_CONTRIBS contributions</text>
-            <text x="280" y="125" fill="#92400E" font-family="'Segoe UI', sans-serif" font-size="24">$YOLO_TIER</text>
-            <text x="280" y="145" fill="#6B7280" font-family="'Segoe UI', sans-serif" font-size="11">$TOTAL_PRS PRs merged</text>
-            <text x="248" y="180" text-anchor="middle" fill="#9CA3AF" font-family="'Segoe UI', sans-serif" font-size="10">Total: $TOTAL_CONTRIBS contributions | $STARS stars | $TOTAL_PRS PRs</text>
+
+            <rect x="20" y="55" width="140" height="95" rx="10" fill="url(#cardBg)" stroke="#E5E7EB" stroke-width="1"/>
+            <text x="90" y="85" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="28">⭐</text>
+            <text x="90" y="115" text-anchor="middle" fill="#92400E" font-family="'Segoe UI', sans-serif" font-size="14" font-weight="600">$STARSTRUCK_TIER</text>
+            <text x="90" y="135" text-anchor="middle" fill="#6B7280" font-family="'Segoe UI', sans-serif" font-size="11">$STARS stars</text>
+
+            <rect x="178" y="55" width="140" height="95" rx="10" fill="url(#cardBg)" stroke="#E5E7EB" stroke-width="1"/>
+            <text x="248" y="85" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="28">🦈</text>
+            <text x="248" y="115" text-anchor="middle" fill="#92400E" font-family="'Segoe UI', sans-serif" font-size="14" font-weight="600">$PULL_SHARK_TIER</text>
+            <text x="248" y="135" text-anchor="middle" fill="#6B7280" font-family="'Segoe UI', sans-serif" font-size="11">$TOTAL_PRS PRs</text>
+
+            <rect x="336" y="55" width="140" height="95" rx="10" fill="url(#cardBg)" stroke="#E5E7EB" stroke-width="1"/>
+            <text x="406" y="85" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="28">🏔️</text>
+            <text x="406" y="115" text-anchor="middle" fill="#92400E" font-family="'Segoe UI', sans-serif" font-size="12" font-weight="600">Arctic Vault</text>
+            <text x="406" y="135" text-anchor="middle" fill="#6B7280" font-family="'Segoe UI', sans-serif" font-size="11">$TOTAL_CONTRIBS contribs</text>
+
+            <rect x="20" y="165" width="140" height="95" rx="10" fill="url(#cardBg)" stroke="#E5E7EB" stroke-width="1"/>
+            <text x="90" y="195" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="28">🤠</text>
+            <text x="90" y="225" text-anchor="middle" fill="#92400E" font-family="'Segoe UI', sans-serif" font-size="14" font-weight="600">YOLO</text>
+            <text x="90" y="245" text-anchor="middle" fill="#6B7280" font-family="'Segoe UI', sans-serif" font-size="11">Direct merge</text>
+
+            <rect x="178" y="165" width="298" height="95" rx="10" fill="url(#cardBg)" stroke="#E5E7EB" stroke-width="1"/>
+            <text x="327" y="195" text-anchor="middle" fill="#B45309" font-family="'Segoe UI', sans-serif" font-size="13" font-weight="600">📊 Summary</text>
+            <text x="327" y="220" text-anchor="middle" fill="#374151" font-family="'Segoe UI', sans-serif" font-size="12">Contributions: $TOTAL_CONTRIBS</text>
+            <text x="327" y="240" text-anchor="middle" fill="#374151" font-family="'Segoe UI', sans-serif" font-size="12">Stars: $STARS | PRs: $TOTAL_PRS</text>
           </svg>
           ACHIEVEMENTS_LIGHT_EOF
 
