@@ -62,10 +62,12 @@
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://skillicons.dev/icons?i=python,java,typescript,vuejs,spring,mysql,redis,minio,rabbitmq,kafka,docker,linux,git,langchain&theme=onDark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://skillicons.dev/icons?i=python,java,typescript,vuejs,spring,mysql,redis,minio,rabbitmq,kafka,docker,linux,git,langchain&theme=onLight" />
-    <img src="https://skillicons.dev/icons?i=python,java,typescript,vuejs,spring,mysql,redis,minio,rabbitmq,kafka,docker,linux,git,langchain&theme=onDark" alt="Skills" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://skillicons.dev/icons?i=python,java,typescript,vuejs,spring,mysql,redis,rabbitmq,kafka,docker,linux,git,langchain&theme=onDark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://skillicons.dev/icons?i=python,java,typescript,vuejs,spring,mysql,redis,rabbitmq,kafka,docker,linux,git,langchain&theme=onLight" />
+    <img src="https://skillicons.dev/icons?i=python,java,typescript,vuejs,spring,mysql,redis,rabbitmq,kafka,docker,linux,git,langchain&theme=onDark" alt="Skills" />
   </picture>
+  <br/>
+  <img src="https://img.shields.io/badge/MinIO-C72E49?style=for-the-badge&logo=minio&logoColor=white" alt="MinIO" />
 </p>
 
 ---
