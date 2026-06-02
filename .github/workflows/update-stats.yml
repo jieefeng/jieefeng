@@ -31,7 +31,7 @@ jobs:
           USER_JSON=$(gh api users/$USER 2>/dev/null)
           REPOS=$(echo "$USER_JSON" | jq -r '.public_repos // 0')
           FOLLOWERS=$(echo "$USER_JSON" | jq -r '.followers // 0')
-          STARS=$(gh api "users/$USER/starred?per_page=100" 2>/dev/null | jq -r 'if type == "array" then length else 0 end')
+          STARS=$(gh api "users/$USER/repos?per_page=100" 2>/dev/null | jq '[.[].stargazers_count] | add // 0')
           echo "Repos: $REPOS, Followers: $FOLLOWERS, Stars: $STARS"
 
           # GraphQL: contributions + PRs + issues + commits
