@@ -41,7 +41,7 @@
 <!-- ==================== Profile Trophy ==================== -->
 
 <h2 align="center" style="font-size: 1.3rem; font-weight: 600; letter-spacing: 1px;">
-  <span style="background: linear-gradient(90deg, #D97706, #F59E0B); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">🏆 成就</span>
+  <span style="background: linear-gradient(90deg, #D97706, #F59E0B); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">📊 数据统计</span>
 </h2>
 
 <p align="center">
