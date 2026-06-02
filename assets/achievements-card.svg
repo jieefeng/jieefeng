@@ -25,29 +25,29 @@
   <rect x="20" y="55" width="140" height="95" rx="10" fill="url(#cardBg)" stroke="#30363d" stroke-width="1"/>
   <text x="90" y="85" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="28">⭐</text>
   <text x="90" y="115" text-anchor="middle" fill="#FDE68A" font-family="'Segoe UI', sans-serif" font-size="14" font-weight="600">✨ Galaxy Brain</text>
-  <text x="90" y="135" text-anchor="middle" fill="#8B949E" font-family="'Segoe UI', sans-serif" font-size="11">35 stars</text>
+  <text x="90" y="135" text-anchor="middle" fill="#8B949E" font-family="'Segoe UI', sans-serif" font-size="11">获得 35 个 star</text>
 
   <!-- Card 2: Pull Shark -->
   <rect x="178" y="55" width="140" height="95" rx="10" fill="url(#cardBg)" stroke="#30363d" stroke-width="1"/>
   <text x="248" y="85" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="28">🦈</text>
   <text x="248" y="115" text-anchor="middle" fill="#FDE68A" font-family="'Segoe UI', sans-serif" font-size="14" font-weight="600">🦈 Pull Shark</text>
-  <text x="248" y="135" text-anchor="middle" fill="#8B949E" font-family="'Segoe UI', sans-serif" font-size="11">59 PRs</text>
+  <text x="248" y="135" text-anchor="middle" fill="#8B949E" font-family="'Segoe UI', sans-serif" font-size="11">提交 59 个 PR</text>
 
   <!-- Card 3: Arctic -->
   <rect x="336" y="55" width="140" height="95" rx="10" fill="url(#cardBg)" stroke="#30363d" stroke-width="1"/>
   <text x="406" y="85" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="28">🏔️</text>
-  <text x="406" y="115" text-anchor="middle" fill="#FDE68A" font-family="'Segoe UI', sans-serif" font-size="12" font-weight="600">Arctic Vault</text>
-  <text x="406" y="135" text-anchor="middle" fill="#8B949E" font-family="'Segoe UI', sans-serif" font-size="11">308 contribs</text>
+  <text x="406" y="115" text-anchor="middle" fill="#FDE68A" font-family="'Segoe UI', sans-serif" font-size="12" font-weight="600">极地代码库</text>
+  <text x="406" y="135" text-anchor="middle" fill="#8B949E" font-family="'Segoe UI', sans-serif" font-size="11">309 次贡献</text>
 
   <!-- Card 4: YOLO -->
   <rect x="20" y="165" width="140" height="95" rx="10" fill="url(#cardBg)" stroke="#30363d" stroke-width="1"/>
   <text x="90" y="195" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="28">🤠</text>
   <text x="90" y="225" text-anchor="middle" fill="#FDE68A" font-family="'Segoe UI', sans-serif" font-size="14" font-weight="600">YOLO</text>
-  <text x="90" y="245" text-anchor="middle" fill="#8B949E" font-family="'Segoe UI', sans-serif" font-size="11">Direct merge</text>
+  <text x="90" y="245" text-anchor="middle" fill="#8B949E" font-family="'Segoe UI', sans-serif" font-size="11">直接合并 PR</text>
 
   <!-- Stats Summary -->
   <rect x="178" y="165" width="298" height="95" rx="10" fill="url(#cardBg)" stroke="#30363d" stroke-width="1"/>
-  <text x="327" y="195" text-anchor="middle" fill="#D97706" font-family="'Segoe UI', sans-serif" font-size="13" font-weight="600">📊 Summary</text>
-  <text x="327" y="220" text-anchor="middle" fill="#C9D1D9" font-family="'Segoe UI', sans-serif" font-size="12">Contributions: 308</text>
-  <text x="327" y="240" text-anchor="middle" fill="#C9D1D9" font-family="'Segoe UI', sans-serif" font-size="12">Stars: 35 | PRs: 59</text>
+  <text x="327" y="195" text-anchor="middle" fill="#D97706" font-family="'Segoe UI', sans-serif" font-size="13" font-weight="600">📊 数据统计</text>
+  <text x="327" y="220" text-anchor="middle" fill="#C9D1D9" font-family="'Segoe UI', sans-serif" font-size="12">总贡献: 309 次</text>
+  <text x="327" y="240" text-anchor="middle" fill="#C9D1D9" font-family="'Segoe UI', sans-serif" font-size="12">Star: 35 | PR: 59</text>
 </svg>
