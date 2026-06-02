@@ -34,7 +34,7 @@ jobs:
           STARS=$(gh api "users/$USER/repos?per_page=100" 2>/dev/null | jq '[.[].stargazers_count] | add // 0')
           echo "Repos: $REPOS, Followers: $FOLLOWERS, Stars: $STARS"
 
-          # GraphQL: contributions + PRs + issues + commits
+          # GraphQL: contributions + PRs + issues + commits + achievements
           GRAPHQL=$(gh api graphql -f query='{
             user(login: "'$USER'") {
               contributionsCollection {
@@ -50,6 +50,15 @@ jobs:
                     }
                   }
                 }
+              }
+              starredRepositories {
+                totalCount
+              }
+              pullRequests(first: 1) {
+                totalCount
+              }
+              issues(first: 1) {
+                totalCount
               }
             }
           }' 2>/dev/null)
@@ -86,6 +95,37 @@ jobs:
           fi
           echo "Current streak: $STREAK, Max streak: $MAX_STREAK"
 
+          # Extract achievement metrics
+          STARS=$(echo "$GRAPHQL" | jq -r '.data.user.starredRepositories.totalCount // 0')
+          TOTAL_PRS=$(echo "$GRAPHQL" | jq -r '.data.user.pullRequests.totalCount // 0')
+          TOTAL_ISSUES=$(echo "$GRAPHQL" | jq -r '.data.user.issues.totalCount // 0')
+          echo "Stars earned: $STARS, Total PRs: $TOTAL_PRS, Total Issues: $TOTAL_ISSUES"
+
+          # Determine achievement tiers
+          STARSTRUCK_TIER="none"
+          if [ "$STARS" -ge 128 ]; then STARSTRUCK_TIER="⬛ Dark Matter"
+          elif [ "$STARS" -ge 64 ]; then STARSTRUCK_TIER="🌟 Supernova"
+          elif [ "$STARS" -ge 16 ]; then STARSTRUCK_TIER="✨ Galaxy Brain"
+          elif [ "$STARS" -ge 1 ]; then STARSTRUCK_TIER="💫 Starstruck"
+          fi
+
+          PULL_SHARK_TIER="none"
+          if [ "$TOTAL_PRS" -ge 512 ]; then PULL_SHARK_TIER="🦈 Pullshark III"
+          elif [ "$TOTAL_PRS" -ge 128 ]; then PULL_SHARK_TIER="🦈 Pullshark II"
+          elif [ "$TOTAL_PRS" -ge 16 ]; then PULL_SHARK_TIER="🦈 Pull Shark"
+          elif [ "$TOTAL_PRS" -ge 1 ]; then PULL_SHARK_TIER="🐟 Pull Fish"
+          fi
+
+          YOLO_TIER="none"
+          if [ "$TOTAL_PRS" -ge 1 ]; then YOLO_TIER="🤠 YOLO"
+          fi
+
+          ARCTIC_TIER="none"
+          if [ "$TOTAL_CONTRIBS" -ge 1 ]; then ARCTIC_TIER="🏔️ Arctic Code Vault"
+          fi
+
+          echo "Achievements: Starstruck=$STARSTRUCK_TIER, PullShark=$PULL_SHARK_TIER, YOLO=$YOLO_TIER, Arctic=$ARCTIC_TIER"
+
           # Fetch top languages
           echo "=== Fetching languages ==="
           LANGS_JSON=$(gh api "users/$USER/repos?per_page=100&sort=updated" 2>/dev/null)
@@ -116,6 +156,74 @@ jobs:
           )
 
           echo "=== Generating SVGs ==="
+
+          # ---- Achievements Card SVG ----
+          cat > assets/achievements-card.svg << ACHIEVEMENTS_EOF
+          <svg xmlns="http://www.w3.org/2000/svg" width="495" height="195" viewBox="0 0 495 195">
+            <defs>
+              <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#0D1117"/>
+                <stop offset="100%" stop-color="#161B22"/>
+              </linearGradient>
+              <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#92400E"/>
+                <stop offset="50%" stop-color="#D97706"/>
+                <stop offset="100%" stop-color="#F59E0B"/>
+              </linearGradient>
+              <filter id="shadow">
+                <feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="#D97706" flood-opacity="0.2"/>
+              </filter>
+            </defs>
+            <rect x="1" y="1" width="493" height="193" rx="12" fill="url(#bg)" filter="url(#shadow)"/>
+            <rect x="1" y="1" width="493" height="193" rx="12" fill="none" stroke="url(#borderGrad)" stroke-width="1.5"/>
+            <text x="248" y="36" text-anchor="middle" fill="#D97706" font-family="'Segoe UI', -apple-system, sans-serif" font-size="16" font-weight="600">GitHub Achievements</text>
+            <!-- Achievement items -->
+            <text x="30" y="75" fill="#FDE68A" font-family="'Segoe UI', sans-serif" font-size="24">$STARSTRUCK_TIER</text>
+            <text x="30" y="95" fill="#8B949E" font-family="'Segoe UI', sans-serif" font-size="11">$STARS stars earned</text>
+            <text x="30" y="125" fill="#FDE68A" font-family="'Segoe UI', sans-serif" font-size="24">$PULL_SHARK_TIER</text>
+            <text x="30" y="145" fill="#8B949E" font-family="'Segoe UI', sans-serif" font-size="11">$TOTAL_PRS pull requests</text>
+            <text x="280" y="75" fill="#FDE68A" font-family="'Segoe UI', sans-serif" font-size="24">$ARCTIC_TIER</text>
+            <text x="280" y="95" fill="#8B949E" font-family="'Segoe UI', sans-serif" font-size="11">$TOTAL_CONTRIBS contributions</text>
+            <text x="280" y="125" fill="#FDE68A" font-family="'Segoe UI', sans-serif" font-size="24">$YOLO_TIER</text>
+            <text x="280" y="145" fill="#8B949E" font-family="'Segoe UI', sans-serif" font-size="11">$TOTAL_PRS PRs merged</text>
+            <!-- Stats footer -->
+            <text x="248" y="180" text-anchor="middle" fill="#6B7280" font-family="'Segoe UI', sans-serif" font-size="10">Total: $TOTAL_CONTRIBS contributions | $STARS stars | $TOTAL_PRS PRs</text>
+          </svg>
+          ACHIEVEMENTS_EOF
+
+          # ---- Achievements Card SVG (Light) ----
+          cat > assets/achievements-card-light.svg << ACHIEVEMENTS_LIGHT_EOF
+          <svg xmlns="http://www.w3.org/2000/svg" width="495" height="195" viewBox="0 0 495 195">
+            <defs>
+              <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FFFBEB"/>
+                <stop offset="100%" stop-color="#FEF3C7"/>
+              </linearGradient>
+              <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#92400E"/>
+                <stop offset="50%" stop-color="#D97706"/>
+                <stop offset="100%" stop-color="#F59E0B"/>
+              </linearGradient>
+              <filter id="shadow">
+                <feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="#D97706" flood-opacity="0.15"/>
+              </filter>
+            </defs>
+            <rect x="1" y="1" width="493" height="193" rx="12" fill="url(#bg)" filter="url(#shadow)"/>
+            <rect x="1" y="1" width="493" height="193" rx="12" fill="none" stroke="url(#borderGrad)" stroke-width="1.5"/>
+            <text x="248" y="36" text-anchor="middle" fill="#92400E" font-family="'Segoe UI', -apple-system, sans-serif" font-size="16" font-weight="600">GitHub Achievements</text>
+            <text x="30" y="75" fill="#92400E" font-family="'Segoe UI', sans-serif" font-size="24">$STARSTRUCK_TIER</text>
+            <text x="30" y="95" fill="#6B7280" font-family="'Segoe UI', sans-serif" font-size="11">$STARS stars earned</text>
+            <text x="30" y="125" fill="#92400E" font-family="'Segoe UI', sans-serif" font-size="24">$PULL_SHARK_TIER</text>
+            <text x="30" y="145" fill="#6B7280" font-family="'Segoe UI', sans-serif" font-size="11">$TOTAL_PRS pull requests</text>
+            <text x="280" y="75" fill="#92400E" font-family="'Segoe UI', sans-serif" font-size="24">$ARCTIC_TIER</text>
+            <text x="280" y="95" fill="#6B7280" font-family="'Segoe UI', sans-serif" font-size="11">$TOTAL_CONTRIBS contributions</text>
+            <text x="280" y="125" fill="#92400E" font-family="'Segoe UI', sans-serif" font-size="24">$YOLO_TIER</text>
+            <text x="280" y="145" fill="#6B7280" font-family="'Segoe UI', sans-serif" font-size="11">$TOTAL_PRS PRs merged</text>
+            <text x="248" y="180" text-anchor="middle" fill="#9CA3AF" font-family="'Segoe UI', sans-serif" font-size="10">Total: $TOTAL_CONTRIBS contributions | $STARS stars | $TOTAL_PRS PRs</text>
+          </svg>
+          ACHIEVEMENTS_LIGHT_EOF
+
+          echo "Achievements cards generated"
 
           # ---- Stats Card SVG ----
           cat > assets/stats-card.svg << STATS_EOF

@@ -45,35 +45,11 @@
 </h2>
 
 <p align="center">
-  <!-- 备用: 原 Trophy 图片 (需科学上网) -->
-  <!-- https://github-profile-trophy.vercel.app/?username=jieefeng&theme=flat&no-frame=true&no-bg=true&column=7&margin-w=10 -->
-  <table align="center" style="border-collapse: collapse;">
-    <tr>
-      <td align="center" style="padding: 12px 20px; border: 1px solid #30363d; border-radius: 8px; background: #0d1117;">
-        <div style="font-size: 1.5rem; margin-bottom: 4px;">🌟</div>
-        <div style="color: #F59E0B; font-weight: 600; font-size: 0.95rem;">Starstruck</div>
-        <div style="color: #8B949E; font-size: 0.8rem;">获得 star</div>
-      </td>
-      <td width="12"></td>
-      <td align="center" style="padding: 12px 20px; border: 1px solid #30363d; border-radius: 8px; background: #0d1117;">
-        <div style="font-size: 1.5rem; margin-bottom: 4px;">🔥</div>
-        <div style="color: #F59E0B; font-weight: 600; font-size: 0.95rem;">Arctic Code Vault</div>
-        <div style="color: #8B949E; font-size: 0.8rem;">代码存档</div>
-      </td>
-      <td width="12"></td>
-      <td align="center" style="padding: 12px 20px; border: 1px solid #30363d; border-radius: 8px; background: #0d1117;">
-        <div style="font-size: 1.5rem; margin-bottom: 4px;">💻</div>
-        <div style="color: #F59E0B; font-weight: 600; font-size: 0.95rem;">Pull Shark</div>
-        <div style="color: #8B949E; font-size: 0.8rem;">提交 PR</div>
-      </td>
-      <td width="12"></td>
-      <td align="center" style="padding: 12px 20px; border: 1px solid #30363d; border-radius: 8px; background: #0d1117;">
-        <div style="font-size: 1.5rem; margin-bottom: 4px;">🎯</div>
-        <div style="color: #F59E0B; font-weight: 600; font-size: 0.95rem;">YOLO</div>
-        <div style="color: #8B949E; font-size: 0.8rem;">直接合并</div>
-      </td>
-    </tr>
-  </table>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./assets/achievements-card.svg" />
+    <source media="(prefers-color-scheme: light)" srcset="./assets/achievements-card-light.svg" />
+    <img src="./assets/achievements-card.svg" alt="Achievements" />
+  </picture>
 </p>
 
 ---
