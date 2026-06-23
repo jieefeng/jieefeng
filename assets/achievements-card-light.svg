@@ -28,7 +28,7 @@
 
   <rect x="178" y="55" width="140" height="95" rx="10" fill="url(#cardBg)" stroke="#E5E7EB" stroke-width="1"/>
   <text x="248" y="85" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="28">⭐</text>
-  <text x="248" y="115" text-anchor="middle" fill="#92400E" font-family="'Segoe UI', sans-serif" font-size="20" font-weight="700">36</text>
+  <text x="248" y="115" text-anchor="middle" fill="#92400E" font-family="'Segoe UI', sans-serif" font-size="20" font-weight="700">7</text>
   <text x="248" y="135" text-anchor="middle" fill="#6B7280" font-family="'Segoe UI', sans-serif" font-size="11">获得的 Star</text>
 
   <rect x="336" y="55" width="140" height="95" rx="10" fill="url(#cardBg)" stroke="#E5E7EB" stroke-width="1"/>
