@@ -36,5 +36,5 @@
     <circle cx="0" cy="-1" r="2.5" fill="#FDE68A"/>
   </g>
   <text x="52" y="36" fill="#8B949E" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif" font-size="10.5" font-weight="500" letter-spacing="2.5">VISITORS</text>
-  <text x="52" y="66" fill="url(#textGrad)" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif" font-size="34" font-weight="700" letter-spacing="-0.5" filter="url(#glow)">0</text>
+  <text x="52" y="66" fill="url(#textGrad)" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif" font-size="34" font-weight="700" letter-spacing="-0.5" filter="url(#glow)">31</text>
 </svg>
