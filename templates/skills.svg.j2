@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="495" height="{{ card_height }}" viewBox="0 0 495 {{ card_height }}">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      {% if theme == "dark" %}
+      <stop offset="0%" stop-color="#0D1117"/>
+      <stop offset="100%" stop-color="#161B22"/>
+      {% else %}
+      <stop offset="0%" stop-color="#FFFBEB"/>
+      <stop offset="100%" stop-color="#FEF3C7"/>
+      {% endif %}
+    </linearGradient>
+    <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#92400E"/>
+      <stop offset="50%" stop-color="#D97706"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="#D97706" flood-opacity="{{ '0.2' if theme == 'dark' else '0.15' }}"/>
+    </filter>
+  </defs>
+  <rect x="1" y="1" width="493" height="{{ card_height - 2 }}" rx="12" fill="url(#bg)" filter="url(#shadow)"/>
+  <rect x="1" y="1" width="493" height="{{ card_height - 2 }}" rx="12" fill="none" stroke="url(#borderGrad)" stroke-width="1.5"/>
+  <text x="248" y="36" text-anchor="middle" fill="{{ '#D97706' if theme == 'dark' else '#92400E' }}" font-family="'Segoe UI', -apple-system, sans-serif" font-size="16" font-weight="600">⚡ 技术栈</text>
+  {% for skill in skills %}
+  {% set col = loop.index0 % 7 %}
+  {% set row = loop.index0 // 7 %}
+  {% set x = 20 + col * 67 %}
+  {% set y = 55 + row * 38 %}
+  <rect x="{{ x }}" y="{{ y }}" width="62" height="28" rx="6" fill="{{ skill.color }}" opacity="0.15"/>
+  <rect x="{{ x }}" y="{{ y }}" width="62" height="28" rx="6" fill="none" stroke="{{ skill.color }}" stroke-width="1" opacity="0.6"/>
+  <text x="{{ x + 31 }}" y="{{ y + 18 }}" text-anchor="middle" fill="{{ skill.color }}" font-family="'Segoe UI', sans-serif" font-size="10" font-weight="600">{{ skill.name }}</text>
+  {% endfor %}
+</svg>

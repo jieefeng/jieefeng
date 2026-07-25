@@ -1,8 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="340" height="90" viewBox="0 0 340 90">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      {% if theme == "dark" %}
+      <stop offset="0%" stop-color="#0D1117"/>
+      <stop offset="100%" stop-color="#161B22"/>
+      {% else %}
       <stop offset="0%" stop-color="#FFFBEB"/>
       <stop offset="100%" stop-color="#FEF3C7"/>
+      {% endif %}
     </linearGradient>
     <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="0%">
       <stop offset="0%" stop-color="#92400E"/>
@@ -10,22 +15,27 @@
       <stop offset="100%" stop-color="#F59E0B"/>
     </linearGradient>
     <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      {% if theme == "dark" %}
+      <stop offset="0%" stop-color="#FDE68A"/>
+      <stop offset="100%" stop-color="#D97706"/>
+      {% else %}
       <stop offset="0%" stop-color="#92400E"/>
       <stop offset="100%" stop-color="#D97706"/>
+      {% endif %}
     </linearGradient>
     <linearGradient id="eyeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#D97706"/>
       <stop offset="100%" stop-color="#F59E0B"/>
     </linearGradient>
     <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+      <feGaussianBlur stdDeviation="{{ '2.5' if theme == 'dark' else '1.5' }}" result="coloredBlur"/>
       <feMerge>
         <feMergeNode in="coloredBlur"/>
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
     <filter id="shadow">
-      <feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="#D97706" flood-opacity="0.15"/>
+      <feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="#D97706" flood-opacity="{{ '0.25' if theme == 'dark' else '0.15' }}"/>
     </filter>
   </defs>
   <rect x="1" y="1" width="338" height="88" rx="12" fill="url(#bg)" filter="url(#shadow)"/>
@@ -33,8 +43,8 @@
   <rect x="1" y="20" width="3" height="50" rx="1.5" fill="url(#borderGrad)"/>
   <g transform="translate(26, 45)">
     <path d="M-12,-1 C-12,-1 -5,-7 0,-7 C5,-7 12,-1 12,-1 C12,-1 5,5 0,5 C-5,5 -12,-1 -12,-1 Z" fill="none" stroke="url(#eyeGrad)" stroke-width="1.3"/>
-    <circle cx="0" cy="-1" r="2.5" fill="#D97706"/>
+    <circle cx="0" cy="-1" r="2.5" fill="{{ '#FDE68A' if theme == 'dark' else '#D97706' }}"/>
   </g>
-  <text x="52" y="36" fill="#6B7280" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif" font-size="10.5" font-weight="500" letter-spacing="2.5">VISITORS</text>
-  <text x="52" y="66" fill="url(#textGrad)" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif" font-size="34" font-weight="700" letter-spacing="-0.5" filter="url(#glow)">0</text>
+  <text x="52" y="36" fill="{{ '#8B949E' if theme == 'dark' else '#6B7280' }}" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif" font-size="10.5" font-weight="500" letter-spacing="2.5">VISITORS</text>
+  <text x="52" y="66" fill="url(#textGrad)" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif" font-size="34" font-weight="700" letter-spacing="-0.5" filter="url(#glow)">{{ views }}</text>
 </svg>

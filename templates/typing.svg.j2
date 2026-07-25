@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="65" viewBox="0 0 500 65">
+  <defs>
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      {% if theme == "dark" %}
+      <stop offset="0%" stop-color="#FDE68A"/>
+      <stop offset="100%" stop-color="#D97706"/>
+      {% else %}
+      <stop offset="0%" stop-color="#92400E"/>
+      <stop offset="100%" stop-color="#D97706"/>
+      {% endif %}
+    </linearGradient>
+  </defs>
+  <style>
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+    @keyframes typing1 { 0%,3%{width:0} 4%,33%{width:{{ (lines[0] | length) * 0.82 }}ch} 34%,37%{width:0} 100%{width:0} }
+    @keyframes typing2 { 0%,37%{width:0} 38%,67%{width:{{ (lines[1] | length) * 0.82 }}ch} 68%,71%{width:0} 100%{width:0} }
+    @keyframes typing3 { 0%,71%{width:0} 72%,97%{width:{{ (lines[2] | length) * 0.82 }}ch} 98%,100%{width:0} 100%{width:0} }
+    .line1 { animation: typing1 9s infinite steps({{ lines[0] | length }}), blink 0.7s infinite; }
+    .line2 { animation: typing2 9s infinite steps({{ lines[1] | length }}), blink 0.7s infinite; }
+    .line3 { animation: typing3 9s infinite steps({{ lines[2] | length }}), blink 0.7s infinite; }
+  </style>
+  <text x="250" y="40" text-anchor="middle" fill="url(#textGrad)" font-family="'Fira Code', 'Courier New', monospace" font-size="14" letter-spacing="0.5">
+    <tspan class="line1">{{ lines[0] }}</tspan>
+    <tspan class="line2">{{ lines[1] }}</tspan>
+    <tspan class="line3">{{ lines[2] }}</tspan>
+  </text>
+</svg>

@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="495" height="242" viewBox="0 0 495 242">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0D1117"/>
+      <stop offset="100%" stop-color="#161B22"/>
+    </linearGradient>
+    <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#92400E"/>
+      <stop offset="50%" stop-color="#D97706"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="#D97706" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  <rect x="1" y="1" width="493" height="240" rx="12" fill="url(#bg)" filter="url(#shadow)"/>
+  <rect x="1" y="1" width="493" height="240" rx="12" fill="none" stroke="url(#borderGrad)" stroke-width="1.5"/>
+  <text x="248" y="36" text-anchor="middle" fill="#D97706" font-family="'Segoe UI', -apple-system, sans-serif" font-size="16" font-weight="600">📝 博客 & 🎯 学习目标</text>
+
+  <rect x="20" y="55" width="455" height="26" rx="6" fill="#1E80FF" opacity="0.12"/>
+  <rect x="20" y="55" width="455" height="26" rx="6" fill="none" stroke="#1E80FF" stroke-width="0.8" opacity="0.5"/>
+  <text x="36" y="72" fill="#1E80FF" font-family="'Segoe UI', sans-serif" font-size="12" font-weight="600">掘金</text>
+  <text x="460" y="72" text-anchor="end" fill="#8B949E" font-family="'Segoe UI', sans-serif" font-size="9">https://juejin.cn/user/jieefeng</text>
+  <rect x="20" y="87" width="455" height="26" rx="6" fill="#FC5531" opacity="0.12"/>
+  <rect x="20" y="87" width="455" height="26" rx="6" fill="none" stroke="#FC5531" stroke-width="0.8" opacity="0.5"/>
+  <text x="36" y="104" fill="#FC5531" font-family="'Segoe UI', sans-serif" font-size="12" font-weight="600">CSDN</text>
+  <text x="460" y="104" text-anchor="end" fill="#8B949E" font-family="'Segoe UI', sans-serif" font-size="9">https://blog.csdn.net/jieefeng</text>
+
+  <text x="248" y="129" text-anchor="middle" fill="#D97706" font-family="'Segoe UI', sans-serif" font-size="12" font-weight="600">🎯 学习目标</text>
+  <text x="20" y="155" fill="#C9D1D9" font-family="'Segoe UI', sans-serif" font-size="11">RAG 深入实践</text>
+  <text x="470" y="155" text-anchor="end" fill="#F59E0B" font-family="'Segoe UI', sans-serif" font-size="11" font-weight="600">65%</text>
+  <rect x="20" y="161" width="455" height="8" rx="4" fill="#21262D"/>
+  <rect x="20" y="161" width="295" height="8" rx="4" fill="#F59E0B"/>
+  <text x="20" y="191" fill="#C9D1D9" font-family="'Segoe UI', sans-serif" font-size="11">系统设计</text>
+  <text x="470" y="191" text-anchor="end" fill="#D97706" font-family="'Segoe UI', sans-serif" font-size="11" font-weight="600">40%</text>
+  <rect x="20" y="197" width="455" height="8" rx="4" fill="#21262D"/>
+  <rect x="20" y="197" width="182" height="8" rx="4" fill="#D97706"/>
+  <text x="20" y="227" fill="#C9D1D9" font-family="'Segoe UI', sans-serif" font-size="11">云原生架构</text>
+  <text x="470" y="227" text-anchor="end" fill="#92400E" font-family="'Segoe UI', sans-serif" font-size="11" font-weight="600">30%</text>
+  <rect x="20" y="233" width="455" height="8" rx="4" fill="#21262D"/>
+  <rect x="20" y="233" width="136" height="8" rx="4" fill="#92400E"/>
+</svg>

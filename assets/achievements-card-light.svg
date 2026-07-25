@@ -21,20 +21,24 @@
   <rect x="1" y="1" width="493" height="193" rx="12" fill="none" stroke="url(#borderGrad)" stroke-width="1.5"/>
   <text x="248" y="36" text-anchor="middle" fill="#92400E" font-family="'Segoe UI', -apple-system, sans-serif" font-size="16" font-weight="600">📊 数据统计</text>
 
+  <!-- Card 1: Contributions -->
   <rect x="20" y="55" width="140" height="95" rx="10" fill="url(#cardBg)" stroke="#E5E7EB" stroke-width="1"/>
   <text x="90" y="85" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="28">📈</text>
   <text x="90" y="115" text-anchor="middle" fill="#92400E" font-family="'Segoe UI', sans-serif" font-size="20" font-weight="700">608</text>
   <text x="90" y="135" text-anchor="middle" fill="#6B7280" font-family="'Segoe UI', sans-serif" font-size="11">总贡献次数</text>
 
+  <!-- Card 2: Stars -->
   <rect x="178" y="55" width="140" height="95" rx="10" fill="url(#cardBg)" stroke="#E5E7EB" stroke-width="1"/>
   <text x="248" y="85" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="28">⭐</text>
   <text x="248" y="115" text-anchor="middle" fill="#92400E" font-family="'Segoe UI', sans-serif" font-size="20" font-weight="700">7</text>
   <text x="248" y="135" text-anchor="middle" fill="#6B7280" font-family="'Segoe UI', sans-serif" font-size="11">获得的 Star</text>
 
+  <!-- Card 3: Pull Requests -->
   <rect x="336" y="55" width="140" height="95" rx="10" fill="url(#cardBg)" stroke="#E5E7EB" stroke-width="1"/>
   <text x="406" y="85" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="28">🔀</text>
-  <text x="406" y="115" text-anchor="middle" fill="#92400E" font-family="'Segoe UI', sans-serif" font-size="20" font-weight="700">60</text>
+  <text x="406" y="115" text-anchor="middle" fill="#92400E" font-family="'Segoe UI', sans-serif" font-size="20" font-weight="700">135</text>
   <text x="406" y="135" text-anchor="middle" fill="#6B7280" font-family="'Segoe UI', sans-serif" font-size="11">Pull Requests</text>
 
+  <!-- Footer -->
   <text x="248" y="180" text-anchor="middle" fill="#9CA3AF" font-family="'Segoe UI', sans-serif" font-size="10">数据来自 GitHub API | 每日自动更新</text>
 </svg>

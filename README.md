@@ -6,11 +6,11 @@
 
 <h1 style="margin: 24px 0 8px; font-size: 2.6rem; font-weight: 700; background: linear-gradient(135deg, #1F2937 0%, #92400E 50%, #D97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: -0.5px;">你好，我是 jieefeng</h1>
 
-<!-- 打字动画 -->
+<!-- 打字动画（本地 SVG） -->
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://readme-typing-svg.demolab.com/?lines=AI+%E5%B7%A5%E7%A8%8B%E5%B8%88+%7C+RAG+%E6%8E%A2%E7%B4%A2%E8%80%85;%E5%85%A8%E6%A0%88%E5%BC%80%E5%8F%91+%7C+%E5%90%8E%E7%AB%AF%E6%9E%B6%E6%9E%84%E5%B8%88;Always+building%2C+always+learning&font=Fira+Code&center=true&vCenter=true&width=500&height=65&duration=3000&pause=1500&color=F59E0B&background=0D111700&size=14&letterSpacing=0.5" />
-  <source media="(prefers-color-scheme: light)" srcset="https://readme-typing-svg.demolab.com/?lines=AI+%E5%B7%A5%E7%A8%8B%E5%B8%88+%7C+RAG+%E6%8E%A2%E7%B4%A2%E8%80%85;%E5%85%A8%E6%A0%88%E5%BC%80%E5%8F%91+%7C+%E5%90%8E%E7%AB%AF%E6%9E%B6%E6%9E%84%E5%B8%88;Always+building%2C+always+learning&font=Fira+Code&center=true&vCenter=true&width=500&height=65&duration=3000&pause=1500&color=B45309&background=FFFFFF00&size=14&letterSpacing=0.5" />
-  <img src="https://readme-typing-svg.demolab.com/?lines=AI+%E5%B7%A5%E7%A8%8B%E5%B8%88+%7C+RAG+%E6%8E%A2%E7%B4%A2%E8%80%85;%E5%85%A8%E6%A0%88%E5%BC%80%E5%8F%91+%7C+%E5%90%8E%E7%AB%AF%E6%9E%B6%E6%9E%84%E5%B8%88;Always+building%2C+always+learning&font=Fira+Code&center=true&vCenter=true&width=500&height=65&duration=3000&pause=1500&color=F59E0B&background=0D111700&size=14&letterSpacing=0.5" alt="Typing SVG" />
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/typing-card.svg" />
+  <source media="(prefers-color-scheme: light)" srcset="./assets/typing-card-light.svg" />
+  <img src="./assets/typing-card.svg" alt="Typing SVG" width="500" />
 </picture>
 
 <p style="font-size: 1.05rem; color: #6B7280; line-height: 1.8; max-width: 560px; margin: 16px auto 8px;">
@@ -38,7 +38,7 @@
 
 ---
 
-<!-- ==================== Profile Trophy ==================== -->
+<!-- ==================== 数据统计 ==================== -->
 
 <h2 align="center" style="font-size: 1.3rem; font-weight: 600; letter-spacing: 1px;">
   <span style="background: linear-gradient(90deg, #D97706, #F59E0B); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">📊 数据统计</span>
@@ -54,7 +54,7 @@
 
 ---
 
-<!-- ==================== 技术栈 ==================== -->
+<!-- ==================== 技术栈（本地 SVG） ==================== -->
 
 <h2 align="center" style="font-size: 1.3rem; font-weight: 600; letter-spacing: 1px;">
   <span style="background: linear-gradient(90deg, #D97706, #F59E0B); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">⚡ 技术栈</span>
@@ -62,12 +62,10 @@
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://skillicons.dev/icons?i=python,java,typescript,vuejs,spring,mysql,redis,rabbitmq,kafka,docker,linux,git,langchain&theme=onDark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://skillicons.dev/icons?i=python,java,typescript,vuejs,spring,mysql,redis,rabbitmq,kafka,docker,linux,git,langchain&theme=onLight" />
-    <img src="https://skillicons.dev/icons?i=python,java,typescript,vuejs,spring,mysql,redis,rabbitmq,kafka,docker,linux,git,langchain&theme=onDark" alt="Skills" />
+    <source media="(prefers-color-scheme: dark)" srcset="./assets/skills-card.svg" />
+    <source media="(prefers-color-scheme: light)" srcset="./assets/skills-card-light.svg" />
+    <img src="./assets/skills-card.svg" alt="Skills" />
   </picture>
-  <br/>
-  <img src="https://img.shields.io/badge/MinIO-C72E49?style=for-the-badge&logo=minio&logoColor=white" alt="MinIO" />
 </p>
 
 ---
@@ -82,6 +80,22 @@
   🧠 探索 RAG 与大语言模型的实际落地场景<br/>
   🏗️ 设计高可用、可扩展的后端系统架构<br/>
   🛠️ 深耕工程化实践，提升研发效能与代码质量
+</p>
+
+---
+
+<!-- ==================== 置顶项目（本地 SVG） ==================== -->
+
+<h2 align="center" style="font-size: 1.3rem; font-weight: 600; letter-spacing: 1px;">
+  <span style="background: linear-gradient(90deg, #D97706, #F59E0B); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">📌 置顶项目</span>
+</h2>
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./assets/pinned-card.svg" />
+    <source media="(prefers-color-scheme: light)" srcset="./assets/pinned-card-light.svg" />
+    <img src="./assets/pinned-card.svg" alt="Pinned Repos" />
+  </picture>
 </p>
 
 ---
@@ -106,11 +120,35 @@
   </picture>
 </p>
 
+---
+
+<!-- ==================== 贡献热力图（本地 SVG） ==================== -->
+
+<h2 align="center" style="font-size: 1.3rem; font-weight: 600; letter-spacing: 1px;">
+  <span style="background: linear-gradient(90deg, #D97706, #F59E0B); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">🔥 贡献热力图</span>
+</h2>
+
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://github-readme-activity-graph.vercel.app/graph?username=jieefeng&bg_color=0D1117&color=F59E0B&line=D97706&point=FDE68A&area=true&area_color=92400E&hide_border=true&locale=cn" />
-    <source media="(prefers-color-scheme: light)" srcset="https://github-readme-activity-graph.vercel.app/graph?username=jieefeng&bg_color=FFFBEB&color=B45309&line=D97706&point=92400E&area=true&area_color=FEF3C7&hide_border=true&locale=cn" />
-    <img src="https://github-readme-activity-graph.vercel.app/graph?username=jieefeng&bg_color=0D1117&color=F59E0B&line=D97706&point=FDE68A&area=true&area_color=92400E&hide_border=true&locale=cn" alt="Activity Graph" />
+    <source media="(prefers-color-scheme: dark)" srcset="./assets/activity-card.svg" />
+    <source media="(prefers-color-scheme: light)" srcset="./assets/activity-card-light.svg" />
+    <img src="./assets/activity-card.svg" alt="Activity" />
+  </picture>
+</p>
+
+---
+
+<!-- ==================== 博客 & 学习目标（本地 SVG） ==================== -->
+
+<h2 align="center" style="font-size: 1.3rem; font-weight: 600; letter-spacing: 1px;">
+  <span style="background: linear-gradient(90deg, #D97706, #F59E0B); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">📝 博客 & 🎯 学习目标</span>
+</h2>
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./assets/blog-card.svg" />
+    <source media="(prefers-color-scheme: light)" srcset="./assets/blog-card-light.svg" />
+    <img src="./assets/blog-card.svg" alt="Blog & Goals" />
   </picture>
 </p>
 
