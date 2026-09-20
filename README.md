@@ -38,17 +38,19 @@
 
 ---
 
-<!-- ==================== 贡献蛇形动画 ==================== -->
+<!-- ==================== 贡献热力图（静态 · 每日自动更新） ==================== -->
 
 <h2 align="center" style="font-size: 1.3rem; font-weight: 600; letter-spacing: 1px;">
-  <span style="background: linear-gradient(90deg, #D97706, #F59E0B); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">🐍 贡献动画</span>
+  <span style="background: linear-gradient(90deg, #D97706, #F59E0B); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">🔥 贡献热力图</span>
 </h2>
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/jieefeng/jieefeng/output/github-snake-dark.svg" />
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/jieefeng/jieefeng/output/github-snake.svg" />
-  <img alt="github contribution grid snake animation" src="https://raw.githubusercontent.com/jieefeng/jieefeng/output/github-snake.svg" width="100%" />
-</picture>
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./assets/activity-card.svg" />
+    <source media="(prefers-color-scheme: light)" srcset="./assets/activity-card-light.svg" />
+    <img alt="GitHub contribution heatmap" src="./assets/activity-card.svg" width="760" />
+  </picture>
+</p>
 
 ---
 

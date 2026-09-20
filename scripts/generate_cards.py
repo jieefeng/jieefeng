@@ -34,10 +34,10 @@ TYPING_LINES = [
 
 def _build_activity_cells(contribution_days: list[dict], theme: str) -> list[dict]:
     """Pre-compute activity heatmap cell positions and colors for a theme."""
-    cell_size = 10
+    cell_size = 11
     gap = 2
-    start_x = 48
-    start_y = 40
+    start_x = 24
+    start_y = 44
 
     cells = []
     week = 0
@@ -91,6 +91,9 @@ def generate_all():
         },
         "activity": {
             "cells": [],  # will be filled per-theme below
+            "total_contribs": data["total_contribs"],
+            "streak": data["streak"],
+            "max_streak": data["max_streak"],
         },
         "blog": {
             "links": BLOG_LINKS,
