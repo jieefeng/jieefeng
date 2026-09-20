@@ -90,38 +90,6 @@
 
 ---
 
-<!-- ==================== 贡献热力图（本地 SVG） ==================== -->
-
-<h2 align="center" style="font-size: 1.3rem; font-weight: 600; letter-spacing: 1px;">
-  <span style="background: linear-gradient(90deg, #D97706, #F59E0B); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">🔥 贡献热力图</span>
-</h2>
-
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./assets/activity-card.svg" />
-    <source media="(prefers-color-scheme: light)" srcset="./assets/activity-card-light.svg" />
-    <img src="./assets/activity-card.svg" alt="Activity" />
-  </picture>
-</p>
-
----
-
-<!-- ==================== 博客 & 学习目标（本地 SVG） ==================== -->
-
-<h2 align="center" style="font-size: 1.3rem; font-weight: 600; letter-spacing: 1px;">
-  <span style="background: linear-gradient(90deg, #D97706, #F59E0B); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">📝 博客 & 🎯 学习目标</span>
-</h2>
-
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./assets/blog-card.svg" />
-    <source media="(prefers-color-scheme: light)" srcset="./assets/blog-card-light.svg" />
-    <img src="./assets/blog-card.svg" alt="Blog & Goals" />
-  </picture>
-</p>
-
----
-
 <!-- ==================== 贡献蛇形动画 ==================== -->
 
 <h2 align="center" style="font-size: 1.3rem; font-weight: 600; letter-spacing: 1px;">
