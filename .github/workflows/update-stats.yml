@@ -29,7 +29,9 @@ jobs:
 
       - name: Generate all SVG cards
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # 若配置了 PAT_TOKEN(需 repo 权限的经典 PAT),可统计私有仓库贡献;
+          # 未配置时回退到 GITHUB_TOKEN(只能统计公开贡献)
+          GH_TOKEN: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
         run: python scripts/generate_cards.py
 
       - name: Commit and push

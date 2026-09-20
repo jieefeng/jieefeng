@@ -36,7 +36,7 @@ def _build_activity_cells(contribution_days: list[dict], theme: str) -> list[dic
     """Pre-compute activity heatmap cell positions and colors for a theme."""
     cell_size = 10
     gap = 2
-    start_x = 20
+    start_x = 48
     start_y = 40
 
     cells = []

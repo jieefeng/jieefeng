@@ -45,7 +45,7 @@ USER_QUERY = """
     repositories(privacy: PUBLIC, first: 1) { totalCount }
     followers(first: 1) { totalCount }
     starredRepositories { totalCount }
-    contributionsCollection {
+    contributionsCollection(includePrivateContributions: true) {
       totalCommitContributions
       totalPullRequestContributions
       totalIssueContributions
