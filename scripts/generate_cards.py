@@ -121,7 +121,9 @@ def generate_all():
         },
         "skills": {
             "skills": SKILLS,
-            "card_height": 20 + ((len(SKILLS) + 6) // 7) * 38 + 10,
+            # Chips start at y=55; each row is 38px (28px chip + 10px gap),
+            # plus ~16px bottom padding inside the card border.
+            "card_height": (((len(SKILLS) + 6) // 7) - 1) * 38 + 99,
         },
         "activity": {
             "cells": [],  # will be filled per-theme below
