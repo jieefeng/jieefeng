@@ -1,22 +1,58 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="500" height="65" viewBox="0 0 500 65">
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="46" viewBox="0 0 500 46" role="img" aria-label="AI 工程师 | RAG 探索者">
   <defs>
-    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#FDE68A"/>
-      <stop offset="100%" stop-color="#D97706"/>
+    <linearGradient id="tg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#FDE68A"/>
+      <stop offset="1" stop-color="#D97706"/>
     </linearGradient>
+    <clipPath id="tc0">
+      <rect x="164.0" y="14" width="172" height="18">
+        <animate attributeName="width" calcMode="discrete"
+                 values="0.00;10.75;21.50;32.25;43.00;53.75;64.50;75.25;86.00;96.75;107.50;118.25;129.00;139.75;150.50;161.25;172.00;161.25;150.50;139.75;129.00;118.25;107.50;96.75;86.00;75.25;64.50;53.75;43.00;32.25;21.50;10.75;0.00" keyTimes="0.0000;0.0076;0.0152;0.0227;0.0303;0.0379;0.0455;0.0530;0.0606;0.0682;0.0758;0.0833;0.0909;0.0985;0.1061;0.1136;0.1212;0.2455;0.2485;0.2515;0.2545;0.2576;0.2606;0.2636;0.2667;0.2697;0.2727;0.2758;0.2788;0.2818;0.2848;0.2879;1.0000"
+                 dur="13.2s" begin="0s" repeatCount="indefinite"/>
+      </rect>
+    </clipPath>
+    <clipPath id="tc1">
+      <rect x="172.5" y="14" width="155" height="18">
+        <animate attributeName="width" calcMode="discrete"
+                 values="0.00;12.92;25.83;38.75;51.67;64.58;77.50;90.42;103.33;116.25;129.17;142.08;155.00;142.08;129.17;116.25;103.33;90.42;77.50;64.58;51.67;38.75;25.83;12.92;0.00" keyTimes="0.2909;0.2985;0.3061;0.3136;0.3212;0.3288;0.3364;0.3439;0.3515;0.3591;0.3667;0.3742;0.3818;0.5061;0.5091;0.5121;0.5152;0.5182;0.5212;0.5242;0.5273;0.5303;0.5333;0.5364;1.0000"
+                 dur="13.2s" begin="0s" repeatCount="indefinite"/>
+      </rect>
+    </clipPath>
+    <clipPath id="tc2">
+      <rect x="111.0" y="14" width="278" height="18">
+        <animate attributeName="width" calcMode="discrete"
+                 values="0.00;8.69;17.38;26.06;34.75;43.44;52.12;60.81;69.50;78.19;86.88;95.56;104.25;112.94;121.62;130.31;139.00;147.69;156.38;165.06;173.75;182.44;191.12;199.81;208.50;217.19;225.88;234.56;243.25;251.94;260.62;269.31;278.00;269.31;260.62;251.94;243.25;234.56;225.88;217.19;208.50;199.81;191.12;182.44;173.75;165.06;156.38;147.69;139.00;130.31;121.62;112.94;104.25;95.56;86.88;78.19;69.50;60.81;52.12;43.44;34.75;26.06;17.38;8.69;0.00" keyTimes="0.5394;0.5470;0.5545;0.5621;0.5697;0.5773;0.5848;0.5924;0.6000;0.6076;0.6152;0.6227;0.6303;0.6379;0.6455;0.6530;0.6606;0.6682;0.6758;0.6833;0.6909;0.6985;0.7061;0.7136;0.7212;0.7288;0.7364;0.7439;0.7515;0.7591;0.7667;0.7742;0.7818;0.9061;0.9091;0.9121;0.9152;0.9182;0.9212;0.9242;0.9273;0.9303;0.9333;0.9364;0.9394;0.9424;0.9455;0.9485;0.9515;0.9545;0.9576;0.9606;0.9636;0.9667;0.9697;0.9727;0.9758;0.9788;0.9818;0.9848;0.9879;0.9909;0.9939;0.9970;1.0000"
+                 dur="13.2s" begin="0s" repeatCount="indefinite"/>
+      </rect>
+    </clipPath>
   </defs>
-  <style>
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-    @keyframes typing1 { 0%,3%{width:0} 4%,33%{width:13.12ch} 34%,37%{width:0} 100%{width:0} }
-    @keyframes typing2 { 0%,37%{width:0} 38%,67%{width:9.84ch} 68%,71%{width:0} 100%{width:0} }
-    @keyframes typing3 { 0%,71%{width:0} 72%,97%{width:26.24ch} 98%,100%{width:0} 100%{width:0} }
-    .line1 { animation: typing1 9s infinite steps(16), blink 0.7s infinite; }
-    .line2 { animation: typing2 9s infinite steps(12), blink 0.7s infinite; }
-    .line3 { animation: typing3 9s infinite steps(32), blink 0.7s infinite; }
-  </style>
-  <text x="250" y="40" text-anchor="middle" fill="url(#textGrad)" font-family="'Fira Code', 'Courier New', monospace" font-size="14" letter-spacing="0.5">
-    <tspan class="line1">AI 工程师 | RAG 探索者</tspan>
-    <tspan class="line2">全栈开发 | 后端架构师</tspan>
-    <tspan class="line3">Always building, always learning</tspan>
-  </text>
+
+  <text x="164.0" y="29" textLength="172" lengthAdjust="spacingAndGlyphs"
+        clip-path="url(#tc0)" opacity="1"
+        fill="url(#tg)" font-family="'Fira Code','JetBrains Mono',Consolas,'Courier New',monospace"
+        font-size="14">AI 工程师 | RAG 探索者<animate attributeName="opacity" calcMode="discrete"
+          values="1.00;0.00" keyTimes="0.0000;1.0000"
+          dur="13.2s" begin="0s" repeatCount="indefinite"/></text>
+  <text x="172.5" y="29" textLength="155" lengthAdjust="spacingAndGlyphs"
+        clip-path="url(#tc1)" opacity="0"
+        fill="url(#tg)" font-family="'Fira Code','JetBrains Mono',Consolas,'Courier New',monospace"
+        font-size="14">全栈开发 | 后端架构师<animate attributeName="opacity" calcMode="discrete"
+          values="0.00;1.00;0.00" keyTimes="0.0000;0.2909;1.0000"
+          dur="13.2s" begin="0s" repeatCount="indefinite"/></text>
+  <text x="111.0" y="29" textLength="278" lengthAdjust="spacingAndGlyphs"
+        clip-path="url(#tc2)" opacity="0"
+        fill="url(#tg)" font-family="'Fira Code','JetBrains Mono',Consolas,'Courier New',monospace"
+        font-size="14">Always building, always learning<animate attributeName="opacity" calcMode="discrete"
+          values="0.00;1.00;0.00" keyTimes="0.0000;0.5394;1.0000"
+          dur="13.2s" begin="0s" repeatCount="indefinite"/></text>
+
+  <rect x="164.0" y="15" width="3" height="17" rx="1"
+        fill="#D97706">
+    <animate attributeName="x" calcMode="discrete"
+             values="164.00;164.00;174.75;185.50;196.25;207.00;217.75;228.50;239.25;250.00;260.75;271.50;282.25;293.00;303.75;314.50;325.25;336.00;325.25;314.50;303.75;293.00;282.25;271.50;260.75;250.00;239.25;228.50;217.75;207.00;196.25;185.50;174.75;172.50;185.42;198.33;211.25;224.17;237.08;250.00;262.92;275.83;288.75;301.67;314.58;327.50;314.58;301.67;288.75;275.83;262.92;250.00;237.08;224.17;211.25;198.33;185.42;111.00;119.69;128.38;137.06;145.75;154.44;163.12;171.81;180.50;189.19;197.88;206.56;215.25;223.94;232.62;241.31;250.00;258.69;267.38;276.06;284.75;293.44;302.12;310.81;319.50;328.19;336.88;345.56;354.25;362.94;371.62;380.31;389.00;380.31;371.62;362.94;354.25;345.56;336.88;328.19;319.50;310.81;302.12;293.44;284.75;276.06;267.38;258.69;250.00;241.31;232.62;223.94;215.25;206.56;197.88;189.19;180.50;171.81;163.12;154.44;145.75;137.06;128.38;119.69;111.00" keyTimes="0.0000;0.0001;0.0076;0.0152;0.0227;0.0303;0.0379;0.0455;0.0530;0.0606;0.0682;0.0758;0.0833;0.0909;0.0985;0.1061;0.1136;0.1212;0.2455;0.2485;0.2515;0.2545;0.2576;0.2606;0.2636;0.2667;0.2697;0.2727;0.2758;0.2788;0.2818;0.2848;0.2879;0.2909;0.2985;0.3061;0.3136;0.3212;0.3288;0.3364;0.3439;0.3515;0.3591;0.3667;0.3742;0.3818;0.5061;0.5091;0.5121;0.5152;0.5182;0.5212;0.5242;0.5273;0.5303;0.5333;0.5364;0.5394;0.5470;0.5545;0.5621;0.5697;0.5773;0.5848;0.5924;0.6000;0.6076;0.6152;0.6227;0.6303;0.6379;0.6455;0.6530;0.6606;0.6682;0.6758;0.6833;0.6909;0.6985;0.7061;0.7136;0.7212;0.7288;0.7364;0.7439;0.7515;0.7591;0.7667;0.7742;0.7818;0.9061;0.9091;0.9121;0.9152;0.9182;0.9212;0.9242;0.9273;0.9303;0.9333;0.9364;0.9394;0.9424;0.9455;0.9485;0.9515;0.9545;0.9576;0.9606;0.9636;0.9667;0.9697;0.9727;0.9758;0.9788;0.9818;0.9848;0.9879;0.9909;0.9939;0.9970;1.0000"
+             dur="13.2s" begin="0s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" calcMode="discrete"
+             values="1;0;0" keyTimes="0;0.5;1"
+             dur="0.9s" begin="0s" repeatCount="indefinite"/>
+  </rect>
 </svg>
