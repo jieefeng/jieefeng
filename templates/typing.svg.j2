@@ -1,27 +1,45 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="500" height="65" viewBox="0 0 500 65">
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="46" viewBox="0 0 500 46" role="img" aria-label="{{ lines[0].text }}">
   <defs>
-    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+    <linearGradient id="tg" x1="0" y1="0" x2="1" y2="0">
       {% if theme == "dark" %}
-      <stop offset="0%" stop-color="#FDE68A"/>
-      <stop offset="100%" stop-color="#D97706"/>
+      <stop offset="0" stop-color="#FDE68A"/>
+      <stop offset="1" stop-color="#D97706"/>
       {% else %}
-      <stop offset="0%" stop-color="#92400E"/>
-      <stop offset="100%" stop-color="#D97706"/>
+      <stop offset="0" stop-color="#92400E"/>
+      <stop offset="1" stop-color="#D97706"/>
       {% endif %}
     </linearGradient>
+    {# One clip rect per line; SMIL animates its width char-by-char.
+       The static width attribute is the full line so renderers without
+       SMIL still show line 1 as a graceful fallback. #}
+    {% for l in lines %}
+    <clipPath id="tc{{ loop.index0 }}">
+      <rect x="{{ l.x0 }}" y="14" width="{{ l.width }}" height="18">
+        <animate attributeName="width" calcMode="discrete"
+                 values="{{ l.w_values }}" keyTimes="{{ l.w_key }}"
+                 dur="{{ duration }}s" begin="0s" repeatCount="indefinite"/>
+      </rect>
+    </clipPath>
+    {% endfor %}
   </defs>
-  <style>
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-    @keyframes typing1 { 0%,3%{width:0} 4%,33%{width:{{ (lines[0] | length) * 0.82 }}ch} 34%,37%{width:0} 100%{width:0} }
-    @keyframes typing2 { 0%,37%{width:0} 38%,67%{width:{{ (lines[1] | length) * 0.82 }}ch} 68%,71%{width:0} 100%{width:0} }
-    @keyframes typing3 { 0%,71%{width:0} 72%,97%{width:{{ (lines[2] | length) * 0.82 }}ch} 98%,100%{width:0} 100%{width:0} }
-    .line1 { animation: typing1 9s infinite steps({{ lines[0] | length }}), blink 0.7s infinite; }
-    .line2 { animation: typing2 9s infinite steps({{ lines[1] | length }}), blink 0.7s infinite; }
-    .line3 { animation: typing3 9s infinite steps({{ lines[2] | length }}), blink 0.7s infinite; }
-  </style>
-  <text x="250" y="40" text-anchor="middle" fill="url(#textGrad)" font-family="'Fira Code', 'Courier New', monospace" font-size="14" letter-spacing="0.5">
-    <tspan class="line1">{{ lines[0] }}</tspan>
-    <tspan class="line2">{{ lines[1] }}</tspan>
-    <tspan class="line3">{{ lines[2] }}</tspan>
-  </text>
+
+  {% for l in lines %}
+  <text x="{{ l.x0 }}" y="29" textLength="{{ l.width }}" lengthAdjust="spacingAndGlyphs"
+        clip-path="url(#tc{{ loop.index0 }})" opacity="{{ 1 if loop.first else 0 }}"
+        fill="url(#tg)" font-family="'Fira Code','JetBrains Mono',Consolas,'Courier New',monospace"
+        font-size="14">{{ l.text }}<animate attributeName="opacity" calcMode="discrete"
+          values="{{ l.o_values }}" keyTimes="{{ l.o_key }}"
+          dur="{{ duration }}s" begin="0s" repeatCount="indefinite"/></text>
+  {% endfor %}
+
+  {# Typewriter caret: x follows the reveal edge, opacity blinks. #}
+  <rect x="{{ caret.x_init }}" y="15" width="3" height="17" rx="1"
+        fill="{{ '#D97706' if theme == 'dark' else '#B45309' }}">
+    <animate attributeName="x" calcMode="discrete"
+             values="{{ caret.x_values }}" keyTimes="{{ caret.x_key }}"
+             dur="{{ duration }}s" begin="0s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" calcMode="discrete"
+             values="1;0;0" keyTimes="0;0.5;1"
+             dur="0.9s" begin="0s" repeatCount="indefinite"/>
+  </rect>
 </svg>

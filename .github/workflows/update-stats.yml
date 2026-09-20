@@ -29,13 +29,15 @@ jobs:
 
       - name: Generate all SVG cards
         env:
-          # 若配置了 PAT_TOKEN(需 repo 权限的经典 PAT),可统计私有仓库贡献;
+          # 若配置了 PAT_TOKEN(需 repo 权限的经典 PAT)，可统计私有仓库贡献;
           # 未配置时回退到 GITHUB_TOKEN(只能统计公开贡献)
           GH_TOKEN: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
+        # 数据获取失败时脚本以非零码退出，保留上一版卡片，避免空数据覆盖线上视觉
         run: python scripts/generate_cards.py
 
       - name: Commit and push
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git diff --quiet || (git add assets/ && git commit -m "chore: update stats cards [skip ci]" && git push)
+          git add assets/
+          git diff --cached --quiet || (git commit -m "chore: update stats cards [skip ci]" && git push)
