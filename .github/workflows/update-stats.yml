@@ -34,8 +34,33 @@ jobs:
           # 贡献)。YAML 的 `||` 只能识别"未配置"，识别不了"已配置但失效"。
           PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        # 数据获取失败时脚本以非零码退出，保留上一版卡片，避免空数据覆盖线上视觉
-        run: python scripts/generate_cards.py
+        # 临时诊断：失败时把完整日志(含脱敏的环境诊断)推到 ci-diag 分支
+        run: |
+          set +e
+          LOG="$RUNNER_TEMP/gen.log"
+          {
+            echo "== diag =="
+            python -V
+            pat="${PAT_TOKEN:-}"; ght="${GH_TOKEN:-}"
+            echo "PAT_TOKEN set: $([ -n "$pat" ] && echo yes || echo no) len=${#pat}"
+            echo "GH_TOKEN  set: $([ -n "$ght" ] && echo yes || echo no) len=${#ght}"
+            echo "same tokens: $([ -n "$pat" ] && [ "$pat" = "$ght" ] && echo yes || echo no)"
+            echo "curl egress probe (expect 401): $(curl -s -o /dev/null -w '%{http_code}' -m 10 -X POST https://api.github.com/graphql || echo curl-failed)"
+            echo "== run =="
+          } > "$LOG" 2>&1
+          python scripts/generate_cards.py >> "$LOG" 2>&1
+          rc=$?
+          echo "== exit $rc ==" >> "$LOG"
+          cat "$LOG"
+          if [ "$rc" -ne 0 ]; then
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+            cp "$LOG" ci-failure.log
+            git add ci-failure.log
+            git commit -q -m "diag: capture generation failure log [skip ci]" || true
+            git push --force origin HEAD:refs/heads/ci-diag || true
+          fi
+          exit "$rc"
 
       - name: Commit and push
         run: |
