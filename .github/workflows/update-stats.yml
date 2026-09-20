@@ -29,9 +29,11 @@ jobs:
 
       - name: Generate all SVG cards
         env:
-          # 若配置了 PAT_TOKEN(需 repo 权限的经典 PAT)，可统计私有仓库贡献;
-          # 未配置时回退到 GITHUB_TOKEN(只能统计公开贡献)
-          GH_TOKEN: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
+          # 两个 token 分开传入：脚本先用 PAT_TOKEN(需 repo 权限的经典 PAT，
+          # 可统计私有仓库贡献)，被拒/失效时在运行时回退 GITHUB_TOKEN(仅公开
+          # 贡献)。YAML 的 `||` 只能识别"未配置"，识别不了"已配置但失效"。
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         # 数据获取失败时脚本以非零码退出，保留上一版卡片，避免空数据覆盖线上视觉
         run: python scripts/generate_cards.py
 
