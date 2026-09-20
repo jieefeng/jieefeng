@@ -5,9 +5,11 @@ calendar. Everything is fetched in one GraphQL POST per token attempt —
 no gh CLI (its presence on runner images is not guaranteed), no extra
 dependencies (stdlib urllib only).
 
-Token resolution: PAT_TOKEN first (a classic PAT with repo scope also
-counts private contributions); if it is rejected we retry with
-GH_TOKEN/GITHUB_TOKEN (public contributions only) instead of failing.
+Token resolution: PAT_TOKEN first (a user-scoped classic PAT may include
+private contributions); if it is rejected we retry with
+GH_TOKEN/GITHUB_TOKEN instead of failing. Note: GitHub removed the
+`includePrivateContributions` argument from contributionsCollection
+(2026-09); private-include behavior, if still offered, is token-driven.
 """
 
 from __future__ import annotations
@@ -23,7 +25,7 @@ API_URL = "https://api.github.com/graphql"
 USER_QUERY = """
 {
   user(login: "%s") {
-    contributionsCollection(includePrivateContributions: true) {
+    contributionsCollection {
       totalCommitContributions
       contributionCalendar {
         totalContributions
