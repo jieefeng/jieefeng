@@ -86,15 +86,6 @@ def generate_all():
 
     # Card definitions: name -> template context
     cards = {
-        "stats": {
-            **data,
-        },
-        "langs": {
-            "languages": data["languages"],
-        },
-        "achievements": {
-            **data,
-        },
         "typing": {
             "lines": TYPING_LINES,
         },

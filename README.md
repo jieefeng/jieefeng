@@ -38,58 +38,6 @@
 
 ---
 
-<!-- ==================== 数据统计 ==================== -->
-
-<h2 align="center" style="font-size: 1.3rem; font-weight: 600; letter-spacing: 1px;">
-  <span style="background: linear-gradient(90deg, #D97706, #F59E0B); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">📊 数据统计</span>
-</h2>
-
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./assets/achievements-card.svg" />
-    <source media="(prefers-color-scheme: light)" srcset="./assets/achievements-card-light.svg" />
-    <img src="./assets/achievements-card.svg" alt="Achievements" />
-  </picture>
-</p>
-
----
-
-<!-- ==================== 正在做什么 ==================== -->
-
-<h2 align="center" style="font-size: 1.3rem; font-weight: 600; letter-spacing: 1px;">
-  <span style="background: linear-gradient(90deg, #D97706, #F59E0B); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">🔭 正在做什么</span>
-</h2>
-
-<p align="center" style="font-size: 1rem; color: #374151; line-height: 2; max-width: 500px; margin: 0 auto;">
-  🧠 探索 RAG 与大语言模型的实际落地场景<br/>
-  🏗️ 设计高可用、可扩展的后端系统架构<br/>
-  🛠️ 深耕工程化实践，提升研发效能与代码质量
-</p>
-
----
-
-<!-- ==================== GitHub 统计 ==================== -->
-
-<h2 align="center" style="font-size: 1.3rem; font-weight: 600; letter-spacing: 1px;">
-  <span style="background: linear-gradient(90deg, #D97706, #92400E); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">📊 GitHub 统计</span>
-</h2>
-
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./assets/stats-card.svg" />
-    <source media="(prefers-color-scheme: light)" srcset="./assets/stats-card-light.svg" />
-    <img src="./assets/stats-card.svg" alt="GitHub Stats" />
-  </picture>
-  &nbsp;&nbsp;
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./assets/langs-card.svg" />
-    <source media="(prefers-color-scheme: light)" srcset="./assets/langs-card-light.svg" />
-    <img src="./assets/langs-card.svg" alt="Top Languages" />
-  </picture>
-</p>
-
----
-
 <!-- ==================== 贡献蛇形动画 ==================== -->
 
 <h2 align="center" style="font-size: 1.3rem; font-weight: 600; letter-spacing: 1px;">
