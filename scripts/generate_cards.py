@@ -11,24 +11,6 @@ ROOT = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = ROOT / "templates"
 ASSETS_DIR = ROOT / "assets"
 
-# Skills configuration (static)
-SKILLS = [
-    {"name": "Python", "color": "#3572A5"},
-    {"name": "Java", "color": "#B07219"},
-    {"name": "TypeScript", "color": "#3178C6"},
-    {"name": "Vue", "color": "#41B883"},
-    {"name": "Spring", "color": "#6DB33F"},
-    {"name": "MySQL", "color": "#4479A1"},
-    {"name": "Redis", "color": "#DC382D"},
-    {"name": "RabbitMQ", "color": "#FF6600"},
-    {"name": "Kafka", "color": "#231F20"},
-    {"name": "Docker", "color": "#2496ED"},
-    {"name": "Linux", "color": "#FCC624"},
-    {"name": "Git", "color": "#F05032"},
-    {"name": "LangChain", "color": "#1C3C3C"},
-    {"name": "MinIO", "color": "#C72E49"},
-]
-
 # Blog links (static)
 BLOG_LINKS = [
     {"name": "掘金", "url": "https://juejin.cn/user/jieefeng", "color": "#1E80FF"},
@@ -119,18 +101,8 @@ def generate_all():
         "typing": {
             "lines": TYPING_LINES,
         },
-        "skills": {
-            "skills": SKILLS,
-            # Chips start at y=55; each row is 38px (28px chip + 10px gap),
-            # plus ~16px bottom padding inside the card border.
-            "card_height": (((len(SKILLS) + 6) // 7) - 1) * 38 + 99,
-        },
         "activity": {
             "cells": [],  # will be filled per-theme below
-        },
-        "pinned": {
-            "repos": data["pinned_repos"],
-            "card_height": max(60, 20 + ((len(data["pinned_repos"]) + 1) // 2) * 100 + 10),
         },
         "blog": {
             "links": BLOG_LINKS,

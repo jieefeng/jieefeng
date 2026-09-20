@@ -61,21 +61,6 @@ USER_QUERY = """
     }
     pullRequests(first: 1) { totalCount }
     issues(first: 1) { totalCount }
-    pinnedItems(first: 6, types: [REPOSITORY]) {
-      nodes {
-        ... on Repository {
-          name
-          description
-          stargazerCount
-          primaryLanguage {
-            name
-            color
-          }
-          url
-          isFork
-        }
-      }
-    }
   }
 }
 """
@@ -137,18 +122,6 @@ def fetch_user_data() -> dict:
         "contribution_days": days,
         "languages": langs,
         "views": views,
-        "pinned_repos": [
-            {
-                "name": repo["name"],
-                "description": repo.get("description") or "",
-                "stars": repo.get("stargazerCount", 0),
-                "language": repo.get("primaryLanguage", {}),
-                "url": repo.get("url", ""),
-                "fork": repo.get("isFork", False),
-            }
-            for repo in (user.get("pinnedItems", {}).get("nodes") or [])
-            if repo and not repo.get("isFork")
-        ],
     }
 
 
@@ -220,5 +193,4 @@ def _fallback_data() -> dict:
         "total_contribs": 0, "total_prs": 0, "total_issues": 0,
         "streak": 0, "max_streak": 0,
         "contribution_days": [], "languages": [], "views": 0,
-        "pinned_repos": [],
     }

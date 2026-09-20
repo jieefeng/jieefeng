@@ -54,22 +54,6 @@
 
 ---
 
-<!-- ==================== 技术栈（本地 SVG） ==================== -->
-
-<h2 align="center" style="font-size: 1.3rem; font-weight: 600; letter-spacing: 1px;">
-  <span style="background: linear-gradient(90deg, #D97706, #F59E0B); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">⚡ 技术栈</span>
-</h2>
-
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./assets/skills-card.svg?v=2" />
-    <source media="(prefers-color-scheme: light)" srcset="./assets/skills-card-light.svg?v=2" />
-    <img src="./assets/skills-card.svg?v=2" alt="Skills" />
-  </picture>
-</p>
-
----
-
 <!-- ==================== 正在做什么 ==================== -->
 
 <h2 align="center" style="font-size: 1.3rem; font-weight: 600; letter-spacing: 1px;">
@@ -80,22 +64,6 @@
   🧠 探索 RAG 与大语言模型的实际落地场景<br/>
   🏗️ 设计高可用、可扩展的后端系统架构<br/>
   🛠️ 深耕工程化实践，提升研发效能与代码质量
-</p>
-
----
-
-<!-- ==================== 置顶项目（本地 SVG） ==================== -->
-
-<h2 align="center" style="font-size: 1.3rem; font-weight: 600; letter-spacing: 1px;">
-  <span style="background: linear-gradient(90deg, #D97706, #F59E0B); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">📌 置顶项目</span>
-</h2>
-
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./assets/pinned-card.svg" />
-    <source media="(prefers-color-scheme: light)" srcset="./assets/pinned-card-light.svg" />
-    <img src="./assets/pinned-card.svg" alt="Pinned Repos" />
-  </picture>
 </p>
 
 ---
