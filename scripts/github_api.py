@@ -1,8 +1,9 @@
-"""Fetch GitHub contribution data via the gh CLI (GraphQL).
+"""Fetch GitHub contribution data via the GitHub GraphQL API (HTTPS).
 
 The script only needs what the cards actually render: the contribution
-calendar. Everything is fetched in one GraphQL call per token attempt —
-no per-repo follow-up requests.
+calendar. Everything is fetched in one GraphQL POST per token attempt —
+no gh CLI (its presence on runner images is not guaranteed), no extra
+dependencies (stdlib urllib only).
 
 Token resolution: PAT_TOKEN first (a classic PAT with repo scope also
 counts private contributions); if it is rejected we retry with
@@ -13,10 +14,11 @@ from __future__ import annotations
 
 import json
 import os
-import shutil
-import subprocess
+import urllib.error
+import urllib.request
 
 LOGIN = "jieefeng"
+API_URL = "https://api.github.com/graphql"
 
 USER_QUERY = """
 {
@@ -63,6 +65,9 @@ def compute_streaks(days: list[dict]) -> tuple[int, int]:
 
 
 def _parse_calendar(payload: dict) -> dict:
+    if payload.get("errors"):
+        raise RuntimeError(f"GraphQL errors: {payload['errors']}")
+
     user = (payload.get("data") or {}).get("user")
     if not user:
         raise ValueError(f"unexpected GraphQL response: {payload}")
@@ -85,22 +90,26 @@ def _parse_calendar(payload: dict) -> dict:
 
 def _try_graphql(token: str) -> dict:
     """One authenticated GraphQL attempt. Raises on any failure."""
-    env = dict(os.environ)
-    env["GH_TOKEN"] = token  # override any ambient GH_TOKEN (incl. the other candidate)
-
-    result = subprocess.run(
-        ["gh", "api", "graphql", "-f", f"query={USER_QUERY}"],
-        capture_output=True, text=True, timeout=60,
-        encoding="utf-8", errors="replace",
-        env=env,
+    body = json.dumps({"query": USER_QUERY}).encode("utf-8")
+    req = urllib.request.Request(
+        API_URL,
+        data=body,
+        method="POST",
+        headers={
+            "Authorization": f"Bearer {token}",
+            "Accept": "application/vnd.github+json",
+            "Content-Type": "application/json",
+            "User-Agent": "jieefeng-profile-card-generator",
+        },
     )
-    if result.returncode != 0:
-        raise RuntimeError(f"gh api graphql failed: {result.stderr.strip()}")
-
     try:
-        payload = json.loads(result.stdout)
-    except json.JSONDecodeError as exc:
-        raise RuntimeError(f"invalid JSON from gh api: {exc}") from exc
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            payload = json.loads(resp.read().decode("utf-8"))
+    except urllib.error.HTTPError as exc:
+        detail = exc.read().decode("utf-8", errors="replace").strip()
+        raise RuntimeError(f"HTTP {exc.code}: {detail[:200]}") from exc
+    except urllib.error.URLError as exc:
+        raise RuntimeError(f"network error: {exc.reason}") from exc
 
     return _parse_calendar(payload)
 
@@ -111,10 +120,6 @@ def fetch_user_data() -> dict | None:
     Returning None (instead of zeroed fallback data) lets generate_cards.py
     fail closed and keep the last good SVGs on disk.
     """
-    if shutil.which("gh") is None:
-        print("ERROR: gh CLI not found on PATH; install it or run `gh auth login`.")
-        return None
-
     # PAT first (private contributions), then the workflow's GITHUB_TOKEN.
     candidates: list[tuple[str, str]] = []
     pat = os.environ.get("PAT_TOKEN", "").strip()
@@ -124,20 +129,18 @@ def fetch_user_data() -> dict | None:
     if gh_token and gh_token != pat:
         candidates.append(("GH_TOKEN", gh_token))
     if not candidates:
-        print("ERROR: no token available (set PAT_TOKEN or GH_TOKEN, or `gh auth login`).")
+        print("ERROR: no token available (set PAT_TOKEN or GH_TOKEN).")
         return None
 
-    data: dict | None = None
     for label, token in candidates:
         try:
             data = _try_graphql(token)
         except Exception as exc:
             print(f"WARNING: {label} attempt failed: {exc}")
-            data = None
-        if data is not None:
-            if len(candidates) > 1:
-                print(f"  using {label} for this run")
-            return data
+            continue
+        if len(candidates) > 1:
+            print(f"  using {label} for this run")
+        return data
 
     print("ERROR: all token candidates failed; keeping existing SVGs untouched.")
     return None
