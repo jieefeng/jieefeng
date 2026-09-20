@@ -62,9 +62,9 @@
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./assets/skills-card.svg" />
-    <source media="(prefers-color-scheme: light)" srcset="./assets/skills-card-light.svg" />
-    <img src="./assets/skills-card.svg" alt="Skills" />
+    <source media="(prefers-color-scheme: dark)" srcset="./assets/skills-card.svg?v=2" />
+    <source media="(prefers-color-scheme: light)" srcset="./assets/skills-card-light.svg?v=2" />
+    <img src="./assets/skills-card.svg?v=2" alt="Skills" />
   </picture>
 </p>
 
