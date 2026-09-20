@@ -104,9 +104,6 @@ def fetch_user_data() -> dict:
     # Fetch languages
     langs = _fetch_languages()
 
-    # Fetch views
-    views = _fetch_views()
-
     return {
         "repos": user.get("repositories", {}).get("totalCount", 0),
         "followers": user.get("followers", {}).get("totalCount", 0),
@@ -121,7 +118,6 @@ def fetch_user_data() -> dict:
         "max_streak": max_streak,
         "contribution_days": days,
         "languages": langs,
-        "views": views,
     }
 
 
@@ -165,26 +161,6 @@ def _fetch_languages() -> list[dict]:
     ]
 
 
-def _fetch_views() -> int:
-    """Fetch profile view count from komarev API."""
-    try:
-        result = subprocess.run(
-            ["curl", "-sf", "--max-time", "15", "--retry", "3", "--retry-delay", "5",
-             "https://komarev.com/ghpvc/?username=jieefeng&color=blue&style=flat"],
-            capture_output=True, text=True, timeout=20,
-            encoding="utf-8", errors="replace",
-        )
-        if result.returncode != 0 or not result.stdout:
-            return 0
-        import re
-        match = re.findall(r'(\d+)</text>', result.stdout)
-        if match:
-            return int(match[-1])
-    except Exception as e:
-        print(f"WARNING: views fetch error: {e}")
-    return 0
-
-
 def _fallback_data() -> dict:
     """Return fallback data when API fails."""
     return {
@@ -192,5 +168,5 @@ def _fallback_data() -> dict:
         "commits": 0, "prs": 0, "issues": 0,
         "total_contribs": 0, "total_prs": 0, "total_issues": 0,
         "streak": 0, "max_streak": 0,
-        "contribution_days": [], "languages": [], "views": 0,
+        "contribution_days": [], "languages": [],
     }

@@ -142,12 +142,9 @@
   <span style="background: linear-gradient(90deg, #D97706, #F59E0B); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">👀 访客统计</span>
 </h2>
 
+<!-- 实时访客计数：徽章由访客浏览器直接加载，每次访问 +1 -->
 <p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./assets/views-card.svg" />
-    <source media="(prefers-color-scheme: light)" srcset="./assets/views-card-light.svg" />
-    <img src="./assets/views-card.svg" alt="Profile Views" />
-  </picture>
+  <img src="https://komarev.com/ghpvc/?username=jieefeng&color=D97706&style=for-the-badge&label=VISITORS" alt="Profile views" />
 </p>
 
 ---
