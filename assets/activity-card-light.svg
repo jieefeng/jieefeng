@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="730" height="150" viewBox="0 0 730 150">
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="170" viewBox="0 0 760 170">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#FFFBEB"/>
@@ -9,17 +9,36 @@
       <stop offset="50%" stop-color="#D97706"/>
       <stop offset="100%" stop-color="#F59E0B"/>
     </linearGradient>
+    <linearGradient id="numGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#D97706"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
     <filter id="shadow">
-      <feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="#D97706" flood-opacity="0.15"/>
+      <feDropShadow dx="0" dy="3" stdDeviation="7" flood-color="#D97706" flood-opacity="0.18"/>
     </filter>
   </defs>
-  <rect x="1" y="1" width="728" height="148" rx="12" fill="url(#bg)" filter="url(#shadow)"/>
-  <rect x="1" y="1" width="728" height="148" rx="12" fill="none" stroke="url(#borderGrad)" stroke-width="1.5"/>
-  <text x="365" y="30" text-anchor="middle" fill="#92400E" font-family="'Segoe UI', -apple-system, sans-serif" font-size="14" font-weight="600">🔥 贡献热力图</text>
-  <text x="572" y="142" fill="#6B7280" font-family="'Segoe UI', sans-serif" font-size="9">Less</text>
-  <rect x="596" y="133" width="10" height="10" rx="2" fill="#E5E7EB"/>
-  <rect x="609" y="133" width="10" height="10" rx="2" fill="#FEF3C7"/>
-  <rect x="622" y="133" width="10" height="10" rx="2" fill="#F59E0B"/>
-  <rect x="635" y="133" width="10" height="10" rx="2" fill="#92400E"/>
-  <text x="648" y="142" fill="#6B7280" font-family="'Segoe UI', sans-serif" font-size="9">More</text>
+
+  <rect x="1" y="1" width="758" height="168" rx="14" fill="url(#bg)" filter="url(#shadow)"/>
+  <rect x="1" y="1" width="758" height="168" rx="14" fill="none" stroke="url(#borderGrad)" stroke-width="1.5"/>
+
+  <!-- Header: title left, stats right -->
+  <text x="28" y="32" fill="#92400E" font-family="'Segoe UI', -apple-system, sans-serif" font-size="15" font-weight="700">🔥 贡献热力图</text>
+  <text x="732" y="32" text-anchor="end" font-family="'Segoe UI', -apple-system, sans-serif" font-size="12">
+    <tspan fill="url(#numGrad)" font-size="16" font-weight="700">0</tspan>
+    <tspan fill="#6B7280"> 次贡献 · 连续 </tspan>
+    <tspan fill="#B45309" font-weight="600">0</tspan>
+    <tspan fill="#6B7280"> 天</tspan>
+  </text>
+
+  <!-- Heatmap grid -->
+
+  <!-- Month-ish baseline & legend -->
+  <text x="24" y="158" fill="#9CA3AF" font-family="'Segoe UI', sans-serif" font-size="9">最近一年</text>
+  <text x="608" y="158" fill="#6B7280" font-family="'Segoe UI', sans-serif" font-size="9">Less</text>
+  <rect x="630" y="149" width="11" height="11" rx="2.5" fill="#E5E7EB"/>
+  <rect x="644" y="149" width="11" height="11" rx="2.5" fill="#FEF3C7"/>
+  <rect x="658" y="149" width="11" height="11" rx="2.5" fill="#FDE68A"/>
+  <rect x="672" y="149" width="11" height="11" rx="2.5" fill="#F59E0B"/>
+  <rect x="686" y="149" width="11" height="11" rx="2.5" fill="#92400E"/>
+  <text x="700" y="158" fill="#6B7280" font-family="'Segoe UI', sans-serif" font-size="9">More</text>
 </svg>
