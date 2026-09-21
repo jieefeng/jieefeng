@@ -45,6 +45,20 @@
 
 ---
 
+<!-- ==================== 贪吃蛇动画（每日自动更新） ==================== -->
+
+<h2 align="center">🐍 贪吃蛇</h2>
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/jieefeng/jieefeng/output/github-snake-dark.svg" />
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/jieefeng/jieefeng/output/github-snake.svg" />
+    <img alt="github contribution grid snake animation" src="https://raw.githubusercontent.com/jieefeng/jieefeng/output/github-snake.svg" width="100%" />
+  </picture>
+</p>
+
+---
+
 <!-- ==================== 访客统计 ==================== -->
 
 <h2 align="center">👀 访客统计</h2>
