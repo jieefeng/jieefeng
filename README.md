@@ -31,29 +31,15 @@
 
 ---
 
-<!-- ==================== 贡献热力图（本地生成 · 每日自动更新） ==================== -->
+<!-- ==================== 贡献热力图 + 贪吃蛇（本地生成 · 每日自动更新） ==================== -->
 
-<h2 align="center">🔥 贡献热力图</h2>
+<h2 align="center">🔥 贡献热力图 · 🐍 贪吃蛇</h2>
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="./assets/activity-card.svg" />
     <source media="(prefers-color-scheme: light)" srcset="./assets/activity-card-light.svg" />
-    <img alt="GitHub contribution heatmap" src="./assets/activity-card.svg" width="760" />
-  </picture>
-</p>
-
----
-
-<!-- ==================== 贪吃蛇动画（每日自动更新） ==================== -->
-
-<h2 align="center">🐍 贪吃蛇</h2>
-
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/jieefeng/jieefeng/output/github-snake-dark.svg" />
-    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/jieefeng/jieefeng/output/github-snake.svg" />
-    <img alt="github contribution grid snake animation" src="https://raw.githubusercontent.com/jieefeng/jieefeng/output/github-snake.svg" width="100%" />
+    <img alt="contribution heatmap with snake animation" src="./assets/activity-card.svg" width="760" />
   </picture>
 </p>
 
@@ -71,5 +57,5 @@
 ---
 
 <p align="center">
-  <i>感谢访问！</i> &nbsp;|&nbsp; <i>访客计数实时更新 · 贡献热力图由 GitHub Actions 每日 9:00（北京时间）自动生成</i>
+  <i>感谢访问！</i> &nbsp;|&nbsp; <i>访客计数实时更新 · 热力图与贪吃蛇动画由 GitHub Actions 每日 9:00（北京时间）自动生成</i>
 </p>

@@ -31,7 +31,7 @@
   {% set accent = '#D97706' if theme == 'dark' else '#B45309' %}
 
   <!-- Header: title left, yearly stats right -->
-  <text x="28" y="31" fill="{{ '#F59E0B' if theme == 'dark' else '#92400E' }}" font-family="'Segoe UI',-apple-system,sans-serif" font-size="15" font-weight="700">🔥 贡献热力图</text>
+  <text x="28" y="31" fill="{{ '#F59E0B' if theme == 'dark' else '#92400E' }}" font-family="'Segoe UI',-apple-system,sans-serif" font-size="15" font-weight="700">🔥 贡献热力图 · 贪吃蛇</text>
   <text x="732" y="31" text-anchor="end" font-family="'Segoe UI',-apple-system,sans-serif" font-size="12">
     <tspan fill="url(#anum)" font-size="16" font-weight="700">{{ total_contribs }}</tspan>
     <tspan fill="{{ muted }}"> 次贡献 · 连续 </tspan>
@@ -51,10 +51,19 @@
   <text x="14" y="{{ wd.y }}" fill="{{ muted2 }}" font-family="'Segoe UI',sans-serif" font-size="8">{{ wd.label }}</text>
   {% endfor %}
 
-  <!-- Heatmap grid -->
+  <!-- Heatmap grid; each cell flashes as the snake "eats" it -->
   {% for cell in cells %}
-  <rect x="{{ cell.x }}" y="{{ cell.y }}" width="11" height="11" rx="2.5" fill="{{ cell.fill }}"/>
+  <rect x="{{ cell.x }}" y="{{ cell.y }}" width="11" height="11" rx="2.5" fill="{{ cell.fill }}">{% if snake.eaten[loop.index0] %}<animate attributeName="fill" values="{{ cell.fill }};{{ snake.flash_color }};{{ cell.fill }};{{ cell.fill }}" keyTimes="0;{{ snake.eaten[loop.index0][0] }};{{ snake.eaten[loop.index0][1] }};1" dur="{{ snake.dur }}s" repeatCount="indefinite"/>{% endif %}</rect>
   {% endfor %}
+
+  <!-- Snake: head + fading trail crawling the grid -->
+  <g>
+    {% for s in snake.segments %}
+    <circle r="{{ s.r }}" fill="{{ snake.color }}" opacity="{{ s.opacity }}"{% if s.r > 4 %} stroke="{{ snake.color }}" stroke-opacity="0.35" stroke-width="2"{% endif %}>
+      <animateMotion dur="{{ snake.dur }}s" begin="{{ s.begin }}s" repeatCount="indefinite" path="{{ snake.path }}"/>
+    </circle>
+    {% endfor %}
+  </g>
 
   <!-- Legend -->
   <text x="36" y="161" fill="{{ muted2 }}" font-family="'Segoe UI',sans-serif" font-size="9">最近一年</text>

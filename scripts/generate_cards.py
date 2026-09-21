@@ -213,6 +213,56 @@ def _month_labels(days: list[dict], max_x: float = 700.0) -> list[dict]:
 # Rendering
 # ---------------------------------------------------------------------------
 
+# ---------------------------------------------------------------------------
+# Snake overlay — the snake crawls the same grid serpentine-style, "eating"
+# each cell (fill flash) as its head passes. Geometry from the block above.
+# ---------------------------------------------------------------------------
+
+SNAKE_DURATION = 14.0  # seconds for one full pass over the grid
+# (begin offset, radius, opacity) for head + trailing body segments.
+SNAKE_TRAIL = ((0.0, 5.0, "1"), (-0.18, 4.2, "0.55"), (-0.36, 3.2, "0.28"))
+SNAKE_COLORS = {"dark": "#FBBF24", "light": "#B45309"}
+
+
+def _snake_context(days: list[dict], theme: str) -> dict:
+    cols = -(-len(days) // 7)  # ceil
+    x0, y0 = GRID_X + CELL / 2, GRID_Y + CELL / 2
+
+    # Serpentine visit order: even columns top->bottom, odd bottom->top.
+    # Every consecutive hop is exactly PITCH long, so speed is uniform.
+    points = [
+        (x0 + w * PITCH, y0 + (r if w % 2 == 0 else 6 - r) * PITCH)
+        for w in range(cols)
+        for r in range(7)
+    ]
+    path = f"M {points[0][0]:.1f} {points[0][1]:.1f} " + " ".join(
+        f"L {x:.1f} {y:.1f}" for x, y in points[1:]
+    )
+
+    # Flash window as a fraction of the loop, kept inside (0, 1) keyTimes.
+    last = len(points) - 1
+    flash_span = 0.035
+
+    def flash_at(index: int) -> tuple[str, str]:
+        t = 0.02 + (index / last) * 0.90
+        return f"{t:.4f}", f"{t + flash_span:.4f}"
+
+    # Per-cell flash times: cells are generated column-major top->bottom in
+    # _activity_cells, i.e. idx = w*7 + r — the same serpentine order.
+    eaten = [flash_at(idx) for idx in range(len(days))]
+
+    return {
+        "dur": SNAKE_DURATION,
+        "path": path,
+        "color": SNAKE_COLORS[theme],
+        "flash_color": LEVEL_COLORS[theme][4],
+        "segments": [
+            {"begin": b, "r": r, "opacity": o} for b, r, o in SNAKE_TRAIL
+        ],
+        "eaten": eaten,
+    }
+
+
 def _mock_data() -> dict:
     """Deterministic sample data for local preview (no gh CLI required)."""
     rng = random.Random(42)
@@ -284,6 +334,7 @@ def generate_all(out_dir: Path, mock: bool) -> None:
             if name == "activity-card":
                 render_ctx["cells"] = _activity_cells(data["contribution_days"], theme)
                 render_ctx["levels"] = LEVEL_COLORS[theme]
+                render_ctx["snake"] = _snake_context(data["contribution_days"], theme)
             svg = env.get_template(template_name).render(**render_ctx, theme=theme)
             path = out_dir / f"{name}{suffix}.svg"
             path.write_text(svg, encoding="utf-8")
