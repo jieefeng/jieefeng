@@ -57,5 +57,5 @@
 ---
 
 <p align="center">
-  <i>感谢访问！</i> &nbsp;|&nbsp; <i>数据卡片由 GitHub Actions 每日 9:00（北京时间）自动更新</i>
+  <i>感谢访问！</i> &nbsp;|&nbsp; <i>访客计数实时更新 · 贡献热力图由 GitHub Actions 每日 9:00（北京时间）自动生成</i>
 </p>

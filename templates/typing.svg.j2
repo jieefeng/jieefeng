@@ -27,9 +27,7 @@
   <text x="{{ l.x0 }}" y="29" textLength="{{ l.width }}" lengthAdjust="spacingAndGlyphs"
         clip-path="url(#tc{{ loop.index0 }})" opacity="{{ 1 if loop.first else 0 }}"
         fill="url(#tg)" font-family="'Fira Code','JetBrains Mono',Consolas,'Courier New',monospace"
-        font-size="14">{{ l.text }}<animate attributeName="opacity" calcMode="discrete"
-          values="{{ l.o_values }}" keyTimes="{{ l.o_key }}"
-          dur="{{ duration }}s" begin="0s" repeatCount="indefinite"/></text>
+        font-size="14">{{ l.text }}</text>
   {% endfor %}
 
   {# Typewriter caret: x follows the reveal edge, opacity blinks. #}

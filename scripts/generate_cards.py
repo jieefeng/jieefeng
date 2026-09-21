@@ -98,20 +98,19 @@ def _typing_context(lines: list[str]) -> dict:
         n = max(len(text), 1)
         w = max(_text_width(text), 1)
         x0 = (CARD_W - w) / 2
-        end = start + t_type + t_hold + t_del
 
         # Reveal width: 0 -> w char by char, hold, then w -> 0.
-        width_frames = [(w * k / n, start + t_type * k / n) for k in range(n + 1)]
+        # Every line's timeline starts with an explicit 0-width frame at
+        # t=0: SMIL requires keyTimes[0] == 0 (violating it makes strict
+        # renderers drop the animation, leaving the rect at full static
+        # width), and a static width of 0 keeps hidden lines invisible in
+        # renderers with no SMIL at all. Visibility is clip-only, so two
+        # lines can never overlap.
+        width_frames = [(0.0, 0.0)]
+        width_frames += [(w * k / n, start + t_type * k / n) for k in range(n + 1)]
         width_frames += [(w * (n - k) / n, start + t_type + t_hold + t_del * k / n)
                          for k in range(1, n + 1)]
         w_values, w_key = _keyframes(width_frames, total)
-
-        # Visibility window (line 0 starts visible as the no-SMIL fallback).
-        opacity_frames = (
-            [(1.0, 0.0), (0.0, end)] if i == 0
-            else [(0.0, 0.0), (1.0, start), (0.0, end)]
-        )
-        o_values, o_key = _keyframes(opacity_frames, total)
 
         lines_ctx.append({
             "text": text,
@@ -119,8 +118,6 @@ def _typing_context(lines: list[str]) -> dict:
             "x0": x0,
             "w_values": w_values,
             "w_key": w_key,
-            "o_values": o_values,
-            "o_key": o_key,
         })
 
         # Caret positions contributed by this line.
