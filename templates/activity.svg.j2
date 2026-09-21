@@ -21,6 +21,13 @@
     <filter id="ashadow" x="-5%" y="-10%" width="110%" height="125%">
       <feDropShadow dx="0" dy="3" stdDeviation="7" flood-color="#D97706" flood-opacity="{{ '0.25' if theme == 'dark' else '0.18' }}"/>
     </filter>
+    <filter id="snakeglow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="2.2" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
   </defs>
 
   <rect x="1" y="1" width="758" height="170" rx="14" fill="url(#abg)" filter="url(#ashadow)"/>
@@ -56,13 +63,27 @@
   <rect x="{{ cell.x }}" y="{{ cell.y }}" width="11" height="11" rx="2.5" fill="{{ cell.fill }}">{% if snake.eaten[loop.index0] %}<animate attributeName="fill" values="{{ cell.fill }};{{ snake.flash_color }};{{ cell.fill }};{{ cell.fill }}" keyTimes="0;{{ snake.eaten[loop.index0][0] }};{{ snake.eaten[loop.index0][1] }};1" dur="{{ snake.dur }}s" repeatCount="indefinite"/>{% endif %}</rect>
   {% endfor %}
 
-  <!-- Snake: head + fading trail crawling the grid -->
-  <g>
-    {% for s in snake.segments %}
-    <circle r="{{ s.r }}" fill="{{ snake.color }}" opacity="{{ s.opacity }}"{% if s.r > 4 %} stroke="{{ snake.color }}" stroke-opacity="0.35" stroke-width="2"{% endif %}>
-      <animateMotion dur="{{ snake.dur }}s" begin="{{ s.begin }}s" repeatCount="indefinite" path="{{ snake.path }}"/>
+  <!-- Snake: a connected glowing body that draws itself along the grid.
+       The stroke is the body (always visible, even in static screenshots);
+       the head rides the path tip and pulses while eating. -->
+  <g filter="url(#snakeglow)">
+    <path d="{{ snake.path }}" fill="none" stroke="{{ snake.color }}" stroke-width="5"
+          stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.9"
+          stroke-dasharray="{{ snake.path_len }}"
+          stroke-dashoffset="{{ snake.path_len }}">
+      <animate attributeName="stroke-dashoffset"
+               values="{{ snake.path_len }};0;0;{{ snake.path_len }}"
+               keyTimes="0;{{ snake.draw }};0.96;1"
+               dur="{{ snake.dur }}s" repeatCount="indefinite" calcMode="spline"
+               keySplines="0.4 0 0.6 1;0 0 1 1;0 0 1 1"/>
+    </path>
+    <circle r="4.6" fill="{{ snake.color }}">
+      <animateMotion dur="{{ snake.dur }}s" repeatCount="indefinite"
+                     path="{{ snake.path }}" rotate="0"
+                     keyPoints="0;1;1" keyTimes="0;{{ snake.draw }};1"
+                     calcMode="linear"/>
+      <animate attributeName="r" values="4.6;4.6;5.6;4.6" keyTimes="0;0.85;0.93;1" dur="3s" repeatCount="indefinite"/>
     </circle>
-    {% endfor %}
   </g>
 
   <!-- Legend -->

@@ -219,8 +219,7 @@ def _month_labels(days: list[dict], max_x: float = 700.0) -> list[dict]:
 # ---------------------------------------------------------------------------
 
 SNAKE_DURATION = 14.0  # seconds for one full pass over the grid
-# (begin offset, radius, opacity) for head + trailing body segments.
-SNAKE_TRAIL = ((0.0, 5.0, "1"), (-0.18, 4.2, "0.55"), (-0.36, 3.2, "0.28"))
+DRAW_FRACTION = 0.88   # body finishes drawing here, then holds before restart
 SNAKE_COLORS = {"dark": "#FBBF24", "light": "#B45309"}
 
 
@@ -229,7 +228,8 @@ def _snake_context(days: list[dict], theme: str) -> dict:
     x0, y0 = GRID_X + CELL / 2, GRID_Y + CELL / 2
 
     # Serpentine visit order: even columns top->bottom, odd bottom->top.
-    # Every consecutive hop is exactly PITCH long, so speed is uniform.
+    # Every consecutive hop is exactly PITCH long, so speed is uniform and
+    # the total polyline length is exact: (points-1) * PITCH.
     points = [
         (x0 + w * PITCH, y0 + (r if w % 2 == 0 else 6 - r) * PITCH)
         for w in range(cols)
@@ -238,13 +238,16 @@ def _snake_context(days: list[dict], theme: str) -> dict:
     path = f"M {points[0][0]:.1f} {points[0][1]:.1f} " + " ".join(
         f"L {x:.1f} {y:.1f}" for x, y in points[1:]
     )
+    path_len = round((len(points) - 1) * PITCH + 1.0, 1)
 
     # Flash window as a fraction of the loop, kept inside (0, 1) keyTimes.
     last = len(points) - 1
     flash_span = 0.035
 
     def flash_at(index: int) -> tuple[str, str]:
-        t = 0.02 + (index / last) * 0.90
+        # Flash right as the body tip reaches the cell (DRAW_FRACTION of the
+        # loop is the drawing phase covering the whole path).
+        t = 0.01 + (index / last) * (DRAW_FRACTION - 0.02)
         return f"{t:.4f}", f"{t + flash_span:.4f}"
 
     # Per-cell flash times: cells are generated column-major top->bottom in
@@ -254,11 +257,10 @@ def _snake_context(days: list[dict], theme: str) -> dict:
     return {
         "dur": SNAKE_DURATION,
         "path": path,
+        "path_len": path_len,
+        "draw": DRAW_FRACTION,
         "color": SNAKE_COLORS[theme],
         "flash_color": LEVEL_COLORS[theme][4],
-        "segments": [
-            {"begin": b, "r": r, "opacity": o} for b, r, o in SNAKE_TRAIL
-        ],
         "eaten": eaten,
     }
 
