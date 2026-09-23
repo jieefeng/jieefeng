@@ -427,6 +427,7 @@
   <rect x="712" y="52" width="11" height="11" rx="2.5" fill="#D9930B"><animate attributeName="fill" values="#D9930B;#FBBF24;#D9930B;#D9930B" keyTimes="0;0.8561;0.8911;1" dur="14.0s" repeatCount="indefinite"/></rect>
   <rect x="712" y="65" width="11" height="11" rx="2.5" fill="#FBBF24"><animate attributeName="fill" values="#FBBF24;#FBBF24;#FBBF24;#FBBF24" keyTimes="0;0.8584;0.8934;1" dur="14.0s" repeatCount="indefinite"/></rect>
   <rect x="712" y="78" width="11" height="11" rx="2.5" fill="#4A3007"><animate attributeName="fill" values="#4A3007;#FBBF24;#4A3007;#4A3007" keyTimes="0;0.8607;0.8957;1" dur="14.0s" repeatCount="indefinite"/></rect>
+  <rect x="712" y="91" width="11" height="11" rx="2.5" fill="#21262D"><animate attributeName="fill" values="#21262D;#FBBF24;#21262D;#21262D" keyTimes="0;0.8630;0.8980;1" dur="14.0s" repeatCount="indefinite"/></rect>
 
   <!-- Snake: a connected glowing body that draws itself along the grid.
        The stroke is the body (always visible, even in static screenshots);
