@@ -170,6 +170,61 @@ def _typing_context(lines: list[str]) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# Skills card — chip layout precomputed here; presentation lives in
+# templates/skills.svg.j2. Widths use the same monospace-free estimate as
+# Segoe UI at 12px: latin ~6.9px, CJK ~12px, plus dot + padding.
+# ---------------------------------------------------------------------------
+
+SKILL_GROUPS = [
+    ("语言", ["Python", "Java", "TypeScript", "SQL"]),
+    ("后端", ["Spring Boot", "MySQL", "Redis", "Kafka", "RabbitMQ"]),
+    ("前端", ["Vue", "React", "Vite"]),
+    ("AI / 数据", ["RAG", "LangChain", "Embedding", "Milvus"]),
+    ("工程", ["Docker", "Linux", "Git", "CI/CD"]),
+]
+
+SKILLS_CARD_W = 500
+
+
+def _chip_width(label: str) -> int:
+    text_w = sum(12.2 if _is_cjk(ch) else 6.9 for ch in label)
+    return round(text_w + 34)  # dot + left/right padding
+
+
+def _skills_context() -> dict:
+    """Lay out skill groups: a small left-aligned group label above each
+    row of centered chips."""
+    groups = []
+    y = 34  # first chip row top; group label sits 10px above it
+    for name, skills in SKILL_GROUPS:
+        chips = [{"label": s, "w": _chip_width(s)} for s in skills]
+        # Greedy wrap into rows that fit the card width.
+        rows: list[list[dict]] = [[]]
+        for chip in chips:
+            row = rows[-1]
+            used = sum(c["w"] for c in row) + 10 * max(len(row) - 1, 0)
+            if row and used + 10 + chip["w"] > SKILLS_CARD_W - 56:
+                rows.append([chip])
+            else:
+                row.append(chip)
+        laid = []
+        for row in rows:
+            total = sum(c["w"] for c in row) + 10 * (len(row) - 1)
+            x = (SKILLS_CARD_W - total) / 2
+            for c in row:
+                laid.append({"x": round(x, 1), "y": y, "w": c["w"], "label": c["label"]})
+                x += c["w"] + 10
+            y += 34
+        groups.append({
+            "name": name,
+            "label_y": y - 34 * len(rows) - 12,
+            "chips": laid,
+        })
+        y += 12  # gap between groups
+    return {"groups": groups, "height": y + 4}
+
+
+# ---------------------------------------------------------------------------
 # Contribution heatmap — geometry mirrored in templates/activity.svg.j2.
 # ---------------------------------------------------------------------------
 
@@ -506,6 +561,7 @@ def generate_all(out_dir: Path, mock: bool) -> None:
 
     cards = (
         ("typing-card", "typing.svg.j2", _typing_context(TYPING_LINES)),
+        ("skills-card", "skills.svg.j2", _skills_context()),
         ("activity-card", "activity.svg.j2", activity_ctx),
     )
 
