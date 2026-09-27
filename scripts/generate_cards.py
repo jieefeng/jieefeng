@@ -112,12 +112,31 @@ def _typing_context(lines: list[str]) -> dict:
                          for k in range(1, n + 1)]
         w_values, w_key = _keyframes(width_frames, total)
 
+        # Discrete opacity: a line is opaque only inside its own
+        # type/hold/delete window, so no two lines ever share the stage.
+        # The trailing (0.0, total) frame matters: _keyframes pins the last
+        # frame to the end of the cycle, and without it the "hidden" frame
+        # would be stretched from the window's end to t=1, leaving the line
+        # visible on top of every later line.
+        # The static opacity attribute stays as the no-SMIL fallback
+        # (line 1 only), which clipping alone cannot provide: a clip of
+        # width 0 hides a line, but a line left at opacity 0 stays
+        # invisible even while its clip opens — the bug this animation
+        # fixes (lines 2 and 3 never appeared before).
+        visible_end = start + t_type + t_hold + t_del
+        op_values, op_key = _keyframes(
+            [(0.0, 0.0), (1.0, start), (0.0, visible_end), (0.0, total)],
+            total,
+        )
+
         lines_ctx.append({
             "text": text,
             "width": w,
             "x0": x0,
             "w_values": w_values,
             "w_key": w_key,
+            "op_values": op_values,
+            "op_key": op_key,
         })
 
         # Caret positions contributed by this line.
@@ -240,19 +259,20 @@ def _snake_context(days: list[dict], theme: str) -> dict:
     )
     path_len = round((len(points) - 1) * PITCH + 1.0, 1)
 
-    # Flash window as a fraction of the loop, kept inside (0, 1) keyTimes.
+    # Per-cell flash time, handed to CSS as an animation-delay in seconds.
+    # The head reaches cell `index` at this point of the drawing phase;
+    # cells are generated column-major top->bottom in _activity_cells
+    # (idx = w*7 + r) — the same serpentine order the path walks.
+    #
+    # One shared @keyframes plus a per-cell delay replaces one SMIL
+    # <animate> per cell. That shrinks the card and, unlike a per-element
+    # SMIL fill ramp from the base color to the highlight, makes the flash
+    # a crisp pulse rather than a slow pre-glow toward the flash color.
     last = len(points) - 1
-    flash_span = 0.035
-
-    def flash_at(index: int) -> tuple[str, str]:
-        # Flash right as the body tip reaches the cell (DRAW_FRACTION of the
-        # loop is the drawing phase covering the whole path).
-        t = 0.01 + (index / last) * (DRAW_FRACTION - 0.02)
-        return f"{t:.4f}", f"{t + flash_span:.4f}"
-
-    # Per-cell flash times: cells are generated column-major top->bottom in
-    # _activity_cells, i.e. idx = w*7 + r — the same serpentine order.
-    eaten = [flash_at(idx) for idx in range(len(days))]
+    flash_delays = [
+        round((0.01 + (idx / last) * (DRAW_FRACTION - 0.02)) * SNAKE_DURATION, 4)
+        for idx in range(len(days))
+    ]
 
     return {
         "dur": SNAKE_DURATION,
@@ -261,7 +281,7 @@ def _snake_context(days: list[dict], theme: str) -> dict:
         "draw": DRAW_FRACTION,
         "color": SNAKE_COLORS[theme],
         "flash_color": LEVEL_COLORS[theme][4],
-        "eaten": eaten,
+        "flash_delays": flash_delays,
     }
 
 
@@ -339,7 +359,10 @@ def generate_all(out_dir: Path, mock: bool) -> None:
                 render_ctx["snake"] = _snake_context(data["contribution_days"], theme)
             svg = env.get_template(template_name).render(**render_ctx, theme=theme)
             path = out_dir / f"{name}{suffix}.svg"
-            path.write_text(svg, encoding="utf-8")
+            # newline="\n" keeps the bytes identical whether this runs on the
+            # Linux runner or a Windows checkout; the default text-mode
+            # translation would emit CRLF locally.
+            path.write_text(svg, encoding="utf-8", newline="\n")
             try:
                 shown = path.resolve().relative_to(ROOT).as_posix()
             except ValueError:

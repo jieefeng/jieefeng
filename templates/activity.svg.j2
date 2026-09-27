@@ -1,4 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="760" height="172" viewBox="0 0 760 172" role="img" aria-label="近一年 {{ total_contribs }} 次贡献，连续 {{ streak }} 天">
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="172" viewBox="0 0 760 172" role="img" aria-label="近一年 {{ total_contribs }} 次贡献，当前连续 {{ streak }} 天，最长 {{ max_streak }} 天">
+  {# The "eaten" flash is one shared @keyframes plus a per-cell
+     animation-delay instead of one SMIL <animate> per cell: the card gets
+     smaller, the flash becomes a crisp pulse (a per-element SMIL fill ramp
+     instead drags the cell toward the highlight color over the whole
+     cycle), and reduced motion can switch the flash and snake off. #}
+  <style>
+    .fl { --t: {{ snake.flash_color }}; fill: var(--f); animation: fl {{ snake.dur }}s linear infinite; }
+    @keyframes fl { 0%, 2.5% { fill: var(--t); } 3.5%, 100% { fill: var(--f); } }
+    .motion { display: inline; }
+    @media (prefers-reduced-motion: reduce) {
+      .fl { animation: none; }
+      .motion { display: none; }
+    }
+  </style>
   <defs>
     <linearGradient id="abg" x1="0" y1="0" x2="1" y2="1">
       {% if theme == "dark" %}
@@ -37,9 +51,9 @@
   {% set muted2 = '#8B949E' if theme == 'dark' else '#9CA3AF' %}
   {% set accent = '#D97706' if theme == 'dark' else '#B45309' %}
 
-  <!-- Header: title left, yearly stats right -->
-  <text x="28" y="31" fill="{{ '#F59E0B' if theme == 'dark' else '#92400E' }}" font-family="'Segoe UI',-apple-system,sans-serif" font-size="15" font-weight="700">🔥 贡献热力图 · 贪吃蛇</text>
-  <text x="732" y="31" text-anchor="end" font-family="'Segoe UI',-apple-system,sans-serif" font-size="12">
+  <!-- Header: yearly stats. The section title is carried by the README
+       heading, so the card does not repeat it. -->
+  <text x="28" y="31" font-family="'Segoe UI',-apple-system,sans-serif" font-size="12">
     <tspan fill="url(#anum)" font-size="16" font-weight="700">{{ total_contribs }}</tspan>
     <tspan fill="{{ muted }}"> 次贡献 · 连续 </tspan>
     <tspan fill="{{ accent }}" font-weight="600">{{ streak }}</tspan>
@@ -58,15 +72,16 @@
   <text x="14" y="{{ wd.y }}" fill="{{ muted2 }}" font-family="'Segoe UI',sans-serif" font-size="8">{{ wd.label }}</text>
   {% endfor %}
 
-  <!-- Heatmap grid; each cell flashes as the snake "eats" it -->
+  <!-- Heatmap grid; each cell pulses once as the snake's head passes it,
+       timed by its own animation-delay (see the .fl rule above). -->
   {% for cell in cells %}
-  <rect x="{{ cell.x }}" y="{{ cell.y }}" width="11" height="11" rx="2.5" fill="{{ cell.fill }}">{% if snake.eaten[loop.index0] %}<animate attributeName="fill" values="{{ cell.fill }};{{ snake.flash_color }};{{ cell.fill }};{{ cell.fill }}" keyTimes="0;{{ snake.eaten[loop.index0][0] }};{{ snake.eaten[loop.index0][1] }};1" dur="{{ snake.dur }}s" repeatCount="indefinite"/>{% endif %}</rect>
+  <rect class="fl" x="{{ cell.x }}" y="{{ cell.y }}" width="11" height="11" rx="2.5" fill="{{ cell.fill }}" style="--f:{{ cell.fill }};animation-delay:{{ snake.flash_delays[loop.index0] }}s"/>
   {% endfor %}
 
   <!-- Snake: a connected glowing body that draws itself along the grid.
        The stroke is the body (always visible, even in static screenshots);
        the head rides the path tip and pulses while eating. -->
-  <g filter="url(#snakeglow)">
+  <g class="motion" filter="url(#snakeglow)">
     <path d="{{ snake.path }}" fill="none" stroke="{{ snake.color }}" stroke-width="5"
           stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.9"
           stroke-dasharray="{{ snake.path_len }}"

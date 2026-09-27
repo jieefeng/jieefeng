@@ -1,4 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="500" height="46" viewBox="0 0 500 46" role="img" aria-label="AI 工程师 | RAG 探索者">
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="46" viewBox="0 0 500 46" role="img" aria-label="AI 工程师 | RAG 探索者 / 全栈开发 | 后端架构师 / Always building, always learning">
+  <style>
+    .motion { display: inline; }
+    .static { display: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .motion { display: none; }
+      .static { display: inline; }
+    }
+  </style>
   <defs>
     <linearGradient id="tg" x1="0" y1="0" x2="1" y2="0">
       <stop offset="0" stop-color="#FDE68A"/>
@@ -27,26 +35,39 @@
     </clipPath>
   </defs>
 
-  <text x="164.0" y="29" textLength="172" lengthAdjust="spacingAndGlyphs"
-        clip-path="url(#tc0)" opacity="1"
-        fill="url(#tg)" font-family="'Fira Code','JetBrains Mono',Consolas,'Courier New',monospace"
-        font-size="14">AI 工程师 | RAG 探索者</text>
-  <text x="172.5" y="29" textLength="155" lengthAdjust="spacingAndGlyphs"
-        clip-path="url(#tc1)" opacity="0"
-        fill="url(#tg)" font-family="'Fira Code','JetBrains Mono',Consolas,'Courier New',monospace"
-        font-size="14">全栈开发 | 后端架构师</text>
-  <text x="111.0" y="29" textLength="278" lengthAdjust="spacingAndGlyphs"
-        clip-path="url(#tc2)" opacity="0"
-        fill="url(#tg)" font-family="'Fira Code','JetBrains Mono',Consolas,'Courier New',monospace"
-        font-size="14">Always building, always learning</text>
+  <g class="motion">
+    <text x="164.0" y="29" textLength="172" lengthAdjust="spacingAndGlyphs"
+          clip-path="url(#tc0)" opacity="1"
+          fill="url(#tg)" font-family="'Fira Code','JetBrains Mono',Consolas,'Courier New',monospace"
+          font-size="14">AI 工程师 | RAG 探索者<animate attributeName="opacity" calcMode="discrete"
+                 values="0.00;1.00;0.00;0.00" keyTimes="0.0000;0.0001;0.2909;1.0000"
+                 dur="13.2s" begin="0s" repeatCount="indefinite"/></text>
+    <text x="172.5" y="29" textLength="155" lengthAdjust="spacingAndGlyphs"
+          clip-path="url(#tc1)" opacity="0"
+          fill="url(#tg)" font-family="'Fira Code','JetBrains Mono',Consolas,'Courier New',monospace"
+          font-size="14">全栈开发 | 后端架构师<animate attributeName="opacity" calcMode="discrete"
+                 values="0.00;1.00;0.00;0.00" keyTimes="0.0000;0.2909;0.5394;1.0000"
+                 dur="13.2s" begin="0s" repeatCount="indefinite"/></text>
+    <text x="111.0" y="29" textLength="278" lengthAdjust="spacingAndGlyphs"
+          clip-path="url(#tc2)" opacity="0"
+          fill="url(#tg)" font-family="'Fira Code','JetBrains Mono',Consolas,'Courier New',monospace"
+          font-size="14">Always building, always learning<animate attributeName="opacity" calcMode="discrete"
+                 values="0.00;1.00;0.00" keyTimes="0.0000;0.5394;1.0000"
+                 dur="13.2s" begin="0s" repeatCount="indefinite"/></text>
 
-  <rect x="164.0" y="15" width="3" height="17" rx="1"
-        fill="#D97706">
-    <animate attributeName="x" calcMode="discrete"
-             values="164.00;164.00;174.75;185.50;196.25;207.00;217.75;228.50;239.25;250.00;260.75;271.50;282.25;293.00;303.75;314.50;325.25;336.00;325.25;314.50;303.75;293.00;282.25;271.50;260.75;250.00;239.25;228.50;217.75;207.00;196.25;185.50;174.75;172.50;185.42;198.33;211.25;224.17;237.08;250.00;262.92;275.83;288.75;301.67;314.58;327.50;314.58;301.67;288.75;275.83;262.92;250.00;237.08;224.17;211.25;198.33;185.42;111.00;119.69;128.38;137.06;145.75;154.44;163.12;171.81;180.50;189.19;197.88;206.56;215.25;223.94;232.62;241.31;250.00;258.69;267.38;276.06;284.75;293.44;302.12;310.81;319.50;328.19;336.88;345.56;354.25;362.94;371.62;380.31;389.00;380.31;371.62;362.94;354.25;345.56;336.88;328.19;319.50;310.81;302.12;293.44;284.75;276.06;267.38;258.69;250.00;241.31;232.62;223.94;215.25;206.56;197.88;189.19;180.50;171.81;163.12;154.44;145.75;137.06;128.38;119.69;111.00" keyTimes="0.0000;0.0001;0.0076;0.0152;0.0227;0.0303;0.0379;0.0455;0.0530;0.0606;0.0682;0.0758;0.0833;0.0909;0.0985;0.1061;0.1136;0.1212;0.2455;0.2485;0.2515;0.2545;0.2576;0.2606;0.2636;0.2667;0.2697;0.2727;0.2758;0.2788;0.2818;0.2848;0.2879;0.2909;0.2985;0.3061;0.3136;0.3212;0.3288;0.3364;0.3439;0.3515;0.3591;0.3667;0.3742;0.3818;0.5061;0.5091;0.5121;0.5152;0.5182;0.5212;0.5242;0.5273;0.5303;0.5333;0.5364;0.5394;0.5470;0.5545;0.5621;0.5697;0.5773;0.5848;0.5924;0.6000;0.6076;0.6152;0.6227;0.6303;0.6379;0.6455;0.6530;0.6606;0.6682;0.6758;0.6833;0.6909;0.6985;0.7061;0.7136;0.7212;0.7288;0.7364;0.7439;0.7515;0.7591;0.7667;0.7742;0.7818;0.9061;0.9091;0.9121;0.9152;0.9182;0.9212;0.9242;0.9273;0.9303;0.9333;0.9364;0.9394;0.9424;0.9455;0.9485;0.9515;0.9545;0.9576;0.9606;0.9636;0.9667;0.9697;0.9727;0.9758;0.9788;0.9818;0.9848;0.9879;0.9909;0.9939;0.9970;1.0000"
-             dur="13.2s" begin="0s" repeatCount="indefinite"/>
-    <animate attributeName="opacity" calcMode="discrete"
-             values="1;0;0" keyTimes="0;0.5;1"
-             dur="0.9s" begin="0s" repeatCount="indefinite"/>
-  </rect>
+    <rect x="164.0" y="15" width="3" height="17" rx="1"
+          fill="#D97706">
+      <animate attributeName="x" calcMode="discrete"
+               values="164.00;164.00;174.75;185.50;196.25;207.00;217.75;228.50;239.25;250.00;260.75;271.50;282.25;293.00;303.75;314.50;325.25;336.00;325.25;314.50;303.75;293.00;282.25;271.50;260.75;250.00;239.25;228.50;217.75;207.00;196.25;185.50;174.75;172.50;185.42;198.33;211.25;224.17;237.08;250.00;262.92;275.83;288.75;301.67;314.58;327.50;314.58;301.67;288.75;275.83;262.92;250.00;237.08;224.17;211.25;198.33;185.42;111.00;119.69;128.38;137.06;145.75;154.44;163.12;171.81;180.50;189.19;197.88;206.56;215.25;223.94;232.62;241.31;250.00;258.69;267.38;276.06;284.75;293.44;302.12;310.81;319.50;328.19;336.88;345.56;354.25;362.94;371.62;380.31;389.00;380.31;371.62;362.94;354.25;345.56;336.88;328.19;319.50;310.81;302.12;293.44;284.75;276.06;267.38;258.69;250.00;241.31;232.62;223.94;215.25;206.56;197.88;189.19;180.50;171.81;163.12;154.44;145.75;137.06;128.38;119.69;111.00" keyTimes="0.0000;0.0001;0.0076;0.0152;0.0227;0.0303;0.0379;0.0455;0.0530;0.0606;0.0682;0.0758;0.0833;0.0909;0.0985;0.1061;0.1136;0.1212;0.2455;0.2485;0.2515;0.2545;0.2576;0.2606;0.2636;0.2667;0.2697;0.2727;0.2758;0.2788;0.2818;0.2848;0.2879;0.2909;0.2985;0.3061;0.3136;0.3212;0.3288;0.3364;0.3439;0.3515;0.3591;0.3667;0.3742;0.3818;0.5061;0.5091;0.5121;0.5152;0.5182;0.5212;0.5242;0.5273;0.5303;0.5333;0.5364;0.5394;0.5470;0.5545;0.5621;0.5697;0.5773;0.5848;0.5924;0.6000;0.6076;0.6152;0.6227;0.6303;0.6379;0.6455;0.6530;0.6606;0.6682;0.6758;0.6833;0.6909;0.6985;0.7061;0.7136;0.7212;0.7288;0.7364;0.7439;0.7515;0.7591;0.7667;0.7742;0.7818;0.9061;0.9091;0.9121;0.9152;0.9182;0.9212;0.9242;0.9273;0.9303;0.9333;0.9364;0.9394;0.9424;0.9455;0.9485;0.9515;0.9545;0.9576;0.9606;0.9636;0.9667;0.9697;0.9727;0.9758;0.9788;0.9818;0.9848;0.9879;0.9909;0.9939;0.9970;1.0000"
+               dur="13.2s" begin="0s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" calcMode="discrete"
+               values="1;0;0" keyTimes="0;0.5;1"
+               dur="0.9s" begin="0s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+
+  <text class="static" x="164.0" y="29" textLength="172"
+        lengthAdjust="spacingAndGlyphs" fill="url(#tg)"
+        font-family="'Fira Code','JetBrains Mono',Consolas,'Courier New',monospace"
+        font-size="14">AI 工程师 | RAG 探索者</text>
 </svg>

@@ -1,4 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="500" height="46" viewBox="0 0 500 46" role="img" aria-label="{{ lines[0].text }}">
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="46" viewBox="0 0 500 46" role="img" aria-label="{{ lines | map(attribute='text') | join(' / ') }}">
+  {# Reduced motion: the animated layer is swapped for one static line.
+     CSS cannot pause SMIL, but hiding the group that holds the painted
+     animated elements does stop everything the viewer actually sees. #}
+  <style>
+    .motion { display: inline; }
+    .static { display: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .motion { display: none; }
+      .static { display: inline; }
+    }
+  </style>
   <defs>
     <linearGradient id="tg" x1="0" y1="0" x2="1" y2="0">
       {% if theme == "dark" %}
@@ -23,21 +34,36 @@
     {% endfor %}
   </defs>
 
-  {% for l in lines %}
-  <text x="{{ l.x0 }}" y="29" textLength="{{ l.width }}" lengthAdjust="spacingAndGlyphs"
-        clip-path="url(#tc{{ loop.index0 }})" opacity="{{ 1 if loop.first else 0 }}"
-        fill="url(#tg)" font-family="'Fira Code','JetBrains Mono',Consolas,'Courier New',monospace"
-        font-size="14">{{ l.text }}</text>
-  {% endfor %}
+  <g class="motion">
+    {# Each line carries its own discrete opacity, so a line is visible only
+       inside its own type/hold/delete window. The opacity attribute stays as
+       the no-SMIL fallback (line 1 only): a zero-width clip hides a line,
+       but a line pinned at opacity 0 stays invisible even while its clip
+       opens — which is why lines 2 and 3 never used to appear. #}
+    {% for l in lines %}
+    <text x="{{ l.x0 }}" y="29" textLength="{{ l.width }}" lengthAdjust="spacingAndGlyphs"
+          clip-path="url(#tc{{ loop.index0 }})" opacity="{{ 1 if loop.first else 0 }}"
+          fill="url(#tg)" font-family="'Fira Code','JetBrains Mono',Consolas,'Courier New',monospace"
+          font-size="14">{{ l.text }}<animate attributeName="opacity" calcMode="discrete"
+                 values="{{ l.op_values }}" keyTimes="{{ l.op_key }}"
+                 dur="{{ duration }}s" begin="0s" repeatCount="indefinite"/></text>
+    {% endfor %}
 
-  {# Typewriter caret: x follows the reveal edge, opacity blinks. #}
-  <rect x="{{ caret.x_init }}" y="15" width="3" height="17" rx="1"
-        fill="{{ '#D97706' if theme == 'dark' else '#B45309' }}">
-    <animate attributeName="x" calcMode="discrete"
-             values="{{ caret.x_values }}" keyTimes="{{ caret.x_key }}"
-             dur="{{ duration }}s" begin="0s" repeatCount="indefinite"/>
-    <animate attributeName="opacity" calcMode="discrete"
-             values="1;0;0" keyTimes="0;0.5;1"
-             dur="0.9s" begin="0s" repeatCount="indefinite"/>
-  </rect>
+    {# Typewriter caret: x follows the reveal edge, opacity blinks. #}
+    <rect x="{{ caret.x_init }}" y="15" width="3" height="17" rx="1"
+          fill="{{ '#D97706' if theme == 'dark' else '#B45309' }}">
+      <animate attributeName="x" calcMode="discrete"
+               values="{{ caret.x_values }}" keyTimes="{{ caret.x_key }}"
+               dur="{{ duration }}s" begin="0s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" calcMode="discrete"
+               values="1;0;0" keyTimes="0;0.5;1"
+               dur="0.9s" begin="0s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+
+  {# Static fallback, shown only when the viewer asks for reduced motion. #}
+  <text class="static" x="{{ lines[0].x0 }}" y="29" textLength="{{ lines[0].width }}"
+        lengthAdjust="spacingAndGlyphs" fill="url(#tg)"
+        font-family="'Fira Code','JetBrains Mono',Consolas,'Courier New',monospace"
+        font-size="14">{{ lines[0].text }}</text>
 </svg>
