@@ -3,10 +3,16 @@
      animation-delay instead of one SMIL <animate> per cell: the card gets
      smaller, the flash becomes a crisp pulse (a per-element SMIL fill ramp
      instead drags the cell toward the highlight color over the whole
-     cycle), and reduced motion can switch the flash and snake off. #}
+     cycle), and reduced motion can switch the flash and snake off.
+     Only cells the snake actually eats carry .fl — a day with no
+     contributions never pulses, so the flash reads as food rather than as a
+     second, competing heatmap.
+     The bright window is longer than the time the snake's own body needs to
+     clear the cell (flash_hold is derived from the body length), otherwise the
+     pulse would be painted underneath the snake and never be seen. #}
   <style>
     .fl { --t: {{ snake.flash_color }}; fill: var(--f); animation: fl {{ snake.dur }}s linear infinite; }
-    @keyframes fl { 0%, 2.5% { fill: var(--t); } 3.5%, 100% { fill: var(--f); } }
+    @keyframes fl { 0%, {{ snake.flash_hold }}% { fill: var(--t); } {{ snake.flash_fade }}%, 100% { fill: var(--f); } }
     .motion { display: inline; }
     @media (prefers-reduced-motion: reduce) {
       .fl { animation: none; }
@@ -72,34 +78,58 @@
   <text x="14" y="{{ wd.y }}" fill="{{ muted2 }}" font-family="'Segoe UI',sans-serif" font-size="8">{{ wd.label }}</text>
   {% endfor %}
 
-  <!-- Heatmap grid; each cell pulses once as the snake's head passes it,
-       timed by its own animation-delay (see the .fl rule above). -->
+  <!-- Heatmap grid. A cell carries .fl — and therefore pulses once — only when
+       the snake's route eats it, i.e. only when that day has contributions. -->
   {% for cell in cells %}
-  <rect class="fl" x="{{ cell.x }}" y="{{ cell.y }}" width="11" height="11" rx="2.5" fill="{{ cell.fill }}" style="--f:{{ cell.fill }};animation-delay:{{ snake.flash_delays[loop.index0] }}s"/>
+  {% if cell.flash is not none %}
+  <rect class="fl" x="{{ cell.x }}" y="{{ cell.y }}" width="11" height="11" rx="2.5" fill="{{ cell.fill }}" style="--f:{{ cell.fill }};animation-delay:{{ cell.flash }}s"/>
+  {% else %}
+  <rect x="{{ cell.x }}" y="{{ cell.y }}" width="11" height="11" rx="2.5" fill="{{ cell.fill }}"/>
+  {% endif %}
   {% endfor %}
 
-  <!-- Snake: a connected glowing body that draws itself along the grid.
-       The stroke is the body (always visible, even in static screenshots);
-       the head rides the path tip and pulses while eating. -->
-  <g class="motion" filter="url(#snakeglow)">
-    <path d="{{ snake.path }}" fill="none" stroke="{{ snake.color }}" stroke-width="5"
+  <!-- Snake: one dashed stroke sliding along a route that visits the active
+       days only, with a dark halo underneath so the amber body stays legible
+       on a level 4 cell. The head rides the dash's leading edge, which is why
+       its motion and the body's dashoffset share one timing model. -->
+  {% if snake.present %}
+  <g class="motion"{% if snake.animated %} filter="url(#snakeglow)"{% endif %}>
+    {% if snake.animated %}
+    <animate attributeName="opacity" dur="{{ snake.dur }}s" repeatCount="indefinite"
+             values="0;1;1;0;0" keyTimes="0;0.008;{{ snake.fade_start }};{{ snake.fade_end }};1"
+             calcMode="linear"/>
+    <path d="{{ snake.path }}" fill="none" stroke="{{ snake.halo }}" stroke-width="9"
           stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.9"
-          stroke-dasharray="{{ snake.path_len }}"
-          stroke-dashoffset="{{ snake.path_len }}">
-      <animate attributeName="stroke-dashoffset"
-               values="{{ snake.path_len }};0;0;{{ snake.path_len }}"
-               keyTimes="0;{{ snake.draw }};0.96;1"
-               dur="{{ snake.dur }}s" repeatCount="indefinite" calcMode="spline"
-               keySplines="0.4 0 0.6 1;0 0 1 1;0 0 1 1"/>
+          stroke-dasharray="{{ snake.arr_final }}" stroke-dashoffset="0">
+      <animate attributeName="stroke-dasharray" dur="{{ snake.dur }}s" repeatCount="indefinite"
+               calcMode="discrete" values="{{ snake.arr_values }}" keyTimes="{{ snake.arr_key }}"/>
+      <animate attributeName="stroke-dashoffset" dur="{{ snake.dur }}s" repeatCount="indefinite"
+               calcMode="linear" values="{{ snake.off_values }}" keyTimes="{{ snake.off_key }}"/>
     </path>
-    <circle r="4.6" fill="{{ snake.color }}">
-      <animateMotion dur="{{ snake.dur }}s" repeatCount="indefinite"
-                     path="{{ snake.path }}" rotate="0"
-                     keyPoints="0;1;1" keyTimes="0;{{ snake.draw }};1"
+    <path d="{{ snake.path }}" fill="none" stroke="{{ snake.color }}" stroke-width="4.8"
+          stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.95"
+          stroke-dasharray="{{ snake.arr_final }}" stroke-dashoffset="0">
+      <animate attributeName="stroke-dasharray" dur="{{ snake.dur }}s" repeatCount="indefinite"
+               calcMode="discrete" values="{{ snake.arr_values }}" keyTimes="{{ snake.arr_key }}"/>
+      <animate attributeName="stroke-dashoffset" dur="{{ snake.dur }}s" repeatCount="indefinite"
+               calcMode="linear" values="{{ snake.off_values }}" keyTimes="{{ snake.off_key }}"/>
+    </path>
+    <g>
+      <animateMotion dur="{{ snake.dur }}s" repeatCount="indefinite" path="{{ snake.path }}"
+                     rotate="auto" keyPoints="0;1;1" keyTimes="0;{{ snake.travel }};1"
                      calcMode="linear"/>
-      <animate attributeName="r" values="4.6;4.6;5.6;4.6" keyTimes="0;0.85;0.93;1" dur="3s" repeatCount="indefinite"/>
-    </circle>
+      <circle r="5.3" fill="{{ snake.halo }}" fill-opacity="0.9"/>
+      <circle r="4.3" fill="{{ snake.color }}"/>
+      <circle cx="1.2" cy="-1.8" r="0.9" fill="{{ snake.eye }}"/>
+      <circle cx="1.2" cy="1.8" r="0.9" fill="{{ snake.eye }}"/>
+    </g>
+    {% else %}
+    <!-- One active day is not a route: a parked head, with that cell pulsing. -->
+    <circle cx="{{ snake.single[0] }}" cy="{{ snake.single[1] }}" r="5.3" fill="{{ snake.halo }}" fill-opacity="0.9"/>
+    <circle cx="{{ snake.single[0] }}" cy="{{ snake.single[1] }}" r="4.3" fill="{{ snake.color }}"/>
+    {% endif %}
   </g>
+  {% endif %}
 
   <!-- Legend -->
   <text x="36" y="161" fill="{{ muted2 }}" font-family="'Segoe UI',sans-serif" font-size="9">最近一年</text>
