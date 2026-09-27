@@ -13,7 +13,6 @@ overwrites good cards with empty ones.
 from __future__ import annotations
 
 import argparse
-import math
 import random
 import sys
 from datetime import date, timedelta
@@ -170,61 +169,6 @@ def _typing_context(lines: list[str]) -> dict:
 
 
 # ---------------------------------------------------------------------------
-# Skills card — chip layout precomputed here; presentation lives in
-# templates/skills.svg.j2. Widths use the same monospace-free estimate as
-# Segoe UI at 12px: latin ~6.9px, CJK ~12px, plus dot + padding.
-# ---------------------------------------------------------------------------
-
-SKILL_GROUPS = [
-    ("语言", ["Python", "Java", "TypeScript", "SQL"]),
-    ("后端", ["Spring Boot", "MySQL", "Redis", "Kafka", "RabbitMQ"]),
-    ("前端", ["Vue", "React", "Vite"]),
-    ("AI / 数据", ["RAG", "LangChain", "Embedding", "Milvus"]),
-    ("工程", ["Docker", "Linux", "Git", "CI/CD"]),
-]
-
-SKILLS_CARD_W = 500
-
-
-def _chip_width(label: str) -> int:
-    text_w = sum(12.2 if _is_cjk(ch) else 6.9 for ch in label)
-    return round(text_w + 34)  # dot + left/right padding
-
-
-def _skills_context() -> dict:
-    """Lay out skill groups: a small left-aligned group label above each
-    row of centered chips."""
-    groups = []
-    y = 34  # first chip row top; group label sits 10px above it
-    for name, skills in SKILL_GROUPS:
-        chips = [{"label": s, "w": _chip_width(s)} for s in skills]
-        # Greedy wrap into rows that fit the card width.
-        rows: list[list[dict]] = [[]]
-        for chip in chips:
-            row = rows[-1]
-            used = sum(c["w"] for c in row) + 10 * max(len(row) - 1, 0)
-            if row and used + 10 + chip["w"] > SKILLS_CARD_W - 56:
-                rows.append([chip])
-            else:
-                row.append(chip)
-        laid = []
-        for row in rows:
-            total = sum(c["w"] for c in row) + 10 * (len(row) - 1)
-            x = (SKILLS_CARD_W - total) / 2
-            for c in row:
-                laid.append({"x": round(x, 1), "y": y, "w": c["w"], "label": c["label"]})
-                x += c["w"] + 10
-            y += 34
-        groups.append({
-            "name": name,
-            "label_y": y - 34 * len(rows) - 12,
-            "chips": laid,
-        })
-        y += 12  # gap between groups
-    return {"groups": groups, "height": y + 4}
-
-
-# ---------------------------------------------------------------------------
 # Contribution heatmap — geometry mirrored in templates/activity.svg.j2.
 # ---------------------------------------------------------------------------
 
@@ -251,20 +195,19 @@ def _level(count: int) -> int:
     return 4
 
 
-def _activity_cells(days: list[dict], theme: str, flash_delays: list | None = None) -> list[dict]:
+def _activity_cells(days: list[dict], theme: str, glow_windows: list | None = None) -> list[dict]:
     """One rect per calendar day.
 
-    `flash_delays` comes from the snake route and is indexed like `days`: a
-    float marks a day the snake eats (the rect gets the `.fl` pulse, delayed to
-    the moment the head arrives) and None marks a day it merely crosses. Days
-    with no contributions are always None, so a blank day can never pulse.
+    `glow_windows` is indexed like `days`: a dict marks a day that briefly
+    brightens as the sweep beam passes (empty days are always None, so a
+    blank day can never glow).
     """
     return [
         {
             "x": GRID_X + (idx // 7) * PITCH,
             "y": GRID_Y + (idx % 7) * PITCH,
             "fill": LEVEL_COLORS[theme][_level(d["contributionCount"])],
-            "flash": None if flash_delays is None else flash_delays[idx],
+            "glow": None if glow_windows is None else glow_windows[idx],
         }
         for idx, d in enumerate(days)
     ]
@@ -293,211 +236,61 @@ def _month_labels(days: list[dict], max_x: float = 700.0) -> list[dict]:
 
 
 # ---------------------------------------------------------------------------
-# Rendering
+# Sweep-beam overlay — a soft light bar scans left→right across the calendar
+# on a slow loop. Days with contributions briefly glow as the beam's centre
+# passes their column, so the timeline reads as being "read" without any
+# game-like overlay. Geometry is shared with the heatmap block above.
 # ---------------------------------------------------------------------------
 
-# ---------------------------------------------------------------------------
-# Snake overlay — a short body crawls the grid and eats the days that actually
-# have contributions. The route is built from the active days *alone*: an empty
-# day is something the snake crosses on its way to food, never something it
-# eats, so the flash (the one cue that reads as "eaten") is emitted only for
-# cells that hold data. Geometry comes from the block above.
-# ---------------------------------------------------------------------------
+SCAN_DUR = 14.0            # seconds for one full left→right sweep
+SCAN_BEAM_W = 90           # px width of the light bar
+SCAN_IN_PAD, SCAN_OUT_PAD = 0.06, 0.06   # fade-in/out at the cycle edges
+SCAN_GLOW_HALF = 0.030     # half-width of a cell's bright window (cycle frac)
 
-SNAKE_SPEED = 42.0          # px/s along the route: the pace of one 13px cell
-SNAKE_MIN_DUR = 9.0         # a handful of active days must not strobe
-SNAKE_MAX_DUR = 26.0        # a fully shaded year must not blur past
-SNAKE_TRAVEL = 0.90         # fraction of the cycle the head spends moving
-SNAKE_FADE = (0.93, 0.975)  # body fades out here, hiding the loop restart
-SNAKE_BASE_SEGMENTS = 2     # body length in cell hops before the first meal
-SNAKE_MAX_SEGMENTS = 10     # body length cap: the snake must not outgrow the grid
-
-# The flash is the "eaten" cue, so it has to stay visible on top of its own
-# meal. The ramp's own top step would be invisible on a level 4 cell, which is
-# exactly the cell a real calendar is fullest of, so the pulse uses a colour
-# from outside the ramp instead.
-SNAKE_FLASH = {"dark": "#FFF8E7", "light": "#EA580C"}
-SNAKE_COLORS = {"dark": "#FBBF24", "light": "#B45309"}
-SNAKE_HALO = {"dark": "#0D1117", "light": "#FFFBEB"}
-SNAKE_EYE = {"dark": "#3B2300", "light": "#FFF7E6"}
+SCAN_GLOW = {"dark": "#FFF3D6", "light": "#F59E0B"}
 
 
-def _snake_route(days: list[dict]) -> tuple[list[tuple[float, float]], list[tuple[int, int]]]:
-    """Orthogonal route through the active days only, in calendar order.
+def _scan_context(days: list[dict], theme: str, weeks: int) -> dict:
+    """Precompute the sweep beam plus, for every active day, the bright
+    window timed to the beam reaching that day's column.
 
-    Returns the polyline the head walks plus, for each meal, the
-    (point index, day index) pair tying a route position back to the cell it
-    feeds on. Hops are horizontal leg first, then vertical: both legs stay on
-    the grid, and because every column is entered from whichever end the route
-    already sits closest to, the snake never re-walks the column it just
-    cleared the way a fixed serpentine would.
+    The beam travels from just off the left edge to just off the right edge
+    of the grid. A cell lights up only when the beam's centre crosses the
+    cell's column centre, so the glow on a day and the beam arriving at that
+    day cannot drift apart — both derive from the same column fraction.
     """
-    by_week: dict[int, list[int]] = {}
+    grid_w = weeks * PITCH - GAP
+    x0 = -SCAN_BEAM_W                       # beam fully off the left edge
+    x1 = grid_w                             # beam fully off the right edge
+
+    def beam_center(frac: float) -> float:
+        return x0 + SCAN_BEAM_W / 2 + (x1 - x0) * frac
+
+    glow_windows: list[dict | None] = [None] * len(days)
     for idx, day in enumerate(days):
-        if day["contributionCount"] > 0:
-            by_week.setdefault(idx // 7, []).append(idx % 7)
-    if not by_week:
-        return [], []
+        if day["contributionCount"] <= 0:
+            continue
+        col_center = (idx // 7) * PITCH + CELL / 2
+        # Fraction of the sweep at which the beam centre reaches this column.
+        f = (col_center - (x0 + SCAN_BEAM_W / 2)) / (x1 - x0)
+        f = min(max(f, 0.0), 1.0)
+        pre = max(f - SCAN_GLOW_HALF, 0.0)
+        post = min(f + SCAN_GLOW_HALF, 1.0)
+        glow_windows[idx] = {
+            "pre": f"{pre * 100:.2f}",
+            "mid": f"{f * 100:.2f}",
+            "post": f"{post * 100:.2f}",
+        }
 
-    points: list[tuple[float, float]] = []
-    eats: list[tuple[int, int]] = []
-    prev_week = prev_row = -1
-    for week in sorted(by_week):
-        rows = sorted(by_week[week])
-        if prev_week >= 0 and abs(prev_row - rows[-1]) < abs(prev_row - rows[0]):
-            rows.reverse()
-        for row in rows:
-            x = GRID_X + CELL / 2 + week * PITCH
-            y = GRID_Y + CELL / 2 + row * PITCH
-            # Corner of the L, so the two legs are axis-aligned. Skipped when
-            # the row already matches, which keeps a plain hop a single segment.
-            # Only column changes need it: within a column the move is vertical.
-            if prev_week >= 0 and prev_week != week and points[-1][1] != y:
-                points.append((x, points[-1][1]))
-            points.append((x, y))
-            eats.append((len(points) - 1, week * 7 + row))
-            prev_week, prev_row = week, row
-    return points, eats
-
-
-def _smil_table(frames: list[tuple[str, float]]) -> tuple[str, str]:
-    """Normalise (value, time) frames into SMIL values/keyTimes strings.
-
-    Times are clamped into [0, 1] and forced strictly increasing — a repeat is
-    nudged by 1e-4 of the cycle (well under a frame at any duration we use), so
-    every renderer sees an unambiguous table — and the table is pinned to end
-    exactly at 1.
-    """
-    table: list[tuple[str, float]] = []
-    for value, t in frames:
-        t = min(max(t, 0.0), 1.0)
-        if table and t <= table[-1][1]:
-            t = table[-1][1] + 1e-4
-        table.append((value, t))
-    table[-1] = (table[-1][0], 1.0)
-    while len(table) > 1 and table[-1][1] <= table[-2][1]:
-        table.pop(-2)  # a shadowed predecessor right at the cycle end
-    return (
-        ";".join(v for v, _ in table),
-        ";".join(f"{t:.4f}" for _, t in table),
-    )
-
-
-def _snake_context(days: list[dict], theme: str) -> dict:
-    """Precompute the whole snake animation, including each meal's arrival time.
-
-    The body is one dashed stroke sliding along the route, so the head is the
-    dash's leading edge and the tail is its trailing edge. Dashoffset is
-    `body_length(t) - head_distance(t)`: the head term makes the dash crawl at a
-    constant speed, and the body term makes the tail step back by one hop every
-    time the head eats, which is what turns a sliding line into a snake that
-    grows. Every timing below derives from the same two functions, so the flash
-    on a cell and the head arriving at that cell cannot drift apart.
-    """
-    points, eats = _snake_route(days)
-    ctx = {
-        "present": False,
-        "animated": False,
-        "dur": SNAKE_MIN_DUR,
-        "travel": SNAKE_TRAVEL,
-        "fade_start": SNAKE_FADE[0],
-        "fade_end": SNAKE_FADE[1],
-        "color": SNAKE_COLORS[theme],
-        "halo": SNAKE_HALO[theme],
-        "eye": SNAKE_EYE[theme],
-        "flash_color": SNAKE_FLASH[theme],
-        "flash_hold": "20.00",
-        "flash_fade": "30.00",
-        "delays": [None] * len(days),
+    return {
+        "dur": SCAN_DUR,
+        "x0": x0,
+        "x1": x1,
+        "beam_w": SCAN_BEAM_W,
+        "grid_w": grid_w,
+        "glow_color": SCAN_GLOW[theme],
+        "windows": glow_windows,
     }
-    if not points:
-        return ctx
-    if len(points) < 2:
-        # A single active day is not a route. Park a head on it and let the cell
-        # pulse: the same information, without a crawl that cannot exist.
-        ctx.update(present=True, single=points[0])
-        for _, day_index in eats:
-            ctx["delays"][day_index] = 0.0
-        return ctx
-
-    cumulative = [0.0]
-    for (x1, y1), (x2, y2) in zip(points, points[1:]):
-        cumulative.append(cumulative[-1] + math.hypot(x2 - x1, y2 - y1))
-    total = cumulative[-1]
-
-    dur = round(min(max(total / SNAKE_SPEED, SNAKE_MIN_DUR), SNAKE_MAX_DUR), 2)
-    travel = SNAKE_TRAVEL
-    meals = len(eats)
-
-    def head_at(t: float) -> float:
-        """Distance the head has covered by normalised time `t`."""
-        return total * min(t / travel, 1.0)
-
-    # Spread the growth across the whole crawl: a snake that ate its way from 2
-    # to 10 segments inside the first dense week and then stayed put would not
-    # read as growth at all, so one segment is earned per `step` meals.
-    step = max(1, -(-meals // (SNAKE_MAX_SEGMENTS - SNAKE_BASE_SEGMENTS)))
-
-    def body_at(meal_count: int) -> float:
-        """Body length once `meal_count` meals have been swallowed."""
-        return PITCH * min(SNAKE_BASE_SEGMENTS + meal_count // step, SNAKE_MAX_SEGMENTS)
-
-    eat_fracs = [travel * cumulative[point_index] / total for point_index, _ in eats]
-    for (_, day_index), frac in zip(eats, eat_fracs):
-        # SMIL's own timeline starts with the document, so the CSS pulse is
-        # timed by the same fraction of the same cycle length.
-        ctx["delays"][day_index] = round(frac * dur, 4)
-
-    # Dashoffset keyframes. The gap between a meal's "before" and "after" frames
-    # is 4e-4 of the cycle (~6 ms), which renders the growth as instantaneous
-    # while keeping every keyTime strictly increasing for SMIL.
-    eps = 0.0004
-    offset_frames: list[tuple[str, float]] = [(f"{body_at(0) - head_at(0.0):.1f}", 0.0)]
-    for i, frac in enumerate(eat_fracs, start=1):
-        before = max(frac - eps, 0.0)
-        offset_frames.append((f"{body_at(i - 1) - head_at(before):.1f}", before))
-        offset_frames.append((f"{body_at(i) - head_at(frac):.1f}", frac))
-    offset_frames.append((f"{body_at(meals) - head_at(travel):.1f}", travel))
-    offset_frames.append((f"{body_at(meals) - head_at(1.0):.1f}", 1.0))
-
-    # Dasharray keyframes are discrete steps: the body only changes length at a
-    # meal. The gap is one pitch longer than the route, so the pattern can never
-    # wrap around and show a second snake somewhere else on the grid.
-    gap = total + PITCH
-    arr_frames: list[tuple[str, float]] = [(f"{body_at(0):.1f} {gap:.1f}", 0.0)]
-    for i, frac in enumerate(eat_fracs, start=1):
-        arr_frames.append((f"{body_at(i):.1f} {gap:.1f}", frac))
-    arr_frames.append((f"{body_at(meals):.1f} {gap:.1f}", 1.0))
-
-    off_values, off_key = _smil_table(offset_frames)
-    arr_values, arr_key = _smil_table(arr_frames)
-
-    # A cell the snake eats sits under the snake's own body for `body_frac` of
-    # the cycle (body length / speed). A pulse shorter than that is painted
-    # underneath the snake and never actually seen, so the bright window is
-    # derived from the body's passing time and then extended into a wake: the
-    # eaten cells stay lit behind the snake and fade out, which is what makes
-    # "this day was eaten" readable at all.
-    body_frac = body_at(meals) * travel / total
-    flash_hold = min(max(body_frac + 0.05, 0.10), 0.60)
-    flash_fade = min(flash_hold + 0.09, 0.85)
-
-    ctx.update(
-        present=True,
-        animated=True,
-        dur=dur,
-        path="M " + " L ".join(f"{x:.1f} {y:.1f}" for x, y in points),
-        off_values=off_values,
-        off_key=off_key,
-        arr_values=arr_values,
-        arr_key=arr_key,
-        # Static fallback for a renderer with no SMIL at all: the finished body,
-        # parked at the start of the route.
-        arr_final=f"{body_at(meals):.1f} {gap:.1f}",
-        flash_hold=f"{flash_hold * 100:.2f}",
-        flash_fade=f"{flash_fade * 100:.2f}",
-    )
-    return ctx
 
 
 def _mock_data() -> dict:
@@ -561,23 +354,23 @@ def generate_all(out_dir: Path, mock: bool) -> None:
 
     cards = (
         ("typing-card", "typing.svg.j2", _typing_context(TYPING_LINES)),
-        ("skills-card", "skills.svg.j2", _skills_context()),
         ("activity-card", "activity.svg.j2", activity_ctx),
     )
 
+    weeks = (len(data["contribution_days"]) + 6) // 7
     for theme in ("dark", "light"):
         suffix = "" if theme == "dark" else "-light"
         for name, template_name, ctx in cards:
             render_ctx = dict(ctx)
             if name == "activity-card":
-                # The route owns the eating schedule, so the cells are built
-                # after it and inherit whatever it decided to eat.
-                snake_ctx = _snake_context(data["contribution_days"], theme)
+                # The beam owns the glow schedule, so the cells are built
+                # after it and inherit whatever it decided to light up.
+                scan_ctx = _scan_context(data["contribution_days"], theme, weeks)
                 render_ctx["cells"] = _activity_cells(
-                    data["contribution_days"], theme, snake_ctx["delays"]
+                    data["contribution_days"], theme, scan_ctx["windows"]
                 )
                 render_ctx["levels"] = LEVEL_COLORS[theme]
-                render_ctx["snake"] = snake_ctx
+                render_ctx["scan"] = scan_ctx
             svg = env.get_template(template_name).render(**render_ctx, theme=theme)
             path = out_dir / f"{name}{suffix}.svg"
             # newline="\n" keeps the bytes identical whether this runs on the

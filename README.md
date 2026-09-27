@@ -21,20 +21,6 @@
 
 ---
 
-<!-- ==================== 技术栈（本地生成 · 深浅色自适应） ==================== -->
-
-<h2 align="center">🛠️ 技术栈</h2>
-
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./assets/skills-card.svg" />
-    <source media="(prefers-color-scheme: light)" srcset="./assets/skills-card-light.svg" />
-    <img alt="技术栈：语言 / 后端 / 前端 / AI 与数据 / 工程" src="./assets/skills-card.svg" width="500" />
-  </picture>
-</p>
-
----
-
 <!-- ==================== 当前方向 ==================== -->
 
 <h2 align="center">🎯 当前方向</h2>
@@ -47,15 +33,15 @@
 
 ---
 
-<!-- ==================== 贡献热力图 + 贪吃蛇（本地生成 · 每日自动更新） ==================== -->
+<!-- ==================== 贡献热力图（本地生成 · 每日自动更新） ==================== -->
 
-<h2 align="center">🔥 贡献热力图 · 🐍 贪吃蛇</h2>
+<h2 align="center">🔥 贡献热力图</h2>
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="./assets/activity-card.svg" />
     <source media="(prefers-color-scheme: light)" srcset="./assets/activity-card-light.svg" />
-    <img alt="近一年贡献热力图与贪吃蛇动画" src="./assets/activity-card.svg" width="760" />
+    <img alt="近一年贡献热力图" src="./assets/activity-card.svg" width="760" />
   </picture>
 </p>
 
@@ -68,5 +54,5 @@
 </p>
 
 <p align="center">
-  <i>感谢访问！</i> &nbsp;|&nbsp; <i>访客计数实时更新 · 全部卡片由 GitHub Actions 每日 9:00（北京时间）本地生成</i>
+  <i>感谢访问！</i> &nbsp;|&nbsp; <i>访客计数实时更新 · 卡片由 GitHub Actions 每日 9:00（北京时间）本地生成</i>
 </p>

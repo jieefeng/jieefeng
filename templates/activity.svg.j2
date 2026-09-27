@@ -1,21 +1,27 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="760" height="172" viewBox="0 0 760 172" role="img" aria-label="近一年 {{ total_contribs }} 次贡献，当前连续 {{ streak }} 天，最长 {{ max_streak }} 天">
-  {# The "eaten" flash is one shared @keyframes plus a per-cell
-     animation-delay instead of one SMIL <animate> per cell: the card gets
-     smaller, the flash becomes a crisp pulse (a per-element SMIL fill ramp
-     instead drags the cell toward the highlight color over the whole
-     cycle), and reduced motion can switch the flash and snake off.
-     Only cells the snake actually eats carry .fl — a day with no
-     contributions never pulses, so the flash reads as food rather than as a
-     second, competing heatmap.
-     The bright window is longer than the time the snake's own body needs to
-     clear the cell (flash_hold is derived from the body length), otherwise the
-     pulse would be painted underneath the snake and never be seen. #}
+  {# A soft light beam sweeps left-to-right across the calendar on a slow
+     loop; days it passes over briefly glow, so the eye reads the timeline
+     being "scanned" without any game-like overlay. Reduced-motion swaps the
+     sweep and the per-day glow off entirely. #}
   <style>
-    .fl { --t: {{ snake.flash_color }}; fill: var(--f); animation: fl {{ snake.dur }}s linear infinite; }
-    @keyframes fl { 0%, {{ snake.flash_hold }}% { fill: var(--t); } {{ snake.flash_fade }}%, 100% { fill: var(--f); } }
+    .beam { animation: sweep {{ scan.dur }}s linear infinite; }
+    @keyframes sweep {
+      0%   { transform: translateX({{ scan.x0 }}px); opacity: 0; }
+      6%   { opacity: 1; }
+      92%  { opacity: 1; }
+      100% { transform: translateX({{ scan.x1 }}px); opacity: 0; }
+    }
+    {% for cell in cells %}{% if cell.glow is not none %}
+    .g{{ loop.index0 }} { animation: gl{{ loop.index0 }} {{ scan.dur }}s linear infinite; }
+    @keyframes gl{{ loop.index0 }} {
+      0%, {{ cell.glow.pre }}%   { fill: {{ cell.fill }}; }
+      {{ cell.glow.mid }}%  { fill: {{ scan.glow_color }}; }
+      {{ cell.glow.post }}%, 100% { fill: {{ cell.fill }}; }
+    }
+    {% endif %}{% endfor %}
     .motion { display: inline; }
     @media (prefers-reduced-motion: reduce) {
-      .fl { animation: none; }
+      .beam { display: none; }
       .motion { display: none; }
     }
   </style>
@@ -38,16 +44,20 @@
       <stop offset="0" stop-color="#D97706"/>
       <stop offset="1" stop-color="#F59E0B"/>
     </linearGradient>
+    <linearGradient id="beamg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="{{ scan.glow_color }}" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="{{ scan.glow_color }}" stop-opacity="{{ '0.55' if theme == 'dark' else '0.40' }}"/>
+      <stop offset="1" stop-color="{{ scan.glow_color }}" stop-opacity="0"/>
+    </linearGradient>
     <filter id="ashadow" x="-5%" y="-10%" width="110%" height="125%">
       <feDropShadow dx="0" dy="3" stdDeviation="7" flood-color="#D97706" flood-opacity="{{ '0.25' if theme == 'dark' else '0.18' }}"/>
     </filter>
-    <filter id="snakeglow" x="-40%" y="-40%" width="180%" height="180%">
-      <feGaussianBlur stdDeviation="2.2" result="b"/>
-      <feMerge>
-        <feMergeNode in="b"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
+    <filter id="beamblur" x="-30%" y="-10%" width="160%" height="120%">
+      <feGaussianBlur stdDeviation="6"/>
     </filter>
+    <clipPath id="gridclip">
+      <rect x="36" y="52" width="{{ scan.grid_w }}" height="91" rx="3"/>
+    </clipPath>
   </defs>
 
   <rect x="1" y="1" width="758" height="170" rx="14" fill="url(#abg)" filter="url(#ashadow)"/>
@@ -78,58 +88,22 @@
   <text x="14" y="{{ wd.y }}" fill="{{ muted2 }}" font-family="'Segoe UI',sans-serif" font-size="8">{{ wd.label }}</text>
   {% endfor %}
 
-  <!-- Heatmap grid. A cell carries .fl — and therefore pulses once — only when
-       the snake's route eats it, i.e. only when that day has contributions. -->
+  <!-- Heatmap grid. Cells with contributions get a per-cell glow keyframe
+       timed to the moment the beam reaches them; empty days stay flat. -->
   {% for cell in cells %}
-  {% if cell.flash is not none %}
-  <rect class="fl" x="{{ cell.x }}" y="{{ cell.y }}" width="11" height="11" rx="2.5" fill="{{ cell.fill }}" style="--f:{{ cell.fill }};animation-delay:{{ cell.flash }}s"/>
+  {% if cell.glow is not none %}
+  <rect class="g{{ loop.index0 }}" x="{{ cell.x }}" y="{{ cell.y }}" width="11" height="11" rx="2.5" fill="{{ cell.fill }}"/>
   {% else %}
   <rect x="{{ cell.x }}" y="{{ cell.y }}" width="11" height="11" rx="2.5" fill="{{ cell.fill }}"/>
   {% endif %}
   {% endfor %}
 
-  <!-- Snake: one dashed stroke sliding along a route that visits the active
-       days only, with a dark halo underneath so the amber body stays legible
-       on a level 4 cell. The head rides the dash's leading edge, which is why
-       its motion and the body's dashoffset share one timing model. -->
-  {% if snake.present %}
-  <g class="motion"{% if snake.animated %} filter="url(#snakeglow)"{% endif %}>
-    {% if snake.animated %}
-    <animate attributeName="opacity" dur="{{ snake.dur }}s" repeatCount="indefinite"
-             values="0;1;1;0;0" keyTimes="0;0.008;{{ snake.fade_start }};{{ snake.fade_end }};1"
-             calcMode="linear"/>
-    <path d="{{ snake.path }}" fill="none" stroke="{{ snake.halo }}" stroke-width="9"
-          stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.9"
-          stroke-dasharray="{{ snake.arr_final }}" stroke-dashoffset="0">
-      <animate attributeName="stroke-dasharray" dur="{{ snake.dur }}s" repeatCount="indefinite"
-               calcMode="discrete" values="{{ snake.arr_values }}" keyTimes="{{ snake.arr_key }}"/>
-      <animate attributeName="stroke-dashoffset" dur="{{ snake.dur }}s" repeatCount="indefinite"
-               calcMode="linear" values="{{ snake.off_values }}" keyTimes="{{ snake.off_key }}"/>
-    </path>
-    <path d="{{ snake.path }}" fill="none" stroke="{{ snake.color }}" stroke-width="4.8"
-          stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.95"
-          stroke-dasharray="{{ snake.arr_final }}" stroke-dashoffset="0">
-      <animate attributeName="stroke-dasharray" dur="{{ snake.dur }}s" repeatCount="indefinite"
-               calcMode="discrete" values="{{ snake.arr_values }}" keyTimes="{{ snake.arr_key }}"/>
-      <animate attributeName="stroke-dashoffset" dur="{{ snake.dur }}s" repeatCount="indefinite"
-               calcMode="linear" values="{{ snake.off_values }}" keyTimes="{{ snake.off_key }}"/>
-    </path>
-    <g>
-      <animateMotion dur="{{ snake.dur }}s" repeatCount="indefinite" path="{{ snake.path }}"
-                     rotate="auto" keyPoints="0;1;1" keyTimes="0;{{ snake.travel }};1"
-                     calcMode="linear"/>
-      <circle r="5.3" fill="{{ snake.halo }}" fill-opacity="0.9"/>
-      <circle r="4.3" fill="{{ snake.color }}"/>
-      <circle cx="1.2" cy="-1.8" r="0.9" fill="{{ snake.eye }}"/>
-      <circle cx="1.2" cy="1.8" r="0.9" fill="{{ snake.eye }}"/>
-    </g>
-    {% else %}
-    <!-- One active day is not a route: a parked head, with that cell pulsing. -->
-    <circle cx="{{ snake.single[0] }}" cy="{{ snake.single[1] }}" r="5.3" fill="{{ snake.halo }}" fill-opacity="0.9"/>
-    <circle cx="{{ snake.single[0] }}" cy="{{ snake.single[1] }}" r="4.3" fill="{{ snake.color }}"/>
-    {% endif %}
+  <!-- The sweeping beam, clipped to the grid so it never washes over the
+       card chrome. -->
+  <g class="motion" clip-path="url(#gridclip)">
+    <rect class="beam" x="0" y="52" width="{{ scan.beam_w }}" height="91"
+          fill="url(#beamg)" filter="url(#beamblur)"/>
   </g>
-  {% endif %}
 
   <!-- Legend -->
   <text x="36" y="161" fill="{{ muted2 }}" font-family="'Segoe UI',sans-serif" font-size="9">最近一年</text>
