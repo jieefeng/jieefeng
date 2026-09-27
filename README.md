@@ -21,21 +21,6 @@
 
 ---
 
-<!-- ==================== 精选项目 ==================== -->
-
-<h2 align="center">🚀 精选项目</h2>
-
-| 项目 | 简介 |
-| :--- | :--- |
-| **[swarm-chat](https://github.com/jieefeng/swarm-chat)**<br/>`Python` | 多智能体协作 IM 平台：Orchestrator 驱动的任务分解、DAG 调度与 HITL 人工介入 |
-| **[scout-hive](https://github.com/jieefeng/scout-hive)**<br/>`Python` | 多智能体竞品分析系统：协作采集情报、分析对手并生成结构化报告 |
-| **[code-sentinel](https://github.com/jieefeng/code-sentinel)**<br/>`Python` | AI 驱动的 PR 评审助手，面向 Java 代码分析 |
-| **[Jieefeng-Flow](https://github.com/jieefeng/Jieefeng-Flow)**<br/>`Java` · `Apache-2.0` | AI 工作流编排 |
-
-<p align="center"><sub>更多项目见 <a href="https://github.com/jieefeng?tab=repositories">Repositories</a></sub></p>
-
----
-
 <!-- ==================== 贡献热力图 + 贪吃蛇（本地生成 · 每日自动更新） ==================== -->
 
 <h2 align="center">🔥 贡献热力图 · 🐍 贪吃蛇</h2>
