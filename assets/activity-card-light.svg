@@ -1,10 +1,189 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="760" height="172" viewBox="0 0 760 172" role="img" aria-label="近一年 632 次贡献，当前连续 1 天，最长 9 天">
   <style>
-    .fl { --t: #EA580C; fill: var(--f); animation: fl 15.79s linear infinite; }
-    @keyframes fl { 0%, 20.88% { fill: var(--t); } 29.88%, 100% { fill: var(--f); } }
+    .beam { animation: sweep 14.0s linear infinite; }
+    @keyframes sweep {
+      0%   { transform: translateX(-90px); opacity: 0; }
+      6%   { opacity: 1; }
+      92%  { opacity: 1; }
+      100% { transform: translateX(687px); opacity: 0; }
+    }
+    .g233 { animation: gl233 14.0s linear infinite; }
+    @keyframes gl233 {
+      0%, 58.71%   { fill: #92400E; }
+      61.71%  { fill: #F59E0B; }
+      64.71%, 100% { fill: #92400E; }
+    }
+    .g234 { animation: gl234 14.0s linear infinite; }
+    @keyframes gl234 {
+      0%, 58.71%   { fill: #92400E; }
+      61.71%  { fill: #F59E0B; }
+      64.71%, 100% { fill: #92400E; }
+    }
+    .g235 { animation: gl235 14.0s linear infinite; }
+    @keyframes gl235 {
+      0%, 58.71%   { fill: #92400E; }
+      61.71%  { fill: #F59E0B; }
+      64.71%, 100% { fill: #92400E; }
+    }
+    .g236 { animation: gl236 14.0s linear infinite; }
+    @keyframes gl236 {
+      0%, 58.71%   { fill: #FEF3C7; }
+      61.71%  { fill: #F59E0B; }
+      64.71%, 100% { fill: #FEF3C7; }
+    }
+    .g237 { animation: gl237 14.0s linear infinite; }
+    @keyframes gl237 {
+      0%, 58.71%   { fill: #92400E; }
+      61.71%  { fill: #F59E0B; }
+      64.71%, 100% { fill: #92400E; }
+    }
+    .g238 { animation: gl238 14.0s linear infinite; }
+    @keyframes gl238 {
+      0%, 60.38%   { fill: #92400E; }
+      63.38%  { fill: #F59E0B; }
+      66.38%, 100% { fill: #92400E; }
+    }
+    .g239 { animation: gl239 14.0s linear infinite; }
+    @keyframes gl239 {
+      0%, 60.38%   { fill: #92400E; }
+      63.38%  { fill: #F59E0B; }
+      66.38%, 100% { fill: #92400E; }
+    }
+    .g240 { animation: gl240 14.0s linear infinite; }
+    @keyframes gl240 {
+      0%, 60.38%   { fill: #F59E0B; }
+      63.38%  { fill: #F59E0B; }
+      66.38%, 100% { fill: #F59E0B; }
+    }
+    .g241 { animation: gl241 14.0s linear infinite; }
+    @keyframes gl241 {
+      0%, 60.38%   { fill: #92400E; }
+      63.38%  { fill: #F59E0B; }
+      66.38%, 100% { fill: #92400E; }
+    }
+    .g243 { animation: gl243 14.0s linear infinite; }
+    @keyframes gl243 {
+      0%, 60.38%   { fill: #92400E; }
+      63.38%  { fill: #F59E0B; }
+      66.38%, 100% { fill: #92400E; }
+    }
+    .g244 { animation: gl244 14.0s linear infinite; }
+    @keyframes gl244 {
+      0%, 60.38%   { fill: #FEF3C7; }
+      63.38%  { fill: #F59E0B; }
+      66.38%, 100% { fill: #FEF3C7; }
+    }
+    .g245 { animation: gl245 14.0s linear infinite; }
+    @keyframes gl245 {
+      0%, 62.06%   { fill: #92400E; }
+      65.06%  { fill: #F59E0B; }
+      68.06%, 100% { fill: #92400E; }
+    }
+    .g246 { animation: gl246 14.0s linear infinite; }
+    @keyframes gl246 {
+      0%, 62.06%   { fill: #92400E; }
+      65.06%  { fill: #F59E0B; }
+      68.06%, 100% { fill: #92400E; }
+    }
+    .g247 { animation: gl247 14.0s linear infinite; }
+    @keyframes gl247 {
+      0%, 62.06%   { fill: #92400E; }
+      65.06%  { fill: #F59E0B; }
+      68.06%, 100% { fill: #92400E; }
+    }
+    .g248 { animation: gl248 14.0s linear infinite; }
+    @keyframes gl248 {
+      0%, 62.06%   { fill: #92400E; }
+      65.06%  { fill: #F59E0B; }
+      68.06%, 100% { fill: #92400E; }
+    }
+    .g250 { animation: gl250 14.0s linear infinite; }
+    @keyframes gl250 {
+      0%, 62.06%   { fill: #92400E; }
+      65.06%  { fill: #F59E0B; }
+      68.06%, 100% { fill: #92400E; }
+    }
+    .g251 { animation: gl251 14.0s linear infinite; }
+    @keyframes gl251 {
+      0%, 62.06%   { fill: #92400E; }
+      65.06%  { fill: #F59E0B; }
+      68.06%, 100% { fill: #92400E; }
+    }
+    .g252 { animation: gl252 14.0s linear infinite; }
+    @keyframes gl252 {
+      0%, 63.73%   { fill: #92400E; }
+      66.73%  { fill: #F59E0B; }
+      69.73%, 100% { fill: #92400E; }
+    }
+    .g253 { animation: gl253 14.0s linear infinite; }
+    @keyframes gl253 {
+      0%, 63.73%   { fill: #92400E; }
+      66.73%  { fill: #F59E0B; }
+      69.73%, 100% { fill: #92400E; }
+    }
+    .g254 { animation: gl254 14.0s linear infinite; }
+    @keyframes gl254 {
+      0%, 63.73%   { fill: #92400E; }
+      66.73%  { fill: #F59E0B; }
+      69.73%, 100% { fill: #92400E; }
+    }
+    .g255 { animation: gl255 14.0s linear infinite; }
+    @keyframes gl255 {
+      0%, 63.73%   { fill: #FDE68A; }
+      66.73%  { fill: #F59E0B; }
+      69.73%, 100% { fill: #FDE68A; }
+    }
+    .g256 { animation: gl256 14.0s linear infinite; }
+    @keyframes gl256 {
+      0%, 63.73%   { fill: #F59E0B; }
+      66.73%  { fill: #F59E0B; }
+      69.73%, 100% { fill: #F59E0B; }
+    }
+    .g261 { animation: gl261 14.0s linear infinite; }
+    @keyframes gl261 {
+      0%, 65.40%   { fill: #FEF3C7; }
+      68.40%  { fill: #F59E0B; }
+      71.40%, 100% { fill: #FEF3C7; }
+    }
+    .g262 { animation: gl262 14.0s linear infinite; }
+    @keyframes gl262 {
+      0%, 65.40%   { fill: #92400E; }
+      68.40%  { fill: #F59E0B; }
+      71.40%, 100% { fill: #92400E; }
+    }
+    .g301 { animation: gl301 14.0s linear infinite; }
+    @keyframes gl301 {
+      0%, 75.44%   { fill: #FEF3C7; }
+      78.44%  { fill: #F59E0B; }
+      81.44%, 100% { fill: #FEF3C7; }
+    }
+    .g357 { animation: gl357 14.0s linear infinite; }
+    @keyframes gl357 {
+      0%, 88.83%   { fill: #F59E0B; }
+      91.83%  { fill: #F59E0B; }
+      94.83%, 100% { fill: #F59E0B; }
+    }
+    .g358 { animation: gl358 14.0s linear infinite; }
+    @keyframes gl358 {
+      0%, 88.83%   { fill: #92400E; }
+      91.83%  { fill: #F59E0B; }
+      94.83%, 100% { fill: #92400E; }
+    }
+    .g359 { animation: gl359 14.0s linear infinite; }
+    @keyframes gl359 {
+      0%, 88.83%   { fill: #FEF3C7; }
+      91.83%  { fill: #F59E0B; }
+      94.83%, 100% { fill: #FEF3C7; }
+    }
+    .g364 { animation: gl364 14.0s linear infinite; }
+    @keyframes gl364 {
+      0%, 90.50%   { fill: #FDE68A; }
+      93.50%  { fill: #F59E0B; }
+      96.50%, 100% { fill: #FDE68A; }
+    }
     .motion { display: inline; }
     @media (prefers-reduced-motion: reduce) {
-      .fl { animation: none; }
+      .beam { display: none; }
       .motion { display: none; }
     }
   </style>
@@ -22,16 +201,20 @@
       <stop offset="0" stop-color="#D97706"/>
       <stop offset="1" stop-color="#F59E0B"/>
     </linearGradient>
+    <linearGradient id="beamg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#F59E0B" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#F59E0B" stop-opacity="0.40"/>
+      <stop offset="1" stop-color="#F59E0B" stop-opacity="0"/>
+    </linearGradient>
     <filter id="ashadow" x="-5%" y="-10%" width="110%" height="125%">
       <feDropShadow dx="0" dy="3" stdDeviation="7" flood-color="#D97706" flood-opacity="0.18"/>
     </filter>
-    <filter id="snakeglow" x="-40%" y="-40%" width="180%" height="180%">
-      <feGaussianBlur stdDeviation="2.2" result="b"/>
-      <feMerge>
-        <feMergeNode in="b"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
+    <filter id="beamblur" x="-30%" y="-10%" width="160%" height="120%">
+      <feGaussianBlur stdDeviation="6"/>
     </filter>
+    <clipPath id="gridclip">
+      <rect x="36" y="52" width="687" height="91" rx="3"/>
+    </clipPath>
   </defs>
 
   <rect x="1" y="1" width="758" height="170" rx="14" fill="url(#abg)" filter="url(#ashadow)"/>
@@ -68,8 +251,8 @@
   <text x="14" y="100" fill="#9CA3AF" font-family="'Segoe UI',sans-serif" font-size="8">三</text>
   <text x="14" y="126" fill="#9CA3AF" font-family="'Segoe UI',sans-serif" font-size="8">五</text>
 
-  <!-- Heatmap grid. A cell carries .fl — and therefore pulses once — only when
-       the snake's route eats it, i.e. only when that day has contributions. -->
+  <!-- Heatmap grid. Cells with contributions get a per-cell glow keyframe
+       timed to the moment the beam reaches them; empty days stay flat. -->
   <rect x="36" y="52" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="36" y="65" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="36" y="78" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
@@ -303,36 +486,36 @@
   <rect x="452" y="130" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="465" y="52" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="465" y="65" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
-  <rect class="fl" x="465" y="78" width="11" height="11" rx="2.5" fill="#92400E" style="--f:#92400E;animation-delay:0.0s"/>
-  <rect class="fl" x="465" y="91" width="11" height="11" rx="2.5" fill="#92400E" style="--f:#92400E;animation-delay:0.2786s"/>
-  <rect class="fl" x="465" y="104" width="11" height="11" rx="2.5" fill="#92400E" style="--f:#92400E;animation-delay:0.5573s"/>
-  <rect class="fl" x="465" y="117" width="11" height="11" rx="2.5" fill="#FEF3C7" style="--f:#FEF3C7;animation-delay:0.8359s"/>
-  <rect class="fl" x="465" y="130" width="11" height="11" rx="2.5" fill="#92400E" style="--f:#92400E;animation-delay:1.1146s"/>
-  <rect class="fl" x="478" y="52" width="11" height="11" rx="2.5" fill="#92400E" style="--f:#92400E;animation-delay:3.0651s"/>
-  <rect class="fl" x="478" y="65" width="11" height="11" rx="2.5" fill="#92400E" style="--f:#92400E;animation-delay:2.7865s"/>
-  <rect class="fl" x="478" y="78" width="11" height="11" rx="2.5" fill="#F59E0B" style="--f:#F59E0B;animation-delay:2.5078s"/>
-  <rect class="fl" x="478" y="91" width="11" height="11" rx="2.5" fill="#92400E" style="--f:#92400E;animation-delay:2.2292s"/>
+  <rect class="g233" x="465" y="78" width="11" height="11" rx="2.5" fill="#92400E"/>
+  <rect class="g234" x="465" y="91" width="11" height="11" rx="2.5" fill="#92400E"/>
+  <rect class="g235" x="465" y="104" width="11" height="11" rx="2.5" fill="#92400E"/>
+  <rect class="g236" x="465" y="117" width="11" height="11" rx="2.5" fill="#FEF3C7"/>
+  <rect class="g237" x="465" y="130" width="11" height="11" rx="2.5" fill="#92400E"/>
+  <rect class="g238" x="478" y="52" width="11" height="11" rx="2.5" fill="#92400E"/>
+  <rect class="g239" x="478" y="65" width="11" height="11" rx="2.5" fill="#92400E"/>
+  <rect class="g240" x="478" y="78" width="11" height="11" rx="2.5" fill="#F59E0B"/>
+  <rect class="g241" x="478" y="91" width="11" height="11" rx="2.5" fill="#92400E"/>
   <rect x="478" y="104" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
-  <rect class="fl" x="478" y="117" width="11" height="11" rx="2.5" fill="#92400E" style="--f:#92400E;animation-delay:1.6719s"/>
-  <rect class="fl" x="478" y="130" width="11" height="11" rx="2.5" fill="#FEF3C7" style="--f:#FEF3C7;animation-delay:1.3932s"/>
-  <rect class="fl" x="491" y="52" width="11" height="11" rx="2.5" fill="#92400E" style="--f:#92400E;animation-delay:3.3438s"/>
-  <rect class="fl" x="491" y="65" width="11" height="11" rx="2.5" fill="#92400E" style="--f:#92400E;animation-delay:3.6224s"/>
-  <rect class="fl" x="491" y="78" width="11" height="11" rx="2.5" fill="#92400E" style="--f:#92400E;animation-delay:3.9011s"/>
-  <rect class="fl" x="491" y="91" width="11" height="11" rx="2.5" fill="#92400E" style="--f:#92400E;animation-delay:4.1797s"/>
+  <rect class="g243" x="478" y="117" width="11" height="11" rx="2.5" fill="#92400E"/>
+  <rect class="g244" x="478" y="130" width="11" height="11" rx="2.5" fill="#FEF3C7"/>
+  <rect class="g245" x="491" y="52" width="11" height="11" rx="2.5" fill="#92400E"/>
+  <rect class="g246" x="491" y="65" width="11" height="11" rx="2.5" fill="#92400E"/>
+  <rect class="g247" x="491" y="78" width="11" height="11" rx="2.5" fill="#92400E"/>
+  <rect class="g248" x="491" y="91" width="11" height="11" rx="2.5" fill="#92400E"/>
   <rect x="491" y="104" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
-  <rect class="fl" x="491" y="117" width="11" height="11" rx="2.5" fill="#92400E" style="--f:#92400E;animation-delay:4.737s"/>
-  <rect class="fl" x="491" y="130" width="11" height="11" rx="2.5" fill="#92400E" style="--f:#92400E;animation-delay:5.0156s"/>
-  <rect class="fl" x="504" y="52" width="11" height="11" rx="2.5" fill="#92400E" style="--f:#92400E;animation-delay:6.9662s"/>
-  <rect class="fl" x="504" y="65" width="11" height="11" rx="2.5" fill="#92400E" style="--f:#92400E;animation-delay:6.6875s"/>
-  <rect class="fl" x="504" y="78" width="11" height="11" rx="2.5" fill="#92400E" style="--f:#92400E;animation-delay:6.4089s"/>
-  <rect class="fl" x="504" y="91" width="11" height="11" rx="2.5" fill="#FDE68A" style="--f:#FDE68A;animation-delay:6.1302s"/>
-  <rect class="fl" x="504" y="104" width="11" height="11" rx="2.5" fill="#F59E0B" style="--f:#F59E0B;animation-delay:5.8516s"/>
+  <rect class="g250" x="491" y="117" width="11" height="11" rx="2.5" fill="#92400E"/>
+  <rect class="g251" x="491" y="130" width="11" height="11" rx="2.5" fill="#92400E"/>
+  <rect class="g252" x="504" y="52" width="11" height="11" rx="2.5" fill="#92400E"/>
+  <rect class="g253" x="504" y="65" width="11" height="11" rx="2.5" fill="#92400E"/>
+  <rect class="g254" x="504" y="78" width="11" height="11" rx="2.5" fill="#92400E"/>
+  <rect class="g255" x="504" y="91" width="11" height="11" rx="2.5" fill="#FDE68A"/>
+  <rect class="g256" x="504" y="104" width="11" height="11" rx="2.5" fill="#F59E0B"/>
   <rect x="504" y="117" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="504" y="130" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="517" y="52" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="517" y="65" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
-  <rect class="fl" x="517" y="78" width="11" height="11" rx="2.5" fill="#FEF3C7" style="--f:#FEF3C7;animation-delay:7.8021s"/>
-  <rect class="fl" x="517" y="91" width="11" height="11" rx="2.5" fill="#92400E" style="--f:#92400E;animation-delay:8.0808s"/>
+  <rect class="g261" x="517" y="78" width="11" height="11" rx="2.5" fill="#FEF3C7"/>
+  <rect class="g262" x="517" y="91" width="11" height="11" rx="2.5" fill="#92400E"/>
   <rect x="517" y="104" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="517" y="117" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="517" y="130" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
@@ -371,7 +554,7 @@
   <rect x="582" y="104" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="582" y="117" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="582" y="130" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
-  <rect class="fl" x="595" y="52" width="11" height="11" rx="2.5" fill="#FEF3C7" style="--f:#FEF3C7;animation-delay:10.5886s"/>
+  <rect class="g301" x="595" y="52" width="11" height="11" rx="2.5" fill="#FEF3C7"/>
   <rect x="595" y="65" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="595" y="78" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="595" y="91" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
@@ -427,48 +610,20 @@
   <rect x="686" y="104" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="686" y="117" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="686" y="130" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
-  <rect class="fl" x="699" y="52" width="11" height="11" rx="2.5" fill="#F59E0B" style="--f:#F59E0B;animation-delay:12.8178s"/>
-  <rect class="fl" x="699" y="65" width="11" height="11" rx="2.5" fill="#92400E" style="--f:#92400E;animation-delay:13.0964s"/>
-  <rect class="fl" x="699" y="78" width="11" height="11" rx="2.5" fill="#FEF3C7" style="--f:#FEF3C7;animation-delay:13.3751s"/>
+  <rect class="g357" x="699" y="52" width="11" height="11" rx="2.5" fill="#F59E0B"/>
+  <rect class="g358" x="699" y="65" width="11" height="11" rx="2.5" fill="#92400E"/>
+  <rect class="g359" x="699" y="78" width="11" height="11" rx="2.5" fill="#FEF3C7"/>
   <rect x="699" y="91" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="699" y="104" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="699" y="117" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="699" y="130" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
-  <rect class="fl" x="712" y="52" width="11" height="11" rx="2.5" fill="#FDE68A" style="--f:#FDE68A;animation-delay:14.211s"/>
+  <rect class="g364" x="712" y="52" width="11" height="11" rx="2.5" fill="#FDE68A"/>
 
-  <!-- Snake: one dashed stroke sliding along a route that visits the active
-       days only, with a dark halo underneath so the amber body stays legible
-       on a level 4 cell. The head rides the dash's leading edge, which is why
-       its motion and the body's dashoffset share one timing model. -->
-  <g class="motion" filter="url(#snakeglow)">
-    <animate attributeName="opacity" dur="15.79s" repeatCount="indefinite"
-             values="0;1;1;0;0" keyTimes="0;0.008;0.93;0.975;1"
-             calcMode="linear"/>
-    <path d="M 470.5 83.5 L 470.5 96.5 L 470.5 109.5 L 470.5 122.5 L 470.5 135.5 L 483.5 135.5 L 483.5 122.5 L 483.5 96.5 L 483.5 83.5 L 483.5 70.5 L 483.5 57.5 L 496.5 57.5 L 496.5 70.5 L 496.5 83.5 L 496.5 96.5 L 496.5 122.5 L 496.5 135.5 L 509.5 135.5 L 509.5 109.5 L 509.5 96.5 L 509.5 83.5 L 509.5 70.5 L 509.5 57.5 L 522.5 57.5 L 522.5 83.5 L 522.5 96.5 L 600.5 96.5 L 600.5 57.5 L 704.5 57.5 L 704.5 70.5 L 704.5 83.5 L 717.5 83.5 L 717.5 57.5" fill="none" stroke="#FFFBEB" stroke-width="9"
-          stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.9"
-          stroke-dasharray="117.0 676.0" stroke-dashoffset="0">
-      <animate attributeName="stroke-dasharray" dur="15.79s" repeatCount="indefinite"
-               calcMode="discrete" values="26.0 676.0;26.0 676.0;26.0 676.0;26.0 676.0;39.0 676.0;39.0 676.0;39.0 676.0;39.0 676.0;52.0 676.0;52.0 676.0;52.0 676.0;52.0 676.0;65.0 676.0;65.0 676.0;65.0 676.0;65.0 676.0;78.0 676.0;78.0 676.0;78.0 676.0;78.0 676.0;91.0 676.0;91.0 676.0;91.0 676.0;91.0 676.0;104.0 676.0;104.0 676.0;104.0 676.0;104.0 676.0;117.0 676.0;117.0 676.0;117.0 676.0" keyTimes="0.0000;0.0001;0.0176;0.0353;0.0529;0.0706;0.0882;0.1059;0.1412;0.1588;0.1765;0.1941;0.2118;0.2294;0.2471;0.2647;0.3000;0.3176;0.3706;0.3882;0.4059;0.4235;0.4412;0.4941;0.5118;0.6706;0.8118;0.8294;0.8471;0.9000;1.0000"/>
-      <animate attributeName="stroke-dashoffset" dur="15.79s" repeatCount="indefinite"
-               calcMode="linear" values="26.0;26.0;26.0;13.3;13.0;0.3;-0.0;-12.7;0.0;-12.7;-13.0;-25.7;-26.0;-38.7;-39.0;-64.7;-52.0;-64.7;-65.0;-77.7;-78.0;-90.7;-91.0;-103.7;-91.0;-103.7;-104.0;-116.7;-117.0;-129.7;-130.0;-155.7;-143.0;-155.7;-156.0;-194.7;-195.0;-207.7;-208.0;-220.7;-208.0;-220.7;-221.0;-233.7;-234.0;-272.7;-273.0;-285.7;-273.0;-389.7;-390.0;-493.7;-494.0;-506.7;-507.0;-519.7;-507.0;-545.7;-546.0;-546.0;-546.0" keyTimes="0.0000;0.0001;0.0002;0.0172;0.0176;0.0349;0.0353;0.0525;0.0529;0.0702;0.0706;0.0878;0.0882;0.1055;0.1059;0.1408;0.1412;0.1584;0.1588;0.1761;0.1765;0.1937;0.1941;0.2114;0.2118;0.2290;0.2294;0.2467;0.2471;0.2643;0.2647;0.2996;0.3000;0.3172;0.3176;0.3702;0.3706;0.3878;0.3882;0.4055;0.4059;0.4231;0.4235;0.4408;0.4412;0.4937;0.4941;0.5114;0.5118;0.6702;0.6706;0.8114;0.8118;0.8290;0.8294;0.8467;0.8471;0.8996;0.9000;0.9001;1.0000"/>
-    </path>
-    <path d="M 470.5 83.5 L 470.5 96.5 L 470.5 109.5 L 470.5 122.5 L 470.5 135.5 L 483.5 135.5 L 483.5 122.5 L 483.5 96.5 L 483.5 83.5 L 483.5 70.5 L 483.5 57.5 L 496.5 57.5 L 496.5 70.5 L 496.5 83.5 L 496.5 96.5 L 496.5 122.5 L 496.5 135.5 L 509.5 135.5 L 509.5 109.5 L 509.5 96.5 L 509.5 83.5 L 509.5 70.5 L 509.5 57.5 L 522.5 57.5 L 522.5 83.5 L 522.5 96.5 L 600.5 96.5 L 600.5 57.5 L 704.5 57.5 L 704.5 70.5 L 704.5 83.5 L 717.5 83.5 L 717.5 57.5" fill="none" stroke="#B45309" stroke-width="4.8"
-          stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.95"
-          stroke-dasharray="117.0 676.0" stroke-dashoffset="0">
-      <animate attributeName="stroke-dasharray" dur="15.79s" repeatCount="indefinite"
-               calcMode="discrete" values="26.0 676.0;26.0 676.0;26.0 676.0;26.0 676.0;39.0 676.0;39.0 676.0;39.0 676.0;39.0 676.0;52.0 676.0;52.0 676.0;52.0 676.0;52.0 676.0;65.0 676.0;65.0 676.0;65.0 676.0;65.0 676.0;78.0 676.0;78.0 676.0;78.0 676.0;78.0 676.0;91.0 676.0;91.0 676.0;91.0 676.0;91.0 676.0;104.0 676.0;104.0 676.0;104.0 676.0;104.0 676.0;117.0 676.0;117.0 676.0;117.0 676.0" keyTimes="0.0000;0.0001;0.0176;0.0353;0.0529;0.0706;0.0882;0.1059;0.1412;0.1588;0.1765;0.1941;0.2118;0.2294;0.2471;0.2647;0.3000;0.3176;0.3706;0.3882;0.4059;0.4235;0.4412;0.4941;0.5118;0.6706;0.8118;0.8294;0.8471;0.9000;1.0000"/>
-      <animate attributeName="stroke-dashoffset" dur="15.79s" repeatCount="indefinite"
-               calcMode="linear" values="26.0;26.0;26.0;13.3;13.0;0.3;-0.0;-12.7;0.0;-12.7;-13.0;-25.7;-26.0;-38.7;-39.0;-64.7;-52.0;-64.7;-65.0;-77.7;-78.0;-90.7;-91.0;-103.7;-91.0;-103.7;-104.0;-116.7;-117.0;-129.7;-130.0;-155.7;-143.0;-155.7;-156.0;-194.7;-195.0;-207.7;-208.0;-220.7;-208.0;-220.7;-221.0;-233.7;-234.0;-272.7;-273.0;-285.7;-273.0;-389.7;-390.0;-493.7;-494.0;-506.7;-507.0;-519.7;-507.0;-545.7;-546.0;-546.0;-546.0" keyTimes="0.0000;0.0001;0.0002;0.0172;0.0176;0.0349;0.0353;0.0525;0.0529;0.0702;0.0706;0.0878;0.0882;0.1055;0.1059;0.1408;0.1412;0.1584;0.1588;0.1761;0.1765;0.1937;0.1941;0.2114;0.2118;0.2290;0.2294;0.2467;0.2471;0.2643;0.2647;0.2996;0.3000;0.3172;0.3176;0.3702;0.3706;0.3878;0.3882;0.4055;0.4059;0.4231;0.4235;0.4408;0.4412;0.4937;0.4941;0.5114;0.5118;0.6702;0.6706;0.8114;0.8118;0.8290;0.8294;0.8467;0.8471;0.8996;0.9000;0.9001;1.0000"/>
-    </path>
-    <g>
-      <animateMotion dur="15.79s" repeatCount="indefinite" path="M 470.5 83.5 L 470.5 96.5 L 470.5 109.5 L 470.5 122.5 L 470.5 135.5 L 483.5 135.5 L 483.5 122.5 L 483.5 96.5 L 483.5 83.5 L 483.5 70.5 L 483.5 57.5 L 496.5 57.5 L 496.5 70.5 L 496.5 83.5 L 496.5 96.5 L 496.5 122.5 L 496.5 135.5 L 509.5 135.5 L 509.5 109.5 L 509.5 96.5 L 509.5 83.5 L 509.5 70.5 L 509.5 57.5 L 522.5 57.5 L 522.5 83.5 L 522.5 96.5 L 600.5 96.5 L 600.5 57.5 L 704.5 57.5 L 704.5 70.5 L 704.5 83.5 L 717.5 83.5 L 717.5 57.5"
-                     rotate="auto" keyPoints="0;1;1" keyTimes="0;0.9;1"
-                     calcMode="linear"/>
-      <circle r="5.3" fill="#FFFBEB" fill-opacity="0.9"/>
-      <circle r="4.3" fill="#B45309"/>
-      <circle cx="1.2" cy="-1.8" r="0.9" fill="#FFF7E6"/>
-      <circle cx="1.2" cy="1.8" r="0.9" fill="#FFF7E6"/>
-    </g>
+  <!-- The sweeping beam, clipped to the grid so it never washes over the
+       card chrome. -->
+  <g class="motion" clip-path="url(#gridclip)">
+    <rect class="beam" x="0" y="52" width="90" height="91"
+          fill="url(#beamg)" filter="url(#beamblur)"/>
   </g>
 
   <!-- Legend -->
