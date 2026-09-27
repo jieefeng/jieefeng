@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="760" height="172" viewBox="0 0 760 172" role="img" aria-label="近一年 631 次贡献，当前连续 1 天，最长 9 天">
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="172" viewBox="0 0 760 172" role="img" aria-label="近一年 632 次贡献，当前连续 1 天，最长 9 天">
   <style>
     .fl { --t: #EA580C; fill: var(--f); animation: fl 15.79s linear infinite; }
     @keyframes fl { 0%, 20.88% { fill: var(--t); } 29.88%, 100% { fill: var(--f); } }
@@ -41,7 +41,7 @@
   <!-- Header: yearly stats. The section title is carried by the README
        heading, so the card does not repeat it. -->
   <text x="28" y="31" font-family="'Segoe UI',-apple-system,sans-serif" font-size="12">
-    <tspan fill="url(#anum)" font-size="16" font-weight="700">631</tspan>
+    <tspan fill="url(#anum)" font-size="16" font-weight="700">632</tspan>
     <tspan fill="#6B7280"> 次贡献 · 连续 </tspan>
     <tspan fill="#B45309" font-weight="600">1</tspan>
     <tspan fill="#6B7280"> 天 · 最长 </tspan>
