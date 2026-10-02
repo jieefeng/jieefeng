@@ -628,6 +628,7 @@
   <rect x="712" y="78" width="11" height="11" rx="2.5" fill="#21262D"/>
   <rect x="712" y="91" width="11" height="11" rx="2.5" fill="#21262D"/>
   <rect x="712" y="104" width="11" height="11" rx="2.5" fill="#21262D"/>
+  <rect x="712" y="117" width="11" height="11" rx="2.5" fill="#21262D"/>
 
   <!-- The sweeping beam, clipped to the grid so it never washes over the
        card chrome. -->
