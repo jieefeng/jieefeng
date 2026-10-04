@@ -7,11 +7,53 @@
       92%  { opacity: 1; }
       100% { transform: translateX(687px); opacity: 0; }
     }
-    .g233 { animation: gl233 14.0s linear infinite; }
-    @keyframes gl233 {
+    .g226 { animation: gl226 14.0s linear infinite; }
+    @keyframes gl226 {
+      0%, 57.04%   { fill: #92400E; }
+      60.04%  { fill: #F59E0B; }
+      63.04%, 100% { fill: #92400E; }
+    }
+    .g227 { animation: gl227 14.0s linear infinite; }
+    @keyframes gl227 {
+      0%, 57.04%   { fill: #92400E; }
+      60.04%  { fill: #F59E0B; }
+      63.04%, 100% { fill: #92400E; }
+    }
+    .g228 { animation: gl228 14.0s linear infinite; }
+    @keyframes gl228 {
+      0%, 57.04%   { fill: #92400E; }
+      60.04%  { fill: #F59E0B; }
+      63.04%, 100% { fill: #92400E; }
+    }
+    .g229 { animation: gl229 14.0s linear infinite; }
+    @keyframes gl229 {
+      0%, 57.04%   { fill: #FEF3C7; }
+      60.04%  { fill: #F59E0B; }
+      63.04%, 100% { fill: #FEF3C7; }
+    }
+    .g230 { animation: gl230 14.0s linear infinite; }
+    @keyframes gl230 {
+      0%, 57.04%   { fill: #92400E; }
+      60.04%  { fill: #F59E0B; }
+      63.04%, 100% { fill: #92400E; }
+    }
+    .g231 { animation: gl231 14.0s linear infinite; }
+    @keyframes gl231 {
       0%, 58.71%   { fill: #92400E; }
       61.71%  { fill: #F59E0B; }
       64.71%, 100% { fill: #92400E; }
+    }
+    .g232 { animation: gl232 14.0s linear infinite; }
+    @keyframes gl232 {
+      0%, 58.71%   { fill: #92400E; }
+      61.71%  { fill: #F59E0B; }
+      64.71%, 100% { fill: #92400E; }
+    }
+    .g233 { animation: gl233 14.0s linear infinite; }
+    @keyframes gl233 {
+      0%, 58.71%   { fill: #F59E0B; }
+      61.71%  { fill: #F59E0B; }
+      64.71%, 100% { fill: #F59E0B; }
     }
     .g234 { animation: gl234 14.0s linear infinite; }
     @keyframes gl234 {
@@ -19,23 +61,17 @@
       61.71%  { fill: #F59E0B; }
       64.71%, 100% { fill: #92400E; }
     }
-    .g235 { animation: gl235 14.0s linear infinite; }
-    @keyframes gl235 {
+    .g236 { animation: gl236 14.0s linear infinite; }
+    @keyframes gl236 {
       0%, 58.71%   { fill: #92400E; }
       61.71%  { fill: #F59E0B; }
       64.71%, 100% { fill: #92400E; }
-    }
-    .g236 { animation: gl236 14.0s linear infinite; }
-    @keyframes gl236 {
-      0%, 58.71%   { fill: #FEF3C7; }
-      61.71%  { fill: #F59E0B; }
-      64.71%, 100% { fill: #FEF3C7; }
     }
     .g237 { animation: gl237 14.0s linear infinite; }
     @keyframes gl237 {
-      0%, 58.71%   { fill: #92400E; }
+      0%, 58.71%   { fill: #FEF3C7; }
       61.71%  { fill: #F59E0B; }
-      64.71%, 100% { fill: #92400E; }
+      64.71%, 100% { fill: #FEF3C7; }
     }
     .g238 { animation: gl238 14.0s linear infinite; }
     @keyframes gl238 {
@@ -51,9 +87,9 @@
     }
     .g240 { animation: gl240 14.0s linear infinite; }
     @keyframes gl240 {
-      0%, 60.38%   { fill: #F59E0B; }
+      0%, 60.38%   { fill: #92400E; }
       63.38%  { fill: #F59E0B; }
-      66.38%, 100% { fill: #F59E0B; }
+      66.38%, 100% { fill: #92400E; }
     }
     .g241 { animation: gl241 14.0s linear infinite; }
     @keyframes gl241 {
@@ -69,9 +105,9 @@
     }
     .g244 { animation: gl244 14.0s linear infinite; }
     @keyframes gl244 {
-      0%, 60.38%   { fill: #FEF3C7; }
+      0%, 60.38%   { fill: #92400E; }
       63.38%  { fill: #F59E0B; }
-      66.38%, 100% { fill: #FEF3C7; }
+      66.38%, 100% { fill: #92400E; }
     }
     .g245 { animation: gl245 14.0s linear infinite; }
     @keyframes gl245 {
@@ -93,99 +129,63 @@
     }
     .g248 { animation: gl248 14.0s linear infinite; }
     @keyframes gl248 {
-      0%, 62.06%   { fill: #92400E; }
+      0%, 62.06%   { fill: #FDE68A; }
       65.06%  { fill: #F59E0B; }
-      68.06%, 100% { fill: #92400E; }
+      68.06%, 100% { fill: #FDE68A; }
     }
-    .g250 { animation: gl250 14.0s linear infinite; }
-    @keyframes gl250 {
-      0%, 62.06%   { fill: #92400E; }
+    .g249 { animation: gl249 14.0s linear infinite; }
+    @keyframes gl249 {
+      0%, 62.06%   { fill: #F59E0B; }
       65.06%  { fill: #F59E0B; }
-      68.06%, 100% { fill: #92400E; }
-    }
-    .g251 { animation: gl251 14.0s linear infinite; }
-    @keyframes gl251 {
-      0%, 62.06%   { fill: #92400E; }
-      65.06%  { fill: #F59E0B; }
-      68.06%, 100% { fill: #92400E; }
-    }
-    .g252 { animation: gl252 14.0s linear infinite; }
-    @keyframes gl252 {
-      0%, 63.73%   { fill: #92400E; }
-      66.73%  { fill: #F59E0B; }
-      69.73%, 100% { fill: #92400E; }
-    }
-    .g253 { animation: gl253 14.0s linear infinite; }
-    @keyframes gl253 {
-      0%, 63.73%   { fill: #92400E; }
-      66.73%  { fill: #F59E0B; }
-      69.73%, 100% { fill: #92400E; }
+      68.06%, 100% { fill: #F59E0B; }
     }
     .g254 { animation: gl254 14.0s linear infinite; }
     @keyframes gl254 {
+      0%, 63.73%   { fill: #FEF3C7; }
+      66.73%  { fill: #F59E0B; }
+      69.73%, 100% { fill: #FEF3C7; }
+    }
+    .g255 { animation: gl255 14.0s linear infinite; }
+    @keyframes gl255 {
       0%, 63.73%   { fill: #92400E; }
       66.73%  { fill: #F59E0B; }
       69.73%, 100% { fill: #92400E; }
     }
-    .g255 { animation: gl255 14.0s linear infinite; }
-    @keyframes gl255 {
-      0%, 63.73%   { fill: #FDE68A; }
-      66.73%  { fill: #F59E0B; }
-      69.73%, 100% { fill: #FDE68A; }
+    .g294 { animation: gl294 14.0s linear infinite; }
+    @keyframes gl294 {
+      0%, 73.77%   { fill: #FEF3C7; }
+      76.77%  { fill: #F59E0B; }
+      79.77%, 100% { fill: #FEF3C7; }
     }
-    .g256 { animation: gl256 14.0s linear infinite; }
-    @keyframes gl256 {
-      0%, 63.73%   { fill: #F59E0B; }
-      66.73%  { fill: #F59E0B; }
-      69.73%, 100% { fill: #F59E0B; }
+    .g350 { animation: gl350 14.0s linear infinite; }
+    @keyframes gl350 {
+      0%, 87.15%   { fill: #F59E0B; }
+      90.15%  { fill: #F59E0B; }
+      93.15%, 100% { fill: #F59E0B; }
     }
-    .g261 { animation: gl261 14.0s linear infinite; }
-    @keyframes gl261 {
-      0%, 65.40%   { fill: #FEF3C7; }
-      68.40%  { fill: #F59E0B; }
-      71.40%, 100% { fill: #FEF3C7; }
+    .g351 { animation: gl351 14.0s linear infinite; }
+    @keyframes gl351 {
+      0%, 87.15%   { fill: #92400E; }
+      90.15%  { fill: #F59E0B; }
+      93.15%, 100% { fill: #92400E; }
     }
-    .g262 { animation: gl262 14.0s linear infinite; }
-    @keyframes gl262 {
-      0%, 65.40%   { fill: #92400E; }
-      68.40%  { fill: #F59E0B; }
-      71.40%, 100% { fill: #92400E; }
-    }
-    .g301 { animation: gl301 14.0s linear infinite; }
-    @keyframes gl301 {
-      0%, 75.44%   { fill: #FEF3C7; }
-      78.44%  { fill: #F59E0B; }
-      81.44%, 100% { fill: #FEF3C7; }
+    .g352 { animation: gl352 14.0s linear infinite; }
+    @keyframes gl352 {
+      0%, 87.15%   { fill: #FEF3C7; }
+      90.15%  { fill: #F59E0B; }
+      93.15%, 100% { fill: #FEF3C7; }
     }
     .g357 { animation: gl357 14.0s linear infinite; }
     @keyframes gl357 {
-      0%, 88.83%   { fill: #F59E0B; }
+      0%, 88.83%   { fill: #FDE68A; }
       91.83%  { fill: #F59E0B; }
-      94.83%, 100% { fill: #F59E0B; }
+      94.83%, 100% { fill: #FDE68A; }
     }
     .g358 { animation: gl358 14.0s linear infinite; }
     @keyframes gl358 {
-      0%, 88.83%   { fill: #92400E; }
-      91.83%  { fill: #F59E0B; }
-      94.83%, 100% { fill: #92400E; }
-    }
-    .g359 { animation: gl359 14.0s linear infinite; }
-    @keyframes gl359 {
       0%, 88.83%   { fill: #FEF3C7; }
       91.83%  { fill: #F59E0B; }
       94.83%, 100% { fill: #FEF3C7; }
-    }
-    .g364 { animation: gl364 14.0s linear infinite; }
-    @keyframes gl364 {
-      0%, 90.50%   { fill: #FDE68A; }
-      93.50%  { fill: #F59E0B; }
-      96.50%, 100% { fill: #FDE68A; }
-    }
-    .g365 { animation: gl365 14.0s linear infinite; }
-    @keyframes gl365 {
-      0%, 90.50%   { fill: #FEF3C7; }
-      93.50%  { fill: #F59E0B; }
-      96.50%, 100% { fill: #FEF3C7; }
     }
     .motion { display: inline; }
     @media (prefers-reduced-motion: reduce) {
@@ -239,18 +239,18 @@
   </text>
 
   <!-- Month labels -->
-  <text x="36" y="47" fill="#9CA3AF" font-family="'Segoe UI',sans-serif" font-size="9">10月</text>
-  <text x="88" y="47" fill="#9CA3AF" font-family="'Segoe UI',sans-serif" font-size="9">11月</text>
-  <text x="153" y="47" fill="#9CA3AF" font-family="'Segoe UI',sans-serif" font-size="9">12月</text>
-  <text x="205" y="47" fill="#9CA3AF" font-family="'Segoe UI',sans-serif" font-size="9">1月</text>
-  <text x="270" y="47" fill="#9CA3AF" font-family="'Segoe UI',sans-serif" font-size="9">2月</text>
-  <text x="322" y="47" fill="#9CA3AF" font-family="'Segoe UI',sans-serif" font-size="9">3月</text>
-  <text x="374" y="47" fill="#9CA3AF" font-family="'Segoe UI',sans-serif" font-size="9">4月</text>
-  <text x="426" y="47" fill="#9CA3AF" font-family="'Segoe UI',sans-serif" font-size="9">5月</text>
-  <text x="491" y="47" fill="#9CA3AF" font-family="'Segoe UI',sans-serif" font-size="9">6月</text>
-  <text x="543" y="47" fill="#9CA3AF" font-family="'Segoe UI',sans-serif" font-size="9">7月</text>
-  <text x="595" y="47" fill="#9CA3AF" font-family="'Segoe UI',sans-serif" font-size="9">8月</text>
-  <text x="660" y="47" fill="#9CA3AF" font-family="'Segoe UI',sans-serif" font-size="9">9月</text>
+  <text x="75" y="47" fill="#9CA3AF" font-family="'Segoe UI',sans-serif" font-size="9">11月</text>
+  <text x="140" y="47" fill="#9CA3AF" font-family="'Segoe UI',sans-serif" font-size="9">12月</text>
+  <text x="192" y="47" fill="#9CA3AF" font-family="'Segoe UI',sans-serif" font-size="9">1月</text>
+  <text x="257" y="47" fill="#9CA3AF" font-family="'Segoe UI',sans-serif" font-size="9">2月</text>
+  <text x="309" y="47" fill="#9CA3AF" font-family="'Segoe UI',sans-serif" font-size="9">3月</text>
+  <text x="361" y="47" fill="#9CA3AF" font-family="'Segoe UI',sans-serif" font-size="9">4月</text>
+  <text x="413" y="47" fill="#9CA3AF" font-family="'Segoe UI',sans-serif" font-size="9">5月</text>
+  <text x="478" y="47" fill="#9CA3AF" font-family="'Segoe UI',sans-serif" font-size="9">6月</text>
+  <text x="530" y="47" fill="#9CA3AF" font-family="'Segoe UI',sans-serif" font-size="9">7月</text>
+  <text x="582" y="47" fill="#9CA3AF" font-family="'Segoe UI',sans-serif" font-size="9">8月</text>
+  <text x="647" y="47" fill="#9CA3AF" font-family="'Segoe UI',sans-serif" font-size="9">9月</text>
+  <text x="699" y="47" fill="#9CA3AF" font-family="'Segoe UI',sans-serif" font-size="9">10月</text>
 
   <!-- Weekday labels -->
   <text x="14" y="74" fill="#9CA3AF" font-family="'Segoe UI',sans-serif" font-size="8">一</text>
@@ -485,43 +485,43 @@
   <rect x="439" y="130" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="452" y="52" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="452" y="65" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
-  <rect x="452" y="78" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
-  <rect x="452" y="91" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
-  <rect x="452" y="104" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
-  <rect x="452" y="117" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
-  <rect x="452" y="130" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
-  <rect x="465" y="52" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
-  <rect x="465" y="65" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
-  <rect class="g233" x="465" y="78" width="11" height="11" rx="2.5" fill="#92400E"/>
+  <rect class="g226" x="452" y="78" width="11" height="11" rx="2.5" fill="#92400E"/>
+  <rect class="g227" x="452" y="91" width="11" height="11" rx="2.5" fill="#92400E"/>
+  <rect class="g228" x="452" y="104" width="11" height="11" rx="2.5" fill="#92400E"/>
+  <rect class="g229" x="452" y="117" width="11" height="11" rx="2.5" fill="#FEF3C7"/>
+  <rect class="g230" x="452" y="130" width="11" height="11" rx="2.5" fill="#92400E"/>
+  <rect class="g231" x="465" y="52" width="11" height="11" rx="2.5" fill="#92400E"/>
+  <rect class="g232" x="465" y="65" width="11" height="11" rx="2.5" fill="#92400E"/>
+  <rect class="g233" x="465" y="78" width="11" height="11" rx="2.5" fill="#F59E0B"/>
   <rect class="g234" x="465" y="91" width="11" height="11" rx="2.5" fill="#92400E"/>
-  <rect class="g235" x="465" y="104" width="11" height="11" rx="2.5" fill="#92400E"/>
-  <rect class="g236" x="465" y="117" width="11" height="11" rx="2.5" fill="#FEF3C7"/>
-  <rect class="g237" x="465" y="130" width="11" height="11" rx="2.5" fill="#92400E"/>
+  <rect x="465" y="104" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
+  <rect class="g236" x="465" y="117" width="11" height="11" rx="2.5" fill="#92400E"/>
+  <rect class="g237" x="465" y="130" width="11" height="11" rx="2.5" fill="#FEF3C7"/>
   <rect class="g238" x="478" y="52" width="11" height="11" rx="2.5" fill="#92400E"/>
   <rect class="g239" x="478" y="65" width="11" height="11" rx="2.5" fill="#92400E"/>
-  <rect class="g240" x="478" y="78" width="11" height="11" rx="2.5" fill="#F59E0B"/>
+  <rect class="g240" x="478" y="78" width="11" height="11" rx="2.5" fill="#92400E"/>
   <rect class="g241" x="478" y="91" width="11" height="11" rx="2.5" fill="#92400E"/>
   <rect x="478" y="104" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect class="g243" x="478" y="117" width="11" height="11" rx="2.5" fill="#92400E"/>
-  <rect class="g244" x="478" y="130" width="11" height="11" rx="2.5" fill="#FEF3C7"/>
+  <rect class="g244" x="478" y="130" width="11" height="11" rx="2.5" fill="#92400E"/>
   <rect class="g245" x="491" y="52" width="11" height="11" rx="2.5" fill="#92400E"/>
   <rect class="g246" x="491" y="65" width="11" height="11" rx="2.5" fill="#92400E"/>
   <rect class="g247" x="491" y="78" width="11" height="11" rx="2.5" fill="#92400E"/>
-  <rect class="g248" x="491" y="91" width="11" height="11" rx="2.5" fill="#92400E"/>
-  <rect x="491" y="104" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
-  <rect class="g250" x="491" y="117" width="11" height="11" rx="2.5" fill="#92400E"/>
-  <rect class="g251" x="491" y="130" width="11" height="11" rx="2.5" fill="#92400E"/>
-  <rect class="g252" x="504" y="52" width="11" height="11" rx="2.5" fill="#92400E"/>
-  <rect class="g253" x="504" y="65" width="11" height="11" rx="2.5" fill="#92400E"/>
-  <rect class="g254" x="504" y="78" width="11" height="11" rx="2.5" fill="#92400E"/>
-  <rect class="g255" x="504" y="91" width="11" height="11" rx="2.5" fill="#FDE68A"/>
-  <rect class="g256" x="504" y="104" width="11" height="11" rx="2.5" fill="#F59E0B"/>
+  <rect class="g248" x="491" y="91" width="11" height="11" rx="2.5" fill="#FDE68A"/>
+  <rect class="g249" x="491" y="104" width="11" height="11" rx="2.5" fill="#F59E0B"/>
+  <rect x="491" y="117" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
+  <rect x="491" y="130" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
+  <rect x="504" y="52" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
+  <rect x="504" y="65" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
+  <rect class="g254" x="504" y="78" width="11" height="11" rx="2.5" fill="#FEF3C7"/>
+  <rect class="g255" x="504" y="91" width="11" height="11" rx="2.5" fill="#92400E"/>
+  <rect x="504" y="104" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="504" y="117" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="504" y="130" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="517" y="52" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="517" y="65" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
-  <rect class="g261" x="517" y="78" width="11" height="11" rx="2.5" fill="#FEF3C7"/>
-  <rect class="g262" x="517" y="91" width="11" height="11" rx="2.5" fill="#92400E"/>
+  <rect x="517" y="78" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
+  <rect x="517" y="91" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="517" y="104" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="517" y="117" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="517" y="130" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
@@ -553,14 +553,14 @@
   <rect x="569" y="104" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="569" y="117" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="569" y="130" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
-  <rect x="582" y="52" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
+  <rect class="g294" x="582" y="52" width="11" height="11" rx="2.5" fill="#FEF3C7"/>
   <rect x="582" y="65" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="582" y="78" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="582" y="91" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="582" y="104" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="582" y="117" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="582" y="130" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
-  <rect class="g301" x="595" y="52" width="11" height="11" rx="2.5" fill="#FEF3C7"/>
+  <rect x="595" y="52" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="595" y="65" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="595" y="78" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="595" y="91" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
@@ -609,27 +609,21 @@
   <rect x="673" y="104" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="673" y="117" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="673" y="130" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
-  <rect x="686" y="52" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
-  <rect x="686" y="65" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
-  <rect x="686" y="78" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
+  <rect class="g350" x="686" y="52" width="11" height="11" rx="2.5" fill="#F59E0B"/>
+  <rect class="g351" x="686" y="65" width="11" height="11" rx="2.5" fill="#92400E"/>
+  <rect class="g352" x="686" y="78" width="11" height="11" rx="2.5" fill="#FEF3C7"/>
   <rect x="686" y="91" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="686" y="104" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="686" y="117" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="686" y="130" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
-  <rect class="g357" x="699" y="52" width="11" height="11" rx="2.5" fill="#F59E0B"/>
-  <rect class="g358" x="699" y="65" width="11" height="11" rx="2.5" fill="#92400E"/>
-  <rect class="g359" x="699" y="78" width="11" height="11" rx="2.5" fill="#FEF3C7"/>
+  <rect class="g357" x="699" y="52" width="11" height="11" rx="2.5" fill="#FDE68A"/>
+  <rect class="g358" x="699" y="65" width="11" height="11" rx="2.5" fill="#FEF3C7"/>
+  <rect x="699" y="78" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="699" y="91" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="699" y="104" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="699" y="117" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
   <rect x="699" y="130" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
-  <rect class="g364" x="712" y="52" width="11" height="11" rx="2.5" fill="#FDE68A"/>
-  <rect class="g365" x="712" y="65" width="11" height="11" rx="2.5" fill="#FEF3C7"/>
-  <rect x="712" y="78" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
-  <rect x="712" y="91" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
-  <rect x="712" y="104" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
-  <rect x="712" y="117" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
-  <rect x="712" y="130" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
+  <rect x="712" y="52" width="11" height="11" rx="2.5" fill="#EBEDF0"/>
 
   <!-- The sweeping beam, clipped to the grid so it never washes over the
        card chrome. -->
