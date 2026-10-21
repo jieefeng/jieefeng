@@ -25,7 +25,7 @@
        SMIL still show line 1 as a graceful fallback. #}
     {% for l in lines %}
     <clipPath id="tc{{ loop.index0 }}">
-      <rect x="{{ l.x0 }}" y="14" width="{{ l.width }}" height="18">
+      <rect x="{{ l.x0 }}" y="13" width="{{ l.width }}" height="20">
         <animate attributeName="width" calcMode="discrete"
                  values="{{ l.w_values }}" keyTimes="{{ l.w_key }}"
                  dur="{{ duration }}s" begin="0s" repeatCount="indefinite"/>
@@ -43,7 +43,7 @@
     {% for l in lines %}
     <text x="{{ l.x0 }}" y="29" textLength="{{ l.width }}" lengthAdjust="spacingAndGlyphs"
           clip-path="url(#tc{{ loop.index0 }})" opacity="{{ 1 if loop.first else 0 }}"
-          fill="url(#tg)" font-family="'Fira Code','JetBrains Mono',Consolas,'Courier New',monospace"
+          fill="url(#tg)" font-family="'JetBrains Mono','Fira Code',Consolas,'Sarasa Mono SC','Noto Sans Mono CJK SC','Microsoft YaHei','PingFang SC',monospace"
           font-size="14">{{ l.text }}<animate attributeName="opacity" calcMode="discrete"
                  values="{{ l.op_values }}" keyTimes="{{ l.op_key }}"
                  dur="{{ duration }}s" begin="0s" repeatCount="indefinite"/></text>
@@ -64,6 +64,6 @@
   {# Static fallback, shown only when the viewer asks for reduced motion. #}
   <text class="static" x="{{ lines[0].x0 }}" y="29" textLength="{{ lines[0].width }}"
         lengthAdjust="spacingAndGlyphs" fill="url(#tg)"
-        font-family="'Fira Code','JetBrains Mono',Consolas,'Courier New',monospace"
+        font-family="'JetBrains Mono','Fira Code',Consolas,'Sarasa Mono SC','Noto Sans Mono CJK SC','Microsoft YaHei','PingFang SC',monospace"
         font-size="14">{{ lines[0].text }}</text>
 </svg>

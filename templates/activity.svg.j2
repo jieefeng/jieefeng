@@ -1,27 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="760" height="172" viewBox="0 0 760 172" role="img" aria-label="近一年 {{ total_contribs }} 次贡献，当前连续 {{ streak }} 天，最长 {{ max_streak }} 天">
-  {# A soft light beam sweeps left-to-right across the calendar on a slow
-     loop; days it passes over briefly glow, so the eye reads the timeline
-     being "scanned" without any game-like overlay. Reduced-motion swaps the
-     sweep and the per-day glow off entirely. #}
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="172" viewBox="0 0 760 172" role="img" aria-label="近一年 {{ total_contribs }} 次贡献，当前连续 {{ streak }} 天，最长 {{ max_streak }} 天；一条小蛇在贡献日历上爬行">
+  {# A pixel snake crawls the calendar in serpentine order: the head hops one
+     cell per step (SMIL, discrete) and a grid cell paints itself in the snake
+     colour for the length of the body (CSS, per-cell animation-delay). The
+     body is therefore the same cells the head has just crossed, which is what
+     makes it read as a snake instead of a line drawn over the chart.
+     Reduced motion drops the snake and leaves the plain heatmap. #}
   <style>
-    .beam { animation: sweep {{ scan.dur }}s linear infinite; }
-    @keyframes sweep {
-      0%   { transform: translateX({{ scan.x0 }}px); opacity: 0; }
-      6%   { opacity: 1; }
-      92%  { opacity: 1; }
-      100% { transform: translateX({{ scan.x1 }}px); opacity: 0; }
+    .sn { animation: crawl {{ snake.dur }}s linear infinite; }
+    @keyframes crawl {
+      0%, {{ snake.body_pct }}% { fill: {{ snake.colors.body }}; }
+      {{ snake.body_pct + 0.05 }}%, 100% { fill: var(--f); }
     }
-    {% for cell in cells %}{% if cell.glow is not none %}
-    .g{{ loop.index0 }} { animation: gl{{ loop.index0 }} {{ scan.dur }}s linear infinite; }
-    @keyframes gl{{ loop.index0 }} {
-      0%, {{ cell.glow.pre }}%   { fill: {{ cell.fill }}; }
-      {{ cell.glow.mid }}%  { fill: {{ scan.glow_color }}; }
-      {{ cell.glow.post }}%, 100% { fill: {{ cell.fill }}; }
-    }
-    {% endif %}{% endfor %}
     .motion { display: inline; }
     @media (prefers-reduced-motion: reduce) {
-      .beam { display: none; }
+      .sn { animation: none; }
       .motion { display: none; }
     }
   </style>
@@ -44,32 +36,22 @@
       <stop offset="0" stop-color="#D97706"/>
       <stop offset="1" stop-color="#F59E0B"/>
     </linearGradient>
-    <linearGradient id="beamg" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="{{ scan.glow_color }}" stop-opacity="0"/>
-      <stop offset="0.5" stop-color="{{ scan.glow_color }}" stop-opacity="{{ '0.55' if theme == 'dark' else '0.40' }}"/>
-      <stop offset="1" stop-color="{{ scan.glow_color }}" stop-opacity="0"/>
-    </linearGradient>
     <filter id="ashadow" x="-5%" y="-10%" width="110%" height="125%">
       <feDropShadow dx="0" dy="3" stdDeviation="7" flood-color="#D97706" flood-opacity="{{ '0.25' if theme == 'dark' else '0.18' }}"/>
     </filter>
-    <filter id="beamblur" x="-30%" y="-10%" width="160%" height="120%">
-      <feGaussianBlur stdDeviation="6"/>
-    </filter>
-    <clipPath id="gridclip">
-      <rect x="36" y="52" width="{{ scan.grid_w }}" height="91" rx="3"/>
-    </clipPath>
   </defs>
 
   <rect x="1" y="1" width="758" height="170" rx="14" fill="url(#abg)" filter="url(#ashadow)"/>
   <rect x="1" y="1" width="758" height="170" rx="14" fill="none" stroke="url(#aborder)" stroke-width="1.5"/>
 
   {% set muted = '#8B949E' if theme == 'dark' else '#6B7280' %}
-  {% set muted2 = '#8B949E' if theme == 'dark' else '#9CA3AF' %}
+  {% set muted2 = '#8B949E' if theme == 'dark' else '#6B7280' %}
   {% set accent = '#D97706' if theme == 'dark' else '#B45309' %}
+  {% set font = "'Segoe UI','PingFang SC','Hiragino Sans GB','Microsoft YaHei','Noto Sans SC',sans-serif" %}
 
   <!-- Header: yearly stats. The section title is carried by the README
        heading, so the card does not repeat it. -->
-  <text x="28" y="31" font-family="'Segoe UI',-apple-system,sans-serif" font-size="12">
+  <text x="28" y="31" font-family="{{ font }}" font-size="12">
     <tspan fill="url(#anum)" font-size="16" font-weight="700">{{ total_contribs }}</tspan>
     <tspan fill="{{ muted }}"> 次贡献 · 连续 </tspan>
     <tspan fill="{{ accent }}" font-weight="600">{{ streak }}</tspan>
@@ -80,36 +62,47 @@
 
   <!-- Month labels -->
   {% for m in months %}
-  <text x="{{ m.x }}" y="47" fill="{{ muted2 }}" font-family="'Segoe UI',sans-serif" font-size="9">{{ m.label }}</text>
+  <text x="{{ m.x }}" y="47" fill="{{ muted2 }}" font-family="{{ font }}" font-size="9">{{ m.label }}</text>
   {% endfor %}
 
   <!-- Weekday labels -->
   {% for wd in weekdays %}
-  <text x="14" y="{{ wd.y }}" fill="{{ muted2 }}" font-family="'Segoe UI',sans-serif" font-size="8">{{ wd.label }}</text>
+  <text x="14" y="{{ wd.y }}" fill="{{ muted2 }}" font-family="{{ font }}" font-size="8">{{ wd.label }}</text>
   {% endfor %}
 
-  <!-- Heatmap grid. Cells with contributions get a per-cell glow keyframe
-       timed to the moment the beam reaches them; empty days stay flat. -->
+  <!-- Heatmap grid. Every cell carries the moment the snake's head reaches it;
+       the CSS animation repaints that cell for the body's length and then
+       returns it to its contribution colour. -->
   {% for cell in cells %}
-  {% if cell.glow is not none %}
-  <rect class="g{{ loop.index0 }}" x="{{ cell.x }}" y="{{ cell.y }}" width="11" height="11" rx="2.5" fill="{{ cell.fill }}"/>
+  {% if cell.delay is not none %}
+  <rect class="sn" x="{{ cell.x }}" y="{{ cell.y }}" width="11" height="11" rx="2.5" fill="{{ cell.fill }}" style="--f:{{ cell.fill }};animation-delay:{{ cell.delay }}s"/>
   {% else %}
   <rect x="{{ cell.x }}" y="{{ cell.y }}" width="11" height="11" rx="2.5" fill="{{ cell.fill }}"/>
   {% endif %}
   {% endfor %}
 
-  <!-- The sweeping beam, clipped to the grid so it never washes over the
-       card chrome. -->
-  <g class="motion" clip-path="url(#gridclip)">
-    <rect class="beam" x="0" y="52" width="{{ scan.beam_w }}" height="91"
-          fill="url(#beamg)" filter="url(#beamblur)"/>
+  <!-- Snake head: rides the same serpentine route, one cell per step, and
+       turns to face the direction of travel. Eyes + forked tongue make the
+       head unmistakable; the body cells behind it do the rest. -->
+  <g class="motion">
+    <animateMotion dur="{{ snake.dur }}s" repeatCount="indefinite" calcMode="discrete" rotate="auto"
+                   path="{{ snake.path }}"
+                   keyPoints="{{ snake.key_points }}" keyTimes="{{ snake.key_times }}"/>
+    <rect x="-6.5" y="-6.5" width="13" height="13" rx="3.8" fill="{{ snake.colors.head }}"/>
+    <circle cx="3.1" cy="-2.6" r="1.45" fill="{{ snake.colors.eye }}"/>
+    <circle cx="3.1" cy="2.6" r="1.45" fill="{{ snake.colors.eye }}"/>
+    <path d="M6.6 0 L9.2 0 M9.2 0 L11.6 -2.2 M9.2 0 L11.6 2.2" fill="none"
+          stroke="{{ snake.colors.tongue }}" stroke-width="1" stroke-linecap="round">
+      <animate attributeName="opacity" values="1;1;0;0;1;1" keyTimes="0;0.42;0.46;0.9;0.94;1"
+               dur="1.7s" repeatCount="indefinite"/>
+    </path>
   </g>
 
   <!-- Legend -->
-  <text x="36" y="161" fill="{{ muted2 }}" font-family="'Segoe UI',sans-serif" font-size="9">最近一年</text>
-  <text x="628" y="161" text-anchor="end" fill="{{ muted }}" font-family="'Segoe UI',sans-serif" font-size="9">Less</text>
+  <text x="36" y="161" fill="{{ muted2 }}" font-family="{{ font }}" font-size="9">最近一年</text>
+  <text x="628" y="161" text-anchor="end" fill="{{ muted }}" font-family="{{ font }}" font-size="9">Less</text>
   {% for color in levels %}
   <rect x="{{ 632 + loop.index0 * 14 }}" y="152" width="11" height="11" rx="2.5" fill="{{ color }}"/>
   {% endfor %}
-  <text x="732" y="161" text-anchor="end" fill="{{ muted }}" font-family="'Segoe UI',sans-serif" font-size="9">More</text>
+  <text x="732" y="161" text-anchor="end" fill="{{ muted }}" font-family="{{ font }}" font-size="9">More</text>
 </svg>

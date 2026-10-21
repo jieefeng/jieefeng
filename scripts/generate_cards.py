@@ -44,8 +44,8 @@ MIN_TYPE_SEC = 0.8
 MIN_DELETE_SEC = 0.35
 
 FONT_SIZE = 14
-LATIN_W = FONT_SIZE * 0.62  # monospace advance, latin glyphs
-CJK_W = FONT_SIZE * 1.02    # monospace advance, fullwidth glyphs
+LATIN_W = FONT_SIZE * 0.60  # monospace advance (Consolas/most coding fonts)
+CJK_W = FONT_SIZE * 1.00    # fullwidth advance (Sans CJK: YaHei/PingFang)
 CARD_W = 500
 
 
@@ -195,19 +195,20 @@ def _level(count: int) -> int:
     return 4
 
 
-def _activity_cells(days: list[dict], theme: str, glow_windows: list | None = None) -> list[dict]:
+def _activity_cells(days: list[dict], theme: str, crawl: list[float] | None = None) -> list[dict]:
     """One rect per calendar day.
 
-    `glow_windows` is indexed like `days`: a dict marks a day that briefly
-    brightens as the sweep beam passes (empty days are always None, so a
-    blank day can never glow).
+    `crawl` is indexed like `days`: each value is the delay (seconds) at which
+    the snake's head reaches that cell. The template paints the cell in the
+    snake colour for the length of the body, then hands it back to the
+    heatmap, so the snake reads as a moving chain of cells.
     """
     return [
         {
             "x": GRID_X + (idx // 7) * PITCH,
             "y": GRID_Y + (idx % 7) * PITCH,
             "fill": LEVEL_COLORS[theme][_level(d["contributionCount"])],
-            "glow": None if glow_windows is None else glow_windows[idx],
+            "delay": None if crawl is None else crawl[idx],
         }
         for idx, d in enumerate(days)
     ]
@@ -236,60 +237,72 @@ def _month_labels(days: list[dict], max_x: float = 700.0) -> list[dict]:
 
 
 # ---------------------------------------------------------------------------
-# Sweep-beam overlay — a soft light bar scans left→right across the calendar
-# on a slow loop. Days with contributions briefly glow as the beam's centre
-# passes their column, so the timeline reads as being "read" without any
-# game-like overlay. Geometry is shared with the heatmap block above.
+# Snake overlay — a pixel snake crawls the calendar in serpentine order (down
+# the first week column, up the next, and so on) one cell per step. The body
+# is the chain of cells the head has just crossed: every grid cell paints
+# itself in the snake colour during its own pass and then returns to its
+# contribution colour, so the snake reads as a moving reptile rather than a
+# line drawn over the chart. Geometry is shared with the heatmap block above.
 # ---------------------------------------------------------------------------
 
-SCAN_DUR = 14.0            # seconds for one full left→right sweep
-SCAN_BEAM_W = 90           # px width of the light bar
-SCAN_IN_PAD, SCAN_OUT_PAD = 0.06, 0.06   # fade-in/out at the cycle edges
-SCAN_GLOW_HALF = 0.030     # half-width of a cell's bright window (cycle frac)
+SNAKE_STEP_SEC = 0.10      # seconds the head takes per cell
+SNAKE_BODY_CELLS = 10      # cells the body trails behind the head
 
-SCAN_GLOW = {"dark": "#FFF3D6", "light": "#F59E0B"}
+SNAKE_COLORS = {
+    "dark": {"body": "#34D399", "head": "#6EE7B7", "eye": "#04231A", "tongue": "#FB7185"},
+    "light": {"body": "#059669", "head": "#10B981", "eye": "#022C22", "tongue": "#BE123C"},
+}
 
 
-def _scan_context(days: list[dict], theme: str, weeks: int) -> dict:
-    """Precompute the sweep beam plus, for every active day, the bright
-    window timed to the beam reaching that day's column.
+def _snake_route(days: list[dict]) -> list[tuple[int, int]]:
+    """Cell coordinates (week column, weekday row) in serpentine order."""
+    rows_by_col: dict[int, list[int]] = {}
+    for idx in range(len(days)):
+        rows_by_col.setdefault(idx // 7, []).append(idx % 7)
 
-    The beam travels from just off the left edge to just off the right edge
-    of the grid. A cell lights up only when the beam's centre crosses the
-    cell's column centre, so the glow on a day and the beam arriving at that
-    day cannot drift apart — both derive from the same column fraction.
+    route: list[tuple[int, int]] = []
+    for week in sorted(rows_by_col):
+        rows = sorted(rows_by_col[week], reverse=bool(week % 2))
+        route.extend((week, row) for row in rows)
+    return route
+
+
+def _snake_context(days: list[dict], theme: str) -> dict:
+    """Precompute the head path plus the per-cell delay of the body crawl.
+
+    The head moves cell to cell with `calcMode="discrete"`; the delay of a
+    cell is simply the time the head reaches it, and the CSS crawl window is
+    the body length, so head and body cannot drift apart.
     """
-    grid_w = weeks * PITCH - GAP
-    x0 = -SCAN_BEAM_W                       # beam fully off the left edge
-    x1 = grid_w                             # beam fully off the right edge
+    route = _snake_route(days)
+    total = len(route)
+    dur = round(total * SNAKE_STEP_SEC, 2)
 
-    def beam_center(frac: float) -> float:
-        return x0 + SCAN_BEAM_W / 2 + (x1 - x0) * frac
+    points = [
+        (GRID_X + week * PITCH + CELL / 2, GRID_Y + row * PITCH + CELL / 2)
+        for week, row in route
+    ]
+    path = "M " + " L ".join(f"{x:.1f} {y:.1f}" for x, y in points)
 
-    glow_windows: list[dict | None] = [None] * len(days)
-    for idx, day in enumerate(days):
-        if day["contributionCount"] <= 0:
-            continue
-        col_center = (idx // 7) * PITCH + CELL / 2
-        # Fraction of the sweep at which the beam centre reaches this column.
-        f = (col_center - (x0 + SCAN_BEAM_W / 2)) / (x1 - x0)
-        f = min(max(f, 0.0), 1.0)
-        pre = max(f - SCAN_GLOW_HALF, 0.0)
-        post = min(f + SCAN_GLOW_HALF, 1.0)
-        glow_windows[idx] = {
-            "pre": f"{pre * 100:.2f}",
-            "mid": f"{f * 100:.2f}",
-            "post": f"{post * 100:.2f}",
-        }
+    # Discrete keyPoints: cell i holds from keyTimes[i] to keyTimes[i + 1].
+    # The extra final frame (same point, t=1) keeps the last cell on screen
+    # until the cycle ends; SMIL requires the last keyTime to be exactly 1.
+    key_points = ";".join(f"{i / (total - 1):.5f}" for i in range(total)) + ";1"
+    key_times = ";".join(f"{i / total:.5f}" for i in range(total)) + ";1"
 
+    delays = [0.0] * len(days)
+    for pos, (week, row) in enumerate(route):
+        delays[week * 7 + row] = round(pos * SNAKE_STEP_SEC, 2)
+
+    body_pct = round(SNAKE_BODY_CELLS / total * 100, 3)
     return {
-        "dur": SCAN_DUR,
-        "x0": x0,
-        "x1": x1,
-        "beam_w": SCAN_BEAM_W,
-        "grid_w": grid_w,
-        "glow_color": SCAN_GLOW[theme],
-        "windows": glow_windows,
+        "dur": dur,
+        "path": path,
+        "key_points": key_points,
+        "key_times": key_times,
+        "delays": delays,
+        "body_pct": body_pct,
+        "colors": SNAKE_COLORS[theme],
     }
 
 
@@ -357,20 +370,19 @@ def generate_all(out_dir: Path, mock: bool) -> None:
         ("activity-card", "activity.svg.j2", activity_ctx),
     )
 
-    weeks = (len(data["contribution_days"]) + 6) // 7
     for theme in ("dark", "light"):
         suffix = "" if theme == "dark" else "-light"
         for name, template_name, ctx in cards:
             render_ctx = dict(ctx)
             if name == "activity-card":
-                # The beam owns the glow schedule, so the cells are built
-                # after it and inherit whatever it decided to light up.
-                scan_ctx = _scan_context(data["contribution_days"], theme, weeks)
+                # The snake owns the crawl schedule, so the cells are built
+                # after it and inherit the delay at which the head arrives.
+                snake_ctx = _snake_context(data["contribution_days"], theme)
                 render_ctx["cells"] = _activity_cells(
-                    data["contribution_days"], theme, scan_ctx["windows"]
+                    data["contribution_days"], theme, snake_ctx["delays"]
                 )
                 render_ctx["levels"] = LEVEL_COLORS[theme]
-                render_ctx["scan"] = scan_ctx
+                render_ctx["snake"] = snake_ctx
             svg = env.get_template(template_name).render(**render_ctx, theme=theme)
             path = out_dir / f"{name}{suffix}.svg"
             # newline="\n" keeps the bytes identical whether this runs on the
