@@ -13,8 +13,10 @@ overwrites good cards with empty ones.
 from __future__ import annotations
 
 import argparse
+import math
 import random
 import sys
+from bisect import bisect_right
 from datetime import date, timedelta
 from pathlib import Path
 
@@ -173,59 +175,205 @@ def _typing_context(lines: list[str]) -> dict:
 
 
 # ---------------------------------------------------------------------------
-# Contribution heatmap — geometry mirrored in templates/activity.svg.j2.
+# Contribution parkour — the calendar as a landscape.
+#
+# The heatmap is gone: every week becomes a column of ground, and that week's
+# real contribution total lifts the ground into a hill (busy) or lets it fall
+# into a valley (quiet). One pixel runner crosses the whole year in a single
+# lap, hops the boulders that stand in for busy patches, collects the amber
+# gems planted on active weeks and stops at the checkpoint flag on the last
+# week; then the lap starts over. Geometry, the runner's timetable and every
+# CSS keyframe are precomputed here — templates/activity.svg.j2 only paints.
 # ---------------------------------------------------------------------------
 
-GRID_X, GRID_Y, CELL, GAP = 36, 52, 11, 2
-PITCH = CELL + GAP
+SCENE_W, SCENE_H = 760, 210
+GROUND_Y = 176.0     # ground line of a week with no contributions at all
+EARTH_BOTTOM = 209.0 # soil runs to the card edge; month row sits inside it
+HILL_MAX = 54.0      # how far the busiest week lifts the ground
+X0, PITCH = 26.0, 13.0
 
-# Amber ramps; index = activity level 0..4 (GitHub-style: dark theme
-# brightens with activity, light theme deepens).
-LEVEL_COLORS = {
-    "dark": ["#21262D", "#4A3007", "#8A5806", "#D9930B", "#FBBF24"],
-    "light": ["#EBEDF0", "#FEF3C7", "#FDE68A", "#F59E0B", "#92400E"],
+RUN_X0, RUN_X1 = 34.0, 712.0
+RUN_SPEED = 70.0     # px/s — constant, so the lap line is genuinely linear
+HOLD_SEC = 2.2       # checkpoint celebration before the lap restarts
+SAMPLE_DT = 0.02     # timetable sampling resolution
+SURF_STEP = 3        # ground polyline resolution
+JUMP_PAD = 15.0      # take-off/landing distance either side of a boulder
+
+PALETTE = {
+    "dark": {
+        "sky_top": "#070A10", "sky_bottom": "#161D28", "glow": "#F59E0B",
+        "far": "#131C28", "mid": "#1D2836",
+        "earth_top": "#33240E", "earth_bottom": "#0D0904",
+        "ridge": "#F59E0B", "ridge_soft": "#B45309",
+        "soil": "#C08E3F", "tuft": "#8A4A0E", "soil_label": "#C08E3F",
+        "rock": "#5C4423", "rock_hi": "#C08E3F",
+        "gem": "#FBBF24", "gem_core": "#FEF9C3",
+        "body": "#2DD4BF", "body_dark": "#0F766E", "pants": "#CBD5E1",
+        "face": "#FDE68A", "scarf": "#FB7185",
+        "text": "#FDE68A", "muted": "#8FA0B5", "bright": "#FBBF24",
+        "moon": "#FDE68A", "star": "#FDE68A",
+        "track": "#1E2733", "marker": "#F59E0B",
+        "banner": "#0B0F16", "banner_edge": "#F59E0B",
+    },
+    "light": {
+        "sky_top": "#FFFDF7", "sky_bottom": "#FCEFD0", "glow": "#F59E0B",
+        "far": "#F7E7BE", "mid": "#EFD9A6",
+        "earth_top": "#ECD4A2", "earth_bottom": "#D6B77C",
+        "ridge": "#B45309", "ridge_soft": "#D97706",
+        "soil": "#B08A4B", "tuft": "#8A4A0E", "soil_label": "#7C5A2A",
+        "rock": "#C9A96B", "rock_hi": "#F7ECD2",
+        "gem": "#D97706", "gem_core": "#FFFBEB",
+        "body": "#0D9488", "body_dark": "#115E59", "pants": "#334155",
+        "face": "#FDE68A", "scarf": "#E11D48",
+        "text": "#92400E", "muted": "#7C6A4E", "bright": "#B45309",
+        "moon": "#F59E0B", "star": "#D97706",
+        "track": "#E7CFA0", "marker": "#B45309",
+        "banner": "#FFF8E7", "banner_edge": "#B45309",
+    },
 }
 
 
-def _level(count: int) -> int:
-    if count <= 0:
-        return 0
-    if count <= 3:
-        return 1
-    if count <= 6:
-        return 2
-    if count <= 9:
-        return 3
-    return 4
+def _weekly_totals(days: list[dict]) -> list[float]:
+    """Contribution count per calendar week column."""
+    totals = [0.0] * ((len(days) + 6) // 7)
+    for idx, day in enumerate(days):
+        totals[idx // 7] += day["contributionCount"]
+    return totals
 
 
-def _activity_cells(days: list[dict], theme: str, crawl: list[float] | None = None) -> list[dict]:
-    """One rect per calendar day.
+def _surface_pts(days: list[dict], *, sigma: float = 5.5,
+                 scale: float = 1.0, lift: float = 0.0) -> tuple[list[float], list[float]]:
+    """Sample the ground line left to right.
 
-    `crawl` is indexed like `days`: each value is the delay (seconds) at which
-    the snake's head reaches that cell. The template paints the cell in the
-    snake colour for the length of the body, then hands it back to the
-    heatmap, so the snake reads as a moving chain of cells.
+    Each week is a control point whose height is its contribution total; a
+    Gaussian blend turns the columns into landforms. A convex blend never
+    overshoots, so a quiet week is a valley and never a hole below the
+    baseline. `scale`/`lift` build the dimmer depth layers behind the ground.
     """
-    return [
-        {
-            "x": GRID_X + (idx // 7) * PITCH,
-            "y": GRID_Y + (idx % 7) * PITCH,
-            "fill": LEVEL_COLORS[theme][_level(d["contributionCount"])],
-            "delay": None if crawl is None else crawl[idx],
-        }
-        for idx, d in enumerate(days)
-    ]
+    totals = _weekly_totals(days)
+    peak = max(totals) if totals else 0.0
+    hs = [((t / peak) ** 0.72 * HILL_MAX * scale) if peak else 0.0 for t in totals]
+    # A light 1-2-1 pass rounds the shoulders the columns would otherwise show.
+    hs = [0.25 * hs[max(i - 1, 0)] + 0.5 * hs[i] + 0.25 * hs[min(i + 1, len(hs) - 1)]
+          for i in range(len(hs))]
+    # Anchor the quietest week to the baseline: an unusually busy year must
+    # still read as land rather than a plateau floating above the card.
+    floor = min(hs) if hs else 0.0
+    hs = [h - floor for h in hs]
+
+    centers = [X0 + i * PITCH + 5.5 for i in range(len(hs))]
+    xs = [float(x) for x in range(0, SCENE_W + 1, SURF_STEP)]
+    ys: list[float] = []
+    inv = 1.0 / (2.0 * sigma * sigma)
+    for x in xs:
+        acc = wsum = 0.0
+        for center, h in zip(centers, hs):
+            d = x - center
+            w = math.exp(-d * d * inv)
+            acc += w * h
+            wsum += w
+        ys.append(round(GROUND_Y - lift - (acc / wsum if wsum else 0.0), 1))
+    return xs, ys
+
+
+def _at(xs: list[float], ys: list[float], x: float) -> float:
+    """Ground height at x, linearly interpolated between samples."""
+    if x <= xs[0]:
+        return ys[0]
+    if x >= xs[-1]:
+        return ys[-1]
+    i = bisect_right(xs, x) - 1
+    span = xs[i + 1] - xs[i]
+    return ys[i] + (ys[i + 1] - ys[i]) * ((x - xs[i]) / span if span else 0.0)
+
+
+def _line_path(xs: list[float], ys: list[float]) -> str:
+    return "M" + " L".join(f"{x:.1f} {y:.1f}" for x, y in zip(xs, ys))
+
+
+def _fill_path(xs: list[float], ys: list[float]) -> str:
+    return (_line_path(xs, ys)
+            + f" L{xs[-1]:.1f} {EARTH_BOTTOM:.1f} L{xs[0]:.1f} {EARTH_BOTTOM:.1f} Z")
+
+
+def _rocks(xs: list[float], ys: list[float]) -> list[dict]:
+    """Boulders on the trail. Fixed seed: the course never moves under the data."""
+    rng = random.Random(7)
+    rocks: list[dict] = []
+    x = 92.0
+    while x < RUN_X1 - 110:
+        w = rng.choice((9, 10, 11))
+        h = rng.choice((9, 11, 13))
+        rocks.append({"x": round(x, 1), "w": w, "h": h,
+                      "y": round(_at(xs, ys, x + w / 2), 1)})
+        x += rng.choice((60, 68, 78, 86))
+    return rocks
+
+
+def _gems(days: list[dict], xs: list[float], ys: list[float],
+          rocks: list[dict]) -> list[dict]:
+    """One gem per active week, parked just above the ground."""
+    gems: list[dict] = []
+    for week, total in enumerate(_weekly_totals(days)):
+        if total <= 0:
+            continue
+        x = X0 + week * PITCH + 5.5
+        if x < RUN_X0 + 14 or x > RUN_X1 - 14:
+            continue
+        if gems and x - gems[-1]["x"] < 21:  # greedy spacing, no gem fences
+            continue
+        if any(abs(x - (r["x"] + r["w"] / 2)) < 15 for r in rocks):
+            continue
+        gems.append({"x": round(x, 1), "y": round(_at(xs, ys, x) - 7.5, 1)})
+    return gems
+
+
+def _tufts(xs: list[float], ys: list[float]) -> list[dict]:
+    rng = random.Random(11)
+    tufts: list[dict] = []
+    x = 12.0
+    while x < SCENE_W - 12:
+        tufts.append({"x": round(x, 1), "y": round(_at(xs, ys, x), 1),
+                      "s": rng.choice((1, 1, 2))})
+        x += rng.choice((17, 23, 31, 37, 43))
+    return tufts
+
+
+def _soil(xs: list[float], ys: list[float]) -> list[dict]:
+    """Pebbles buried in the earth band."""
+    rng = random.Random(13)
+    dots: list[dict] = []
+    for _ in range(30):
+        x = rng.uniform(10, SCENE_W - 10)
+        top = _at(xs, ys, x) + 7
+        dots.append({"x": round(x, 1),
+                     "y": round(rng.uniform(top, EARTH_BOTTOM - 7), 1),
+                     "r": rng.choice((0.8, 1.0, 1.3))})
+    return dots
+
+
+def _stars() -> list[dict]:
+    rng = random.Random(3)
+    stars: list[dict] = []
+    for _ in range(38):
+        x = rng.uniform(10, SCENE_W - 10)
+        y = rng.uniform(12, 106)
+        if 636 < x and 30 < y < 104:  # keep the moon's halo clear
+            continue
+        stars.append({"x": round(x, 1), "y": round(y, 1),
+                      "r": rng.choice((0.7, 1.0, 1.3)),
+                      "delay": round(rng.uniform(0.0, 4.2), 2)})
+    return stars
 
 
 def _month_labels(days: list[dict], max_x: float = 700.0) -> list[dict]:
-    """One label per month where its first column begins (GitHub style)."""
+    """One label per month where its first week column begins."""
     labels: list[dict] = []
     last_week = -10
     prev_month = None
-    for idx, d in enumerate(days):
+    for idx, day in enumerate(days):
         week = idx // 7
-        month = int(d["date"][5:7])
+        month = int(day["date"][5:7])
         if month == prev_month:
             continue
         prev_month = month
@@ -233,86 +381,168 @@ def _month_labels(days: list[dict], max_x: float = 700.0) -> list[dict]:
             continue
         if week - last_week < 4:  # avoid crowded consecutive labels
             continue
-        x = GRID_X + week * PITCH
+        x = X0 + week * PITCH
         if x <= max_x:
-            labels.append({"x": x, "label": f"{month}月"})
+            labels.append({"x": round(x, 1), "label": f"{month}月"})
             last_week = week
     return labels
 
 
-# ---------------------------------------------------------------------------
-# Snake overlay — a pixel snake crawls the calendar in serpentine order (down
-# the first week column, up the next, and so on) one cell per step. The body
-# is the chain of cells the head has just crossed: every grid cell paints
-# itself in the snake colour during its own pass and then returns to its
-# contribution colour, so the snake reads as a moving reptile rather than a
-# line drawn over the chart. Geometry is shared with the heatmap block above.
-# ---------------------------------------------------------------------------
+def _timetable(xs: list[float], ys: list[float], rocks: list[dict]) -> dict:
+    """Runner path: constant ground speed, one parabola per boulder.
 
-SNAKE_STEP_SEC = 0.10      # seconds the head takes per cell
-SNAKE_BODY_CELLS = 10      # cells the body trails behind the head
-SNAKE_PHASE_SEC = round(SNAKE_BODY_CELLS * SNAKE_STEP_SEC, 2)  # start mid-body
-
-SNAKE_COLORS = {
-    "dark": {"body": "#34D399", "head": "#6EE7B7", "eye": "#04231A", "tongue": "#FB7185"},
-    "light": {"body": "#059669", "head": "#10B981", "eye": "#022C22", "tongue": "#BE123C"},
-}
-
-
-def _snake_route(days: list[dict]) -> list[tuple[int, int]]:
-    """Cell coordinates (week column, weekday row) in serpentine order."""
-    rows_by_col: dict[int, list[int]] = {}
-    for idx in range(len(days)):
-        rows_by_col.setdefault(idx // 7, []).append(idx % 7)
-
-    route: list[tuple[int, int]] = []
-    for week in sorted(rows_by_col):
-        rows = sorted(rows_by_col[week], reverse=bool(week % 2))
-        route.extend((week, row) for row in rows)
-    return route
-
-
-def _snake_context(days: list[dict], theme: str) -> dict:
-    """Precompute the head path plus the per-cell delay of the body crawl.
-
-    The head moves cell to cell with `calcMode="discrete"`; the delay of a
-    cell is simply the time the head reaches it, and the CSS crawl window is
-    the body length, so head and body cannot drift apart.
+    Sampling the ground on a fixed clock and then thinning the frame list
+    keeps the sprite glued to the terrain — a straight-line interpolation
+    between distant points would cut through every hill.
     """
-    route = _snake_route(days)
-    total = len(route)
-    dur = round(total * SNAKE_STEP_SEC, 2)
+    dur_run = (RUN_X1 - RUN_X0) / RUN_SPEED
+    dur = round(dur_run + HOLD_SEC, 2)
+    jumps = [(r["x"] - JUMP_PAD, r["x"] + r["w"] + JUMP_PAD, r["h"] + 12.0)
+             for r in rocks]
 
-    points = [
-        (GRID_X + week * PITCH + CELL / 2, GRID_Y + row * PITCH + CELL / 2)
-        for week, row in route
-    ]
-    path = "M " + " L ".join(f"{x:.1f} {y:.1f}" for x, y in points)
+    frames: list[tuple[float, float, float]] = []
+    for i in range(int(round(dur / SAMPLE_DT)) + 1):
+        t = i * SAMPLE_DT
+        x = RUN_X0 + RUN_SPEED * min(t, dur_run)
+        lift = 0.0
+        for start, end, apex in jumps:
+            if start <= x <= end:
+                s = (x - start) / (end - start)
+                lift = max(lift, 4.0 * apex * s * (1.0 - s))
+        frames.append((x, _at(xs, ys, x) - lift, t))
 
-    # Discrete keyPoints: cell i holds from keyTimes[i] to keyTimes[i + 1].
-    # The extra final frame (same point, t=1) keeps the last cell on screen
-    # until the cycle ends; SMIL requires the last keyTime to be exactly 1.
-    key_points = ";".join(f"{i / (total - 1):.5f}" for i in range(total)) + ";1"
-    key_times = ";".join(f"{i / total:.5f}" for i in range(total)) + ";1"
+    kept = [frames[0]]
+    for frame in frames[1:-1]:
+        if abs(frame[0] - kept[-1][0]) >= 1.6 or abs(frame[1] - kept[-1][1]) >= 0.35:
+            kept.append(frame)
+    kept.append(frames[-1])
 
-    # The cycle starts one full body length in: negative delays paint the
-    # trailing cells and the head's negative begin puts it at the same offset,
-    # so the very first frame is already a complete snake. Anyone whose client
-    # shows a still frame then sees a snake instead of a lone head.
-    delays = [0.0] * len(days)
-    for pos, (week, row) in enumerate(route):
-        delays[week * 7 + row] = round(pos * SNAKE_STEP_SEC - SNAKE_PHASE_SEC, 2)
-
-    body_pct = round(SNAKE_BODY_CELLS / total * 100, 3)
+    keys = [f"{t / dur:.5f}" for _, _, t in kept]
+    keys[-1] = "1.00000"
     return {
         "dur": dur,
-        "phase": f"{SNAKE_PHASE_SEC:.2f}",
-        "path": path,
-        "key_points": key_points,
-        "key_times": key_times,
-        "delays": delays,
-        "body_pct": body_pct,
-        "colors": SNAKE_COLORS[theme],
+        "run_pct": round(dur_run / dur * 100.0, 2),
+        "values": ";".join(f"{x:.1f},{y:.1f}" for x, y, _ in kept),
+        "keys": ";".join(keys),
+        # The cast shadow walks the same clock but ignores the jump lift, so it
+        # stays pinned to the ground while the sprite rises off it.
+        "shadow_values": ";".join(
+            f"{x:.1f},{_at(xs, ys, x):.1f}" for x, _, _ in kept),
+        "jumps": jumps,
+    }
+
+
+def _opacity_frames(spans: list[tuple[float, float]], *, on: str = "1",
+                    off: str = "0", total: float = 100.0) -> list[tuple[float, str]]:
+    """Discrete opacity stops for the percentage windows in `spans`.
+
+    Consumed with `calcMode="discrete"`, so each stop holds until the next one:
+    the sprite is either on the ground or in the air, never half of each.
+    """
+    frames: list[tuple[float, str]] = [(0.0, off)]
+    for start, end in spans:
+        frames.append((min(max(start, 0.0), total), on))
+        frames.append((min(max(end, 0.0), total), off))
+    frames.append((total, frames[-1][1]))
+
+    merged: list[tuple[float, str]] = []
+    for pct, val in frames:
+        if merged and abs(pct - merged[-1][0]) < 1e-9:
+            merged[-1] = (pct, val)  # the later stop wins at a shared instant
+        else:
+            merged.append((pct, val))
+    return merged
+
+
+def _smil(frames: list[tuple[float, str]]) -> dict:
+    """The same frames as SMIL values/keyTimes, for a discrete opacity swap.
+
+    The keys are short on purpose: `values` and `keys` are dict methods, so a
+    template reading `.values` would render the bound method instead.
+    """
+    return {
+        "v": ";".join(val for _, val in frames),
+        "kt": ";".join(f"{pct / 100.0:.5f}" for pct, _ in frames),
+    }
+
+
+def _parkour_context(days: list[dict], theme: str, total: int,
+                     streak: int, max_streak: int) -> dict:
+    p = PALETTE[theme]
+    xs, ys = _surface_pts(days)
+    rocks = _rocks(xs, ys)
+    gems = _gems(days, xs, ys, rocks)
+    run = _timetable(xs, ys, rocks)
+    dur = run["dur"]
+
+    # Airborne windows, and the gem pickups, as percentages of one lap.
+    # Everything time-driven is SMIL rather than CSS keyframes: the runner is
+    # already an animateTransform, and one mechanism means one thing to reason
+    # about (and to verify) when a frame looks wrong.
+    air_spans = [((start - RUN_X0) / RUN_SPEED / dur * 100.0,
+                  (end - RUN_X0) / RUN_SPEED / dur * 100.0)
+                 for start, end, _ in run["jumps"]]
+    pose_air = _smil(_opacity_frames(air_spans))
+    pose_ground = _smil(_opacity_frames(air_spans, on="0", off="1"))
+    shadow = _smil(_opacity_frames(air_spans, on=".18", off=".4"))
+    banner = _smil(_opacity_frames([(run["run_pct"], 100.0)]))
+    reward = []
+    for gem in gems:
+        hit = (gem["x"] - RUN_X0) / RUN_SPEED / dur * 100.0
+        reward.append({
+            **gem,
+            "gem": _smil(_opacity_frames([(0.0, hit)])),
+            "spark": _smil(_opacity_frames([(hit, hit + 2.2)])),
+        })
+
+    far_xs, far_ys = _surface_pts(days, sigma=26.0, scale=0.55, lift=9.0)
+    mid_xs, mid_ys = _surface_pts(days, sigma=15.0, scale=0.82, lift=3.0)
+    flag_x = 726.0
+    track = {"x": 560.0, "w": 174.0, "y": 46.0}
+
+    score = f"{total:,}"
+    return {
+        "w": SCENE_W, "h": SCENE_H,
+        "p": p,
+        "total": score,
+        "score_w": round(len(score) * 21 * 0.6, 1),
+        "streak": streak,
+        "max_streak": max_streak,
+        "date_from": f"{days[0]['date'][:7].replace('-', '.')}",
+        "date_to": f"{days[-1]['date'][:7].replace('-', '.')}",
+        "months": _month_labels(days),
+        "terrain": _fill_path(xs, ys),
+        "ridge": _line_path(xs, ys),
+        "far": _fill_path(far_xs, far_ys),
+        "far_ridge": _line_path(far_xs, far_ys),
+        "mid": _fill_path(mid_xs, mid_ys),
+        "mid_ridge": _line_path(mid_xs, mid_ys),
+        "soil": _soil(xs, ys),
+        "tufts": _tufts(xs, ys),
+        "rocks": rocks,
+        "gems": reward,
+        "pose_air": pose_air,
+        "pose_ground": pose_ground,
+        "banner": banner,
+        "stars": _stars(),
+        "flag": {"x": flag_x, "y": round(_at(xs, ys, flag_x), 1)},
+        "dur": dur,
+        "run_pct": run["run_pct"],
+        "runner_values": run["values"],
+        "runner_keys": run["keys"],
+        "shadow_values": run["shadow_values"],
+        "shadow": shadow,
+        "run_x0": RUN_X0,
+        "run_y0": round(_at(xs, ys, RUN_X0), 1),
+        "poster": {
+            "x": round(RUN_X0 + (RUN_X1 - RUN_X0) * 0.55, 1),
+            "y": round(_at(xs, ys, RUN_X0 + (RUN_X1 - RUN_X0) * 0.55), 1),
+        },
+        "track": track,
+        "progress": {
+            "v": f"0,0;{track['w'] - 3:.1f},0;{track['w'] - 3:.1f},0",
+            "kt": f"0;{run['run_pct'] / 100.0:.5f};1",
+        },
     }
 
 
@@ -363,37 +593,21 @@ def generate_all(out_dir: Path, mock: bool) -> None:
     )
 
     out_dir.mkdir(parents=True, exist_ok=True)
-    weekdays = [
-        {"label": label, "y": GRID_Y + dow * PITCH + 9}
-        for dow, label in ((1, "一"), (3, "三"), (5, "五"))
-    ]
-    activity_ctx = {
-        "total_contribs": f"{data['total_contribs']:,}",
-        "streak": data["streak"],
-        "max_streak": data["max_streak"],
-        "months": _month_labels(data["contribution_days"]),
-        "weekdays": weekdays,
-    }
-
-    cards = (
-        ("typing-card", "typing.svg.j2", _typing_context(TYPING_LINES)),
-        ("activity-card", "activity.svg.j2", activity_ctx),
-    )
+    typing_ctx = _typing_context(TYPING_LINES)
 
     for theme in ("dark", "light"):
         suffix = "" if theme == "dark" else "-light"
-        for name, template_name, ctx in cards:
-            render_ctx = dict(ctx)
-            if name == "activity-card":
-                # The snake owns the crawl schedule, so the cells are built
-                # after it and inherit the delay at which the head arrives.
-                snake_ctx = _snake_context(data["contribution_days"], theme)
-                render_ctx["cells"] = _activity_cells(
-                    data["contribution_days"], theme, snake_ctx["delays"]
-                )
-                render_ctx["levels"] = LEVEL_COLORS[theme]
-                render_ctx["snake"] = snake_ctx
-            svg = env.get_template(template_name).render(**render_ctx, theme=theme)
+        cards = (
+            ("typing-card", env.get_template("typing.svg.j2").render(**typing_ctx, theme=theme)),
+            ("activity-card", env.get_template("activity.svg.j2").render(
+                **_parkour_context(
+                    data["contribution_days"], theme,
+                    data["total_contribs"], data["streak"], data["max_streak"],
+                ),
+                theme=theme,
+            )),
+        )
+        for name, svg in cards:
             path = out_dir / f"{name}{suffix}.svg"
             # newline="\n" keeps the bytes identical whether this runs on the
             # Linux runner or a Windows checkout; the default text-mode

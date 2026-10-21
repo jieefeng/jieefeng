@@ -1,108 +1,274 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="760" height="172" viewBox="0 0 760 172" role="img" aria-label="近一年 {{ total_contribs }} 次贡献，当前连续 {{ streak }} 天，最长 {{ max_streak }} 天；一条小蛇在贡献日历上爬行">
-  {# A pixel snake crawls the calendar in serpentine order: the head hops one
-     cell per step (SMIL, discrete) and a grid cell paints itself in the snake
-     colour for the length of the body (CSS, per-cell animation-delay). The
-     body is therefore the same cells the head has just crossed, which is what
-     makes it read as a snake instead of a line drawn over the chart.
-     Reduced motion drops the snake and leaves the plain heatmap. #}
+<svg xmlns="http://www.w3.org/2000/svg" width="{{ w }}" height="{{ h }}" viewBox="0 0 {{ w }} {{ h }}"
+     role="img"
+     aria-label="贡献跑酷：{{ date_from }} 至 {{ date_to }}，共 {{ total }} 次贡献，当前连击 {{ streak }} 天，最长连击 {{ max_streak }} 天">
+  <title>贡献跑酷 {{ date_from }} – {{ date_to }}</title>
+
+  {# One lap = the runner crossing the year. Every window below (airborne,
+     checkpoint, gem pickup) is expressed as a percentage of that lap, so all
+     of them stay in sync with the SMIL motion path and with each other. #}
   <style>
-    .sn { animation: crawl {{ snake.dur }}s linear infinite; }
-    @keyframes crawl {
-      0%, {{ snake.body_pct }}% { fill: {{ snake.colors.body }}; }
-      {{ snake.body_pct + 0.05 }}%, 100% { fill: var(--f); }
-    }
     .motion { display: inline; }
+    .static { display: none; }
     @media (prefers-reduced-motion: reduce) {
-      .sn { animation: none; }
       .motion { display: none; }
+      .static { display: inline; }
+      * { animation: none !important; }
     }
+
+    /* Two-frame sprite run cycle: `step-end` snaps between poses instead of
+       tweening, which is what makes the little runner read as pixel art. */
+    @keyframes legSwapA { 0% { transform: translate(0, 0) } 50% { transform: translate(-2.4px, 0) } }
+    @keyframes legSwapB { 0% { transform: translate(0, 0) } 50% { transform: translate(1.8px, 0) } }
+    @keyframes bobUp    { 0% { transform: translate(0, 0) } 50% { transform: translate(0, -1px) } }
+    .legA { animation: legSwapA .26s step-end infinite }
+    .legB { animation: legSwapB .26s step-end infinite }
+    .bob  { animation: bobUp .26s step-end infinite }
+
+    /* Idle decoration only. Everything the run itself depends on — the pose
+       swap, the pickups, the finish banner and the lap bar — is SMIL, so the
+       whole timeline shares one clock. */
+
+    @keyframes floatGem { 0%, 100% { transform: translateY(0) } 50% { transform: translateY(-2.4px) } }
+    .gemfloat { animation: floatGem 2.6s ease-in-out infinite }
+
+    @keyframes twinkle { 0%, 100% { opacity: .2 } 50% { opacity: .95 } }
+    .star { animation: twinkle 3.8s ease-in-out infinite }
+
+    @keyframes drift { from { transform: translateX(-9px) } to { transform: translateX(11px) } }
+    .cloud { animation: drift 26s ease-in-out infinite alternate }
   </style>
+
+  {# --- the runner sprite ------------------------------------------------
+     Drawn 12 wide by 18 tall on an integer grid, feet on y=0, so the whole
+     card can be rendered at 1:1 and the sprite stays crisp pixel art. #}
+  {% macro body() -%}
+  <rect x="-3" y="-16" width="6" height="6" fill="{{ p.face }}"/>
+  <rect x="-4" y="-17" width="8" height="2" fill="{{ p.body_dark }}"/>
+  <rect x="4" y="-16" width="2" height="1" fill="{{ p.body_dark }}"/>
+  <rect x="-4" y="-15" width="1" height="4" fill="{{ p.body_dark }}"/>
+  <rect x="1" y="-14" width="1" height="2" fill="{{ p.body_dark }}"/>
+  <rect x="-6" y="-10" width="3" height="1" fill="{{ p.scarf }}"/>
+  <rect x="-3" y="-10" width="6" height="1" fill="{{ p.scarf }}"/>
+  <rect x="-3" y="-9" width="6" height="7" fill="{{ p.body }}"/>
+  <rect x="2" y="-8" width="2" height="3" fill="{{ p.body_dark }}"/>
+  {%- endmacro %}
+
+  {% macro leg_front() -%}
+  <rect x="0" y="-2" width="2" height="2" fill="{{ p.pants }}"/>
+  <rect x="0" y="-1" width="3" height="1" fill="{{ p.body_dark }}"/>
+  {%- endmacro %}
+
+  {% macro leg_back() -%}
+  <rect x="-3" y="-2" width="2" height="2" fill="{{ p.pants }}"/>
+  <rect x="-4" y="-1" width="3" height="1" fill="{{ p.body_dark }}"/>
+  {%- endmacro %}
+
+  {% macro legs_air() -%}
+  <rect x="1" y="-4" width="2" height="3" fill="{{ p.pants }}"/>
+  <rect x="-3" y="-2" width="2" height="1" fill="{{ p.pants }}"/>
+  <rect x="1" y="-3" width="3" height="1" fill="{{ p.body_dark }}"/>
+  <rect x="-4" y="-1" width="3" height="1" fill="{{ p.body_dark }}"/>
+  {%- endmacro %}
+
   <defs>
-    <linearGradient id="abg" x1="0" y1="0" x2="1" y2="1">
-      {% if theme == "dark" %}
-      <stop offset="0" stop-color="#0D1117"/>
-      <stop offset="1" stop-color="#161B22"/>
-      {% else %}
-      <stop offset="0" stop-color="#FFFBEB"/>
-      <stop offset="1" stop-color="#FEF3C7"/>
-      {% endif %}
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="{{ p.sky_top }}"/>
+      <stop offset="1" stop-color="{{ p.sky_bottom }}"/>
     </linearGradient>
-    <linearGradient id="aborder" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#92400E"/>
-      <stop offset="0.5" stop-color="#D97706"/>
-      <stop offset="1" stop-color="#F59E0B"/>
+    <radialGradient id="horizon" cx=".5" cy="1" r=".7">
+      <stop offset="0" stop-color="{{ p.glow }}" stop-opacity=".22"/>
+      <stop offset="1" stop-color="{{ p.glow }}" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="earth" x1="0" y1="118" x2="0" y2="{{ h }}" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="{{ p.earth_top }}"/>
+      <stop offset="1" stop-color="{{ p.earth_bottom }}"/>
     </linearGradient>
-    <linearGradient id="anum" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#D97706"/>
-      <stop offset="1" stop-color="#F59E0B"/>
+    <linearGradient id="num" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="{{ p.text }}"/>
+      <stop offset="1" stop-color="{{ p.bright }}"/>
     </linearGradient>
-    <filter id="ashadow" x="-5%" y="-10%" width="110%" height="125%">
-      <feDropShadow dx="0" dy="3" stdDeviation="7" flood-color="#D97706" flood-opacity="{{ '0.25' if theme == 'dark' else '0.18' }}"/>
-    </filter>
+    <radialGradient id="moonGlow">
+      <stop offset="0" stop-color="{{ p.moon }}" stop-opacity=".26"/>
+      <stop offset="1" stop-color="{{ p.moon }}" stop-opacity="0"/>
+    </radialGradient>
+    <mask id="crescent">
+      <rect x="0" y="0" width="{{ w }}" height="{{ h }}" fill="#fff"/>
+      <circle cx="650" cy="94" r="13" fill="#fff"/>
+      <circle cx="657" cy="89" r="12" fill="#000"/>
+    </mask>
+    <clipPath id="card"><rect x="1" y="1" width="{{ w - 2 }}" height="{{ h - 2 }}" rx="15"/></clipPath>
   </defs>
 
-  <rect x="1" y="1" width="758" height="170" rx="14" fill="url(#abg)" filter="url(#ashadow)"/>
-  <rect x="1" y="1" width="758" height="170" rx="14" fill="none" stroke="url(#aborder)" stroke-width="1.5"/>
+  <rect x="1" y="1" width="{{ w - 2 }}" height="{{ h - 2 }}" rx="15"
+        fill="{{ p.sky_top }}" stroke="{{ p.ridge_soft }}" stroke-opacity=".55" stroke-width="1.5"/>
 
-  {% set muted = '#8B949E' if theme == 'dark' else '#6B7280' %}
-  {% set muted2 = '#8B949E' if theme == 'dark' else '#6B7280' %}
-  {% set accent = '#D97706' if theme == 'dark' else '#B45309' %}
-  {% set font = "'Segoe UI','PingFang SC','Hiragino Sans GB','Microsoft YaHei','Noto Sans SC',sans-serif" %}
+  <g clip-path="url(#card)">
+    <rect x="0" y="0" width="{{ w }}" height="{{ h }}" fill="url(#sky)"/>
+    <ellipse cx="{{ w / 2 }}" cy="{{ h - 34 }}" rx="360" ry="74" fill="url(#horizon)"/>
 
-  <!-- Header: yearly stats. The section title is carried by the README
-       heading, so the card does not repeat it. -->
-  <text x="28" y="31" font-family="{{ font }}" font-size="12">
-    <tspan fill="url(#anum)" font-size="16" font-weight="700">{{ total_contribs }}</tspan>
-    <tspan fill="{{ muted }}"> 次贡献 · 连续 </tspan>
-    <tspan fill="{{ accent }}" font-weight="600">{{ streak }}</tspan>
-    <tspan fill="{{ muted }}"> 天 · 最长 </tspan>
-    <tspan fill="{{ accent }}" font-weight="600">{{ max_streak }}</tspan>
-    <tspan fill="{{ muted }}"> 天</tspan>
-  </text>
+    {% if theme == "dark" %}
+    {% for s in stars %}
+    <circle class="star" cx="{{ s.x }}" cy="{{ s.y }}" r="{{ s.r }}" fill="{{ p.star }}"
+            style="animation-delay:-{{ s.delay }}s"/>
+    {% endfor %}
+    <circle cx="650" cy="94" r="34" fill="url(#moonGlow)"/>
+    <circle cx="650" cy="94" r="13" fill="{{ p.moon }}" mask="url(#crescent)"/>
+    <path d="M118 96 l5 -3 l5 3 M132 88 l4 -2.4 l4 2.4" stroke="{{ p.muted }}" stroke-opacity=".45"
+          stroke-width="1.1" fill="none" stroke-linecap="round"/>
+    {% else %}
+    <circle cx="650" cy="94" r="40" fill="url(#moonGlow)"/>
+    <circle cx="650" cy="94" r="14" fill="{{ p.moon }}" opacity=".55"/>
+    {% for c in (150, 392, 596) %}
+    <g transform="translate({{ c }},{{ 52 if c == 150 else 74 }})">
+      <g class="cloud" style="animation-delay:-{{ loop.index0 * 7 }}s">
+        <rect x="-26" y="-3" width="52" height="7" rx="3.5" fill="#fff" opacity=".85"/>
+        <rect x="-14" y="-9" width="26" height="8" rx="4" fill="#fff" opacity=".85"/>
+        <rect x="4" y="-7" width="18" height="6" rx="3" fill="#fff" opacity=".7"/>
+      </g>
+    </g>
+    {% endfor %}
+    {% endif %}
 
-  <!-- Month labels -->
-  {% for m in months %}
-  <text x="{{ m.x }}" y="47" fill="{{ muted2 }}" font-family="{{ font }}" font-size="9">{{ m.label }}</text>
-  {% endfor %}
+    {# Two dimmer copies of the same landscape, smoothed and lifted, read as
+       depth without adding any new data. #}
+    <path d="{{ far }}" fill="{{ p.far }}"/>
+    <path d="{{ far_ridge }}" fill="none" stroke="{{ p.far }}" stroke-width="1.2"/>
+    <path d="{{ mid }}" fill="{{ p.mid }}"/>
+    <path d="{{ mid_ridge }}" fill="none" stroke="{{ p.mid }}" stroke-width="1.2"/>
 
-  <!-- Weekday labels -->
-  {% for wd in weekdays %}
-  <text x="14" y="{{ wd.y }}" fill="{{ muted2 }}" font-family="{{ font }}" font-size="8">{{ wd.label }}</text>
-  {% endfor %}
+    <path d="{{ terrain }}" fill="url(#earth)"/>
+    {% for d in soil %}
+    <circle cx="{{ d.x }}" cy="{{ d.y }}" r="{{ d.r }}" fill="{{ p.soil }}" opacity=".28"/>
+    {% endfor %}
 
-  <!-- Heatmap grid. Every cell carries the moment the snake's head reaches it;
-       the CSS animation repaints that cell for the body's length and then
-       returns it to its contribution colour. -->
-  {% for cell in cells %}
-  {% if cell.delay is not none %}
-  <rect class="sn" x="{{ cell.x }}" y="{{ cell.y }}" width="11" height="11" rx="2.5" fill="{{ cell.fill }}" style="--f:{{ cell.fill }};animation-delay:{{ cell.delay }}s"/>
-  {% else %}
-  <rect x="{{ cell.x }}" y="{{ cell.y }}" width="11" height="11" rx="2.5" fill="{{ cell.fill }}"/>
-  {% endif %}
-  {% endfor %}
+    {% for t in tufts %}
+    <path d="M{{ t.x }} {{ t.y }} l1.2 -{{ 2.4 if t.s == 1 else 3.6 }} M{{ t.x + 2.2 }} {{ t.y }} l-1 -{{ 2 if t.s == 1 else 3 }}"
+          stroke="{{ p.tuft }}" stroke-width="1" stroke-opacity=".7" fill="none" stroke-linecap="round"/>
+    {% endfor %}
 
-  <!-- Snake head: rides the same serpentine route, one cell per step, and
-       turns to face the direction of travel. Eyes + forked tongue make the
-       head unmistakable; the body cells behind it do the rest. -->
-  <g class="motion">
-    <animateMotion dur="{{ snake.dur }}s" begin="-{{ snake.phase }}s" repeatCount="indefinite" calcMode="discrete" rotate="auto"
-                   path="{{ snake.path }}"
-                   keyPoints="{{ snake.key_points }}" keyTimes="{{ snake.key_times }}"/>
-    <rect x="-6.5" y="-6.5" width="13" height="13" rx="3.8" fill="{{ snake.colors.head }}"/>
-    <circle cx="3.1" cy="-2.6" r="1.45" fill="{{ snake.colors.eye }}"/>
-    <circle cx="3.1" cy="2.6" r="1.45" fill="{{ snake.colors.eye }}"/>
-    <path d="M6.6 0 L9.2 0 M9.2 0 L11.6 -2.2 M9.2 0 L11.6 2.2" fill="none"
-          stroke="{{ snake.colors.tongue }}" stroke-width="1" stroke-linecap="round">
-      <animate attributeName="opacity" values="1;1;0;0;1;1" keyTimes="0;0.42;0.46;0.9;0.94;1"
-               dur="1.7s" repeatCount="indefinite"/>
-    </path>
+    {% for r in rocks %}
+    <path d="M{{ r.x }} {{ r.y }} L{{ r.x + 1.6 }} {{ r.y - r.h * 0.72 }} L{{ r.x + r.w * 0.55 }} {{ r.y - r.h }} L{{ r.x + r.w }} {{ r.y - r.h * 0.34 }} L{{ r.x + r.w }} {{ r.y }} Z"
+          fill="{{ p.rock }}"/>
+    <path d="M{{ r.x + 1.6 }} {{ r.y - r.h * 0.72 }} L{{ r.x + r.w * 0.55 }} {{ r.y - r.h }} L{{ r.x + r.w * 0.58 }} {{ r.y - r.h * 0.52 }} L{{ r.x + 2.4 }} {{ r.y - r.h * 0.42 }} Z"
+          fill="{{ p.rock_hi }}" opacity=".5"/>
+    {% endfor %}
+
+    <path d="{{ ridge }}" fill="none" stroke="{{ p.ridge }}" stroke-width="3.2" stroke-opacity=".16"/>
+    <path d="{{ ridge }}" fill="none" stroke="{{ p.ridge }}" stroke-width="1.1"/>
+
+    {# --- rewards: one gem per active week -------------------------------- #}
+    {% for g in gems %}
+    <g transform="translate({{ g.x }},{{ g.y }})">
+      <g opacity="0">
+        <animate attributeName="opacity" calcMode="discrete" dur="{{ dur }}s"
+                 repeatCount="indefinite" values="{{ g.spark.v }}" keyTimes="{{ g.spark.kt }}"/>
+        <path d="M0 -10.5 v2.6 M0 5.6 v2.6 M-7.6 -2.4 h2.6 M5 -2.4 h2.6" stroke="{{ p.gem_core }}"
+              stroke-width="1.1" stroke-linecap="round"/>
+      </g>
+      <g>
+        <animate attributeName="opacity" calcMode="discrete" dur="{{ dur }}s"
+                 repeatCount="indefinite" values="{{ g.gem.v }}" keyTimes="{{ g.gem.kt }}"/>
+        <g class="gemfloat" style="animation-delay:-{{ loop.index0 * 0.37 }}s">
+          <polygon points="0,-6.8 4,-3 0,3 -4,-3" fill="{{ p.gem }}"/>
+          <polygon points="0,-6.8 4,-3 0,-1.6 -4,-3" fill="{{ p.gem_core }}" opacity=".55"/>
+        </g>
+      </g>
+    </g>
+    {% endfor %}
+
+    {# --- checkpoint flag on the final week ------------------------------- #}
+    <g transform="translate({{ flag.x }},{{ flag.y }})">
+      <ellipse cx="0" cy="0" rx="7" ry="1.6" fill="#000" opacity=".22"/>
+      <rect x="-.8" y="-31" width="1.6" height="31" fill="{{ p.muted }}" opacity=".85"/>
+      <path d="M.8 -31 l15 4.2 l-15 4.2 Z" fill="{{ p.banner_edge }}"/>
+      <circle cx="0" cy="-31.8" r="1.7" fill="{{ p.bright }}"/>
+    </g>
+
+    {# --- the runner ------------------------------------------------------ #}
+    {% if runner_values %}
+    {# Cast shadow first: same clock, no jump lift, so it stays on the ground
+       and fades while the sprite is in the air. #}
+    <g class="motion">
+      <g transform="translate({{ run_x0 }},{{ run_y0 }})">
+        <animateTransform attributeName="transform" type="translate"
+                          values="{{ shadow_values }}" keyTimes="{{ runner_keys }}"
+                          calcMode="linear" dur="{{ dur }}s" repeatCount="indefinite"/>
+        <g opacity=".4">
+          <animate attributeName="opacity" calcMode="discrete" dur="{{ dur }}s"
+                   repeatCount="indefinite" values="{{ shadow.v }}" keyTimes="{{ shadow.kt }}"/>
+          <ellipse cx="1" cy="-.4" rx="5.4" ry="1.3" fill="#000"/>
+        </g>
+      </g>
+    </g>
+    <g class="motion">
+      <g transform="translate({{ run_x0 }},{{ run_y0 }})">
+        <animateTransform attributeName="transform" type="translate"
+                          values="{{ runner_values }}" keyTimes="{{ runner_keys }}"
+                          calcMode="linear" dur="{{ dur }}s" repeatCount="indefinite"/>
+        {# The two poses are generated from the same parabola the motion path
+           follows, so the sprite swaps exactly when it leaves the ground. #}
+        <g>
+          <animate attributeName="opacity" calcMode="discrete" dur="{{ dur }}s"
+                   repeatCount="indefinite" values="{{ pose_ground.v }}" keyTimes="{{ pose_ground.kt }}"/>
+          <g class="bob">{{ body() }}</g>
+          <g class="legA">{{ leg_front() }}</g>
+          <g class="legB">{{ leg_back() }}</g>
+        </g>
+        <g opacity="0">
+          <animate attributeName="opacity" calcMode="discrete" dur="{{ dur }}s"
+                   repeatCount="indefinite" values="{{ pose_air.v }}" keyTimes="{{ pose_air.kt }}"/>
+          {{ body() }}{{ legs_air() }}
+        </g>
+      </g>
+    </g>
+    {% endif %}
+    {# Reduced motion, or any client that drops the animation: a runner frozen
+       mid-stride at the same spot, still legible as a runner. #}
+    <g class="static">
+      <g transform="translate({{ poster.x }},{{ poster.y }})">
+        {{ body() }}{{ leg_front() }}{{ leg_back() }}
+      </g>
+    </g>
+
+    {# --- lap clear banner ------------------------------------------------ #}
+    <g class="motion">
+      <g opacity="0">
+        <animate attributeName="opacity" calcMode="discrete" dur="{{ dur }}s"
+                 repeatCount="indefinite" values="{{ banner.v }}" keyTimes="{{ banner.kt }}"/>
+        <rect x="292" y="80" width="176" height="32" rx="16" fill="{{ p.banner }}"
+              fill-opacity=".93" stroke="{{ p.banner_edge }}" stroke-opacity=".65"/>
+        <text x="380" y="101" text-anchor="middle" font-size="11.5" font-weight="700"
+              letter-spacing="2.6" fill="{{ p.bright }}">STAGE CLEAR</text>
+      </g>
+    </g>
+
+    {# --- month row, sitting on the soil ---------------------------------- #}
+    {% for m in months %}
+    <text x="{{ m.x }}" y="199" font-size="7.5" fill="{{ p.soil_label }}" opacity=".9">{{ m.label }}</text>
+    {% endfor %}
   </g>
 
-  <!-- Legend -->
-  <text x="36" y="161" fill="{{ muted2 }}" font-family="{{ font }}" font-size="9">最近一年</text>
-  <text x="628" y="161" text-anchor="end" fill="{{ muted }}" font-family="{{ font }}" font-size="9">Less</text>
-  {% for color in levels %}
-  <rect x="{{ 632 + loop.index0 * 14 }}" y="152" width="11" height="11" rx="2.5" fill="{{ color }}"/>
-  {% endfor %}
-  <text x="732" y="161" text-anchor="end" fill="{{ muted }}" font-family="{{ font }}" font-size="9">More</text>
+  {# --- HUD: the same numbers the old card carried, as a game read-out ---- #}
+  <g font-family="'JetBrains Mono','Fira Code',Consolas,'Sarasa Mono SC','Noto Sans Mono CJK SC','Microsoft YaHei','PingFang SC',monospace">
+    <text x="26" y="18" font-size="7.5" letter-spacing="2.6" fill="{{ p.muted }}">SCORE</text>
+    <text x="26" y="42" font-size="21" font-weight="700" fill="url(#num)">{{ total }}</text>
+    <text x="{{ 26 + score_w + 5 }}" y="41" font-size="8" fill="{{ p.muted }}">次贡献</text>
+
+    <line x1="130" y1="11" x2="130" y2="40" stroke="{{ p.muted }}" stroke-opacity=".22"/>
+    <text x="144" y="18" font-size="7.5" letter-spacing="2.6" fill="{{ p.muted }}">BEST COMBO</text>
+    <text x="144" y="40" font-size="15" font-weight="600" fill="{{ p.bright }}">{{ max_streak }}<tspan font-size="8" font-weight="400" fill="{{ p.muted }}" dx="3">天</tspan></text>
+
+    <line x1="248" y1="11" x2="248" y2="40" stroke="{{ p.muted }}" stroke-opacity=".22"/>
+    <text x="262" y="18" font-size="7.5" letter-spacing="2.6" fill="{{ p.muted }}">STREAK</text>
+    <text x="262" y="40" font-size="15" font-weight="600" fill="{{ p.bright }}">{{ streak }}<tspan font-size="8" font-weight="400" fill="{{ p.muted }}" dx="3">天</tspan></text>
+
+    <text x="734" y="18" font-size="7.5" letter-spacing="2.6" fill="{{ p.muted }}" text-anchor="end">LAP</text>
+    <text x="734" y="34" font-size="9" fill="{{ p.muted }}" text-anchor="end">{{ date_from }} — {{ date_to }}</text>
+    <rect x="{{ track.x }}" y="{{ track.y }}" width="{{ track.w }}" height="3" rx="1.5" fill="{{ p.track }}"/>
+    <rect x="{{ track.x }}" y="{{ track.y - 1.2 }}" width="3" height="5.4" rx="1.5" fill="{{ p.marker }}">
+      <animateTransform attributeName="transform" type="translate"
+                        values="{{ progress.v }}" keyTimes="{{ progress.kt }}"
+                        calcMode="linear" dur="{{ dur }}s" repeatCount="indefinite"/>
+    </rect>
+  </g>
 </svg>

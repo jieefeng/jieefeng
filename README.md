@@ -28,15 +28,15 @@
 
 ---
 
-<!-- ==================== 贡献热力图（本地生成 · 每日自动更新） ==================== -->
+<!-- ==================== 贡献跑酷（本地生成 · 每日自动更新） ==================== -->
 
-<h2 align="center">🐍 贡献热力图</h2>
+<h2 align="center">🏃 贡献跑酷</h2>
 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="./assets/activity-card.svg" />
     <source media="(prefers-color-scheme: light)" srcset="./assets/activity-card-light.svg" />
-    <img alt="近一年贡献热力图：一条小蛇在日历格上爬行" src="./assets/activity-card.svg" width="760" />
+    <img alt="近一年贡献跑酷：每周的贡献量堆成地形，小人跑过全年、沿途捡起活跃周的宝石，最后冲线 STAGE CLEAR" src="./assets/activity-card.svg" width="760" />
   </picture>
 </p>
 
