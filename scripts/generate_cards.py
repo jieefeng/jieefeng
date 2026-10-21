@@ -159,6 +159,10 @@ def _typing_context(lines: list[str]) -> dict:
 
     return {
         "duration": round(total, 2),
+        # The cycle starts with the first line already typed, so a still
+        # frame (or a client that never advances the clock) shows text
+        # instead of an empty card with a lone caret.
+        "phase": f"{phases[0][1]:.2f}",
         "lines": lines_ctx,
         "caret": {
             "x_init": round(merged[0][0], 2),
@@ -247,6 +251,7 @@ def _month_labels(days: list[dict], max_x: float = 700.0) -> list[dict]:
 
 SNAKE_STEP_SEC = 0.10      # seconds the head takes per cell
 SNAKE_BODY_CELLS = 10      # cells the body trails behind the head
+SNAKE_PHASE_SEC = round(SNAKE_BODY_CELLS * SNAKE_STEP_SEC, 2)  # start mid-body
 
 SNAKE_COLORS = {
     "dark": {"body": "#34D399", "head": "#6EE7B7", "eye": "#04231A", "tongue": "#FB7185"},
@@ -290,13 +295,18 @@ def _snake_context(days: list[dict], theme: str) -> dict:
     key_points = ";".join(f"{i / (total - 1):.5f}" for i in range(total)) + ";1"
     key_times = ";".join(f"{i / total:.5f}" for i in range(total)) + ";1"
 
+    # The cycle starts one full body length in: negative delays paint the
+    # trailing cells and the head's negative begin puts it at the same offset,
+    # so the very first frame is already a complete snake. Anyone whose client
+    # shows a still frame then sees a snake instead of a lone head.
     delays = [0.0] * len(days)
     for pos, (week, row) in enumerate(route):
-        delays[week * 7 + row] = round(pos * SNAKE_STEP_SEC, 2)
+        delays[week * 7 + row] = round(pos * SNAKE_STEP_SEC - SNAKE_PHASE_SEC, 2)
 
     body_pct = round(SNAKE_BODY_CELLS / total * 100, 3)
     return {
         "dur": dur,
+        "phase": f"{SNAKE_PHASE_SEC:.2f}",
         "path": path,
         "key_points": key_points,
         "key_times": key_times,

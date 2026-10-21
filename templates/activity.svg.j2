@@ -85,7 +85,7 @@
        turns to face the direction of travel. Eyes + forked tongue make the
        head unmistakable; the body cells behind it do the rest. -->
   <g class="motion">
-    <animateMotion dur="{{ snake.dur }}s" repeatCount="indefinite" calcMode="discrete" rotate="auto"
+    <animateMotion dur="{{ snake.dur }}s" begin="-{{ snake.phase }}s" repeatCount="indefinite" calcMode="discrete" rotate="auto"
                    path="{{ snake.path }}"
                    keyPoints="{{ snake.key_points }}" keyTimes="{{ snake.key_times }}"/>
     <rect x="-6.5" y="-6.5" width="13" height="13" rx="3.8" fill="{{ snake.colors.head }}"/>

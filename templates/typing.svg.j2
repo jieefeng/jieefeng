@@ -28,7 +28,7 @@
       <rect x="{{ l.x0 }}" y="13" width="{{ l.width }}" height="20">
         <animate attributeName="width" calcMode="discrete"
                  values="{{ l.w_values }}" keyTimes="{{ l.w_key }}"
-                 dur="{{ duration }}s" begin="0s" repeatCount="indefinite"/>
+                 dur="{{ duration }}s" begin="-{{ phase }}s" repeatCount="indefinite"/>
       </rect>
     </clipPath>
     {% endfor %}
@@ -46,7 +46,7 @@
           fill="url(#tg)" font-family="'JetBrains Mono','Fira Code',Consolas,'Sarasa Mono SC','Noto Sans Mono CJK SC','Microsoft YaHei','PingFang SC',monospace"
           font-size="14">{{ l.text }}<animate attributeName="opacity" calcMode="discrete"
                  values="{{ l.op_values }}" keyTimes="{{ l.op_key }}"
-                 dur="{{ duration }}s" begin="0s" repeatCount="indefinite"/></text>
+                 dur="{{ duration }}s" begin="-{{ phase }}s" repeatCount="indefinite"/></text>
     {% endfor %}
 
     {# Typewriter caret: x follows the reveal edge, opacity blinks. #}
@@ -54,7 +54,7 @@
           fill="{{ '#D97706' if theme == 'dark' else '#B45309' }}">
       <animate attributeName="x" calcMode="discrete"
                values="{{ caret.x_values }}" keyTimes="{{ caret.x_key }}"
-               dur="{{ duration }}s" begin="0s" repeatCount="indefinite"/>
+               dur="{{ duration }}s" begin="-{{ phase }}s" repeatCount="indefinite"/>
       <animate attributeName="opacity" calcMode="discrete"
                values="1;0;0" keyTimes="0;0.5;1"
                dur="0.9s" begin="0s" repeatCount="indefinite"/>
