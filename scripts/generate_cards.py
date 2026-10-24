@@ -17,7 +17,7 @@ import math
 import random
 import sys
 from bisect import bisect_right
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader
@@ -28,6 +28,14 @@ from content import COOP_LINE, DAILY_PAIRS, INVENTORY, QUESTS
 ROOT = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = ROOT / "templates"
 DEFAULT_OUT = ROOT / "assets"
+
+# The runner's clock is UTC; the card should carry the date on the owner's
+# wall clock, or a 01:00 UTC run would print yesterday for him all morning.
+LOCAL_TZ = timezone(timedelta(hours=8))
+
+
+def _local_today() -> date:
+    return datetime.now(LOCAL_TZ).date()
 
 # ---------------------------------------------------------------------------
 # Typing animation — presentation lives in templates/typing.svg.j2, all
@@ -675,7 +683,7 @@ def _daily_context(theme: str, today: date) -> dict:
 def _mock_data() -> dict:
     """Deterministic sample data for local preview (no gh CLI required)."""
     rng = random.Random(42)
-    today = date.today()
+    today = _local_today()
     days = []
     for back in range(371, 0, -1):
         day = today - timedelta(days=back)
@@ -720,7 +728,7 @@ def generate_all(out_dir: Path, mock: bool) -> None:
 
     out_dir.mkdir(parents=True, exist_ok=True)
     typing_ctx = _typing_context(TYPING_LINES)
-    today = date.today()
+    today = _local_today()
 
     for theme in ("dark", "light"):
         suffix = "" if theme == "dark" else "-light"
