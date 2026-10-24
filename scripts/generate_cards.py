@@ -23,6 +23,7 @@ from pathlib import Path
 from jinja2 import Environment, FileSystemLoader
 
 from github_api import compute_streaks, fetch_user_data
+from content import COOP_LINE, DAILY_PAIRS, INVENTORY, QUESTS
 
 ROOT = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = ROOT / "templates"
@@ -214,6 +215,10 @@ PALETTE = {
         "moon": "#FDE68A", "star": "#FDE68A",
         "track": "#1E2733", "marker": "#F59E0B",
         "banner": "#0B0F16", "banner_edge": "#F59E0B",
+        # inventory / quest slots
+        "slot_bg": "#111823", "pip_off": "#2A3442",
+        "r_legendary": "#FBBF24", "r_epic": "#A78BFA",
+        "r_rare": "#2DD4BF", "r_common": "#8FA0B5",
     },
     "light": {
         "sky_top": "#FFFDF7", "sky_bottom": "#FCEFD0", "glow": "#F59E0B",
@@ -229,6 +234,9 @@ PALETTE = {
         "moon": "#F59E0B", "star": "#D97706",
         "track": "#E7CFA0", "marker": "#B45309",
         "banner": "#FFF8E7", "banner_edge": "#B45309",
+        "slot_bg": "#FFF8E7", "pip_off": "#E7CFA0",
+        "r_legendary": "#B45309", "r_epic": "#7C3AED",
+        "r_rare": "#0D9488", "r_common": "#7C6A4E",
     },
 }
 
@@ -546,6 +554,124 @@ def _parkour_context(days: list[dict], theme: str, total: int,
     }
 
 
+# ---------------------------------------------------------------------------
+# Quest log + inventory — the two editorial cards.
+#
+# Neither of them reads the GitHub API: they render a small hand-written
+# config (scripts/content.py) in the same game-UI language as the parkour
+# card, so the whole profile reads as one save file. All coordinates below
+# are computed here; the templates only paint.
+# ---------------------------------------------------------------------------
+
+RARITY_LABEL = {"legendary": "LEGENDARY", "epic": "EPIC",
+                "rare": "RARE", "common": "COMMON"}
+RARITY_CN = {"legendary": "传说", "epic": "史诗", "rare": "稀有", "common": "普通"}
+RARITY_STROKE = {"legendary": 0.95, "epic": 0.7, "rare": 0.5, "common": 0.38}
+RARITY_LABEL_OP = {"legendary": 1.0, "epic": 0.85, "rare": 0.8, "common": 0.78}
+
+INV_W, INV_H = 760, 196
+SLOT_W, SLOT_H = 92.0, 62.0
+SLOT_X0, SLOT_Y0 = 25.0, 44.0
+SLOT_GAP_X, SLOT_GAP_Y = 11.0, 10.0
+SLOT_COLS = 7
+PIP_PITCH, PIP_START = 6.0, 32.0  # 5 pips of 4px + 2px gaps, centred in a slot
+
+QUEST_W, QUEST_H = 760, 208
+QUEST_ROW_Y = 44.0
+QUEST_ROW_STEP = 44.0
+QUEST_BAR_X, QUEST_BAR_W = 418.0, 150.0
+QUEST_CHIP_X, QUEST_CHIP_W = 674.0, 60.0
+QUEST_FOOTER_RULE, QUEST_FOOTER_Y = 176.0, 194.0
+
+DAILY_W, DAILY_H = 760, 64
+DAILY_TITLE_W = 12.5 * 3  # “今日签”, three fullwidth advances at font-size 12.5
+
+
+def _est_width(text: str, size: float) -> float:
+    """Rough advance width: fullwidth CJK, 0.58em for Latin (monospace-ish)."""
+    return sum(size if ord(ch) >= 0x2E80 else size * 0.58 for ch in text)
+
+
+def _inventory_context(theme: str) -> dict:
+    p = PALETTE[theme]
+    items = []
+    for idx, spec in enumerate(INVENTORY):
+        col, row = idx % SLOT_COLS, idx // SLOT_COLS
+        x = SLOT_X0 + col * (SLOT_W + SLOT_GAP_X)
+        y = SLOT_Y0 + row * (SLOT_H + SLOT_GAP_Y)
+        cx = x + SLOT_W / 2
+        filled = min(5, int(spec["level"] / 20 + 0.5))
+        rarity = spec["rarity"]
+        items.append({
+            "name": spec["name"],
+            "rarity": rarity,
+            "rarity_label": RARITY_LABEL[rarity],
+            "color": p[f"r_{rarity}"],
+            "stroke_op": RARITY_STROKE[rarity],
+            "label_op": RARITY_LABEL_OP[rarity],
+            "pip_on_op": RARITY_STROKE[rarity],
+            "x": round(x, 1), "y": round(y, 1), "cx": round(cx, 1),
+            "w": SLOT_W, "h": SLOT_H,
+            "pips": [{"x": round(x + PIP_START + k * PIP_PITCH, 1), "on": k < filled}
+                     for k in range(5)],
+        })
+
+    counts = {r: sum(1 for s in INVENTORY if s["rarity"] == r) for r in RARITY_CN}
+    legend: list[dict] = []
+    cursor = INV_W - 26.0
+    for rarity in ("legendary", "epic", "rare", "common"):
+        if not counts[rarity]:
+            continue
+        count = counts[rarity]
+        text_w = _est_width(RARITY_CN[rarity], 7.5) + 3 + _est_width(str(count), 7.5)
+        cursor -= 6 + 4 + text_w  # swatch + gutter + label
+        legend.insert(0, {"x": round(cursor, 1), "color": p[f"r_{rarity}"],
+                          "label": RARITY_CN[rarity], "count": count})
+        cursor -= 14
+
+    return {
+        "w": INV_W, "h": INV_H, "p": p,
+        "items": items, "count": len(INVENTORY), "legend": legend,
+    }
+
+
+def _quest_context(theme: str) -> dict:
+    p = PALETTE[theme]
+    quests = []
+    for idx, spec in enumerate(QUESTS):
+        y = QUEST_ROW_Y + idx * QUEST_ROW_STEP
+        accent = p["bright"] if spec["kind"] == "MAIN" else p["r_rare"]
+        quests.append({
+            **spec,
+            "y": round(y, 1),
+            "accent": accent,
+            "fill_w": round(QUEST_BAR_W * spec["progress"] / 100.0, 1),
+        })
+    return {
+        "w": QUEST_W, "h": QUEST_H, "p": p,
+        "quests": quests,
+        "main_count": sum(1 for q in QUESTS if q["kind"] == "MAIN"),
+        "bar_x": QUEST_BAR_X, "bar_w": QUEST_BAR_W,
+        "chip_x": QUEST_CHIP_X, "chip_w": QUEST_CHIP_W,
+        "footer_rule": QUEST_FOOTER_RULE, "footer_y": QUEST_FOOTER_Y,
+        "coop": COOP_LINE,
+    }
+
+
+def _daily_context(theme: str, today: date) -> dict:
+    """The daily strip: one (宜, 忌) pair picked from the date itself."""
+    p = PALETTE[theme]
+    good, bad = DAILY_PAIRS[today.toordinal() % len(DAILY_PAIRS)]
+    return {
+        "w": DAILY_W, "h": DAILY_H, "p": p,
+        "good": good, "bad": bad,
+        "date_label": today.strftime("%Y.%m.%d"),
+        "weekday": "周" + "一二三四五六日"[today.weekday()],
+        "seed": f"{today.toordinal():03X}",
+        "title_w": DAILY_TITLE_W,
+    }
+
+
 def _mock_data() -> dict:
     """Deterministic sample data for local preview (no gh CLI required)."""
     rng = random.Random(42)
@@ -594,11 +720,15 @@ def generate_all(out_dir: Path, mock: bool) -> None:
 
     out_dir.mkdir(parents=True, exist_ok=True)
     typing_ctx = _typing_context(TYPING_LINES)
+    today = date.today()
 
     for theme in ("dark", "light"):
         suffix = "" if theme == "dark" else "-light"
         cards = (
             ("typing-card", env.get_template("typing.svg.j2").render(**typing_ctx, theme=theme)),
+            ("daily-card", env.get_template("daily.svg.j2").render(**_daily_context(theme, today), theme=theme)),
+            ("quest-card", env.get_template("quest.svg.j2").render(**_quest_context(theme), theme=theme)),
+            ("inventory-card", env.get_template("inventory.svg.j2").render(**_inventory_context(theme), theme=theme)),
             ("activity-card", env.get_template("activity.svg.j2").render(
                 **_parkour_context(
                     data["contribution_days"], theme,

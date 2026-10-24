@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="208" viewBox="0 0 760 208"
+     role="img"
+     aria-label="任务日志：RAG 检索链路优化（进行中，72%）；后端服务工程化（进行中，58%）；Embedding 调优 · 系统设计 · 云原生（学习中，41%）">
+  <title>任务日志</title>
+
+  <style>
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; }
+    }
+    @keyframes blip { 0%, 100% { opacity: .25 } 50% { opacity: 1 } }
+    .blip { animation: blip 2.6s ease-in-out infinite }
+
+    @keyframes scan {
+      from { transform: translateX(0) }
+      to   { transform: translateX(150.0px) }
+    }
+    .scan { animation: scan 4.4s linear infinite }
+
+    @keyframes rowIn { from { transform: translateX(-6px) } to { transform: translateX(0) } }
+    .row { animation: rowIn .45s cubic-bezier(.22,.7,.3,1) both }
+  </style>
+
+  <defs>
+    <linearGradient id="qbg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#070A10"/>
+      <stop offset="1" stop-color="#161D28"/>
+    </linearGradient>
+    <linearGradient id="barfill" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#F59E0B" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#FBBF24"/>
+    </linearGradient>
+    <clipPath id="qcard"><rect x="1" y="1" width="758" height="206" rx="15"/></clipPath>
+    <clipPath id="qb0"><rect x="418.0" y="57.0" width="108.0" height="6" rx="3"/></clipPath>
+    <clipPath id="qb1"><rect x="418.0" y="101.0" width="87.0" height="6" rx="3"/></clipPath>
+    <clipPath id="qb2"><rect x="418.0" y="145.0" width="61.5" height="6" rx="3"/></clipPath>
+  </defs>
+
+  <rect x="1" y="1" width="758" height="206" rx="15"
+        fill="#070A10" stroke="#B45309" stroke-opacity=".55" stroke-width="1.5"/>
+
+  <g clip-path="url(#qcard)">
+    <rect x="0" y="0" width="760" height="208" fill="url(#qbg)"/>
+
+    <g class="row" style="animation-delay:0.00s">
+      <rect x="26" y="46.0" width="13" height="13" rx="3.5" fill="none"
+            stroke="#FBBF24" stroke-opacity=".8"/>
+      <rect class="blip" x="30" y="50.0" width="5" height="5" rx="1" fill="#FBBF24"
+            style="animation-delay:-0.00s"/>
+
+      <text x="50" y="58.0" font-size="11.5" font-weight="600" fill="#FDE68A">RAG 检索链路优化</text>
+      <text x="50" y="72.0" font-size="7.5" fill="#8FA0B5" fill-opacity=".9">召回 · 重排 · 评估闭环</text>
+
+      <rect x="418.0" y="57.0" width="150.0" height="6" rx="3" fill="#1E2733"/>
+      <rect x="418.0" y="57.0" width="108.0" height="6" rx="3" fill="url(#barfill)"/>
+      <g clip-path="url(#qb0)">
+        <g class="scan" style="animation-delay:-0.00s">
+          <rect x="-30" y="55.0" width="30" height="10" fill="#FBBF24" opacity=".22"/>
+        </g>
+      </g>
+      <text x="578.0" y="63.0" font-size="7.5" fill="#8FA0B5">72%</text>
+
+      <rect x="674.0" y="52.5" width="60.0" height="15" rx="7.5"
+            fill="#FBBF24" fill-opacity=".10" stroke="#FBBF24" stroke-opacity=".45"/>
+      <text x="704.0" y="62.5" text-anchor="middle" font-size="7.5"
+            fill="#FBBF24">进行中</text>
+    </g>
+    <g class="row" style="animation-delay:0.06s">
+      <rect x="26" y="90.0" width="13" height="13" rx="3.5" fill="none"
+            stroke="#FBBF24" stroke-opacity=".8"/>
+      <rect class="blip" x="30" y="94.0" width="5" height="5" rx="1" fill="#FBBF24"
+            style="animation-delay:-0.80s"/>
+
+      <text x="50" y="102.0" font-size="11.5" font-weight="600" fill="#FDE68A">后端服务工程化</text>
+      <text x="50" y="116.0" font-size="7.5" fill="#8FA0B5" fill-opacity=".9">可观测 · 稳定性 · 部署流水线</text>
+
+      <rect x="418.0" y="101.0" width="150.0" height="6" rx="3" fill="#1E2733"/>
+      <rect x="418.0" y="101.0" width="87.0" height="6" rx="3" fill="url(#barfill)"/>
+      <g clip-path="url(#qb1)">
+        <g class="scan" style="animation-delay:-1.70s">
+          <rect x="-30" y="99.0" width="30" height="10" fill="#FBBF24" opacity=".22"/>
+        </g>
+      </g>
+      <text x="578.0" y="107.0" font-size="7.5" fill="#8FA0B5">58%</text>
+
+      <rect x="674.0" y="96.5" width="60.0" height="15" rx="7.5"
+            fill="#FBBF24" fill-opacity=".10" stroke="#FBBF24" stroke-opacity=".45"/>
+      <text x="704.0" y="106.5" text-anchor="middle" font-size="7.5"
+            fill="#FBBF24">进行中</text>
+    </g>
+    <g class="row" style="animation-delay:0.12s">
+      <rect x="26" y="134.0" width="13" height="13" rx="3.5" fill="none"
+            stroke="#2DD4BF" stroke-opacity=".8"/>
+      <rect class="blip" x="30" y="138.0" width="5" height="5" rx="1" fill="#2DD4BF"
+            style="animation-delay:-1.60s"/>
+
+      <text x="50" y="146.0" font-size="11.5" font-weight="600" fill="#FDE68A">Embedding 调优 · 系统设计 · 云原生</text>
+      <text x="50" y="160.0" font-size="7.5" fill="#8FA0B5" fill-opacity=".9">每天攒一点技能点</text>
+
+      <rect x="418.0" y="145.0" width="150.0" height="6" rx="3" fill="#1E2733"/>
+      <rect x="418.0" y="145.0" width="61.5" height="6" rx="3" fill="url(#barfill)"/>
+      <g clip-path="url(#qb2)">
+        <g class="scan" style="animation-delay:-3.40s">
+          <rect x="-30" y="143.0" width="30" height="10" fill="#FBBF24" opacity=".22"/>
+        </g>
+      </g>
+      <text x="578.0" y="151.0" font-size="7.5" fill="#8FA0B5">41%</text>
+
+      <rect x="674.0" y="140.5" width="60.0" height="15" rx="7.5"
+            fill="#2DD4BF" fill-opacity=".10" stroke="#2DD4BF" stroke-opacity=".45"/>
+      <text x="704.0" y="150.5" text-anchor="middle" font-size="7.5"
+            fill="#2DD4BF">学习中</text>
+    </g>
+
+    <line x1="26" y1="33.5" x2="734" y2="33.5" stroke="#8FA0B5" stroke-opacity=".22"/>
+    <line x1="26" y1="176.0" x2="734" y2="176.0"
+          stroke="#8FA0B5" stroke-opacity=".22"/>
+
+    <g font-family="'JetBrains Mono','Fira Code',Consolas,'Sarasa Mono SC','Noto Sans Mono CJK SC','Microsoft YaHei','PingFang SC',monospace">
+      <text x="26" y="24" font-size="7.5" letter-spacing="2.6" fill="#8FA0B5">QUEST LOG</text>
+      <text x="734" y="24" font-size="7.5" fill="#8FA0B5" fill-opacity=".75"
+            text-anchor="end">3 ACTIVE · 2 MAIN</text>
+
+      <text x="26" y="194.0" font-size="7" letter-spacing="2.2" fill="#8FA0B5">CO-OP</text>
+      <text x="78" y="194.0" font-size="8" fill="#FDE68A" fill-opacity=".82">开放组队：Python / Java 后端 · RAG 落地 · 全栈开发</text>
+      <text x="734" y="194.0" font-size="7" fill="#8FA0B5" fill-opacity=".75"
+            text-anchor="end">PARTY OPEN</text>
+    </g>
+  </g>
+</svg>
