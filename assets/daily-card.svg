@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="760" height="64" viewBox="0 0 760 64"
      role="img"
-     aria-label="今日签 2026.10.26 周一：宜 清理死代码，忌 注释掉就当删了">
+     aria-label="今日签 2026.10.27 周二：宜 量化评估，忌 拍脑袋调 prompt">
   <title>今日签</title>
 
   <style>
@@ -31,15 +31,15 @@
     <rect x="124" y="16.5" width="20" height="16" rx="4" fill="#FBBF24" fill-opacity=".12"
           stroke="#FBBF24" stroke-opacity=".45"/>
     <text x="134" y="28.5" text-anchor="middle" font-size="10" fill="#FBBF24">宜</text>
-    <text x="154" y="28.5" font-size="11.5" fill="#FDE68A">清理死代码</text>
+    <text x="154" y="28.5" font-size="11.5" fill="#FDE68A">量化评估</text>
 
     <rect x="124" y="35.5" width="20" height="16" rx="4" fill="#FB7185" fill-opacity=".1"
           stroke="#FB7185" stroke-opacity=".4"/>
     <text x="134" y="47.5" text-anchor="middle" font-size="10" fill="#FB7185">忌</text>
-    <text x="154" y="47.5" font-size="11.5" fill="#FDE68A" fill-opacity=".8">注释掉就当删了</text>
+    <text x="154" y="47.5" font-size="11.5" fill="#FDE68A" fill-opacity=".8">拍脑袋调 prompt</text>
 
-    <text x="734" y="28" text-anchor="end" font-size="8.5" fill="#8FA0B5">2026.10.26 · 周一</text>
+    <text x="734" y="28" text-anchor="end" font-size="8.5" fill="#8FA0B5">2026.10.27 · 周二</text>
     <text x="734" y="45" text-anchor="end" font-size="7" letter-spacing="1.6"
-          fill="#8FA0B5" fill-opacity=".7">SEED B4A4B</text>
+          fill="#8FA0B5" fill-opacity=".7">SEED B4A4C</text>
   </g>
 </svg>

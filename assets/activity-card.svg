@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="760" height="210" viewBox="0 0 760 210"
      role="img"
-     aria-label="贡献跑酷：2025.10 至 2026.10，共 640 次贡献，当前连击 1 天，最长连击 9 天">
+     aria-label="贡献跑酷：2025.10 至 2026.10，共 640 次贡献，当前连击 0 天，最长连击 9 天">
   <title>贡献跑酷 2025.10 – 2026.10</title>
 
   <style>
@@ -456,7 +456,7 @@
 
     <line x1="248" y1="11" x2="248" y2="40" stroke="#8FA0B5" stroke-opacity=".22"/>
     <text x="262" y="18" font-size="7.5" letter-spacing="2.6" fill="#8FA0B5">STREAK</text>
-    <text x="262" y="40" font-size="15" font-weight="600" fill="#FBBF24">1<tspan font-size="8" font-weight="400" fill="#8FA0B5" dx="3">天</tspan></text>
+    <text x="262" y="40" font-size="15" font-weight="600" fill="#FBBF24">0<tspan font-size="8" font-weight="400" fill="#8FA0B5" dx="3">天</tspan></text>
 
     <text x="734" y="18" font-size="7.5" letter-spacing="2.6" fill="#8FA0B5" text-anchor="end">LAP</text>
     <text x="734" y="34" font-size="9" fill="#8FA0B5" text-anchor="end">2025.10 — 2026.10</text>
